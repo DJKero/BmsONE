@@ -24,7 +24,6 @@ double BmsConsts::ClampBpm(double value)
 }
 
 
-
 Document::Document(QObject *parent)
 	: QObject(parent)
 	, info(this)
@@ -64,6 +63,10 @@ void Document::Initialize()
 
 void Document::LoadFile(QString filePath)
 {
+    //
+    // TODO: Return errors instead of exceptions.
+    //
+
 	directory = QFileInfo(filePath).absoluteDir();
 
 	QFile file(filePath);
@@ -306,6 +309,10 @@ QStringList Document::FindTraversalFilePaths(const QStringList &filePaths) const
 
 void Document::ExportTo(const QString &exportFilePath)
 {
+    //
+    // TODO: Return errors instead of exceptions.
+    //
+
 	bmsonFields[Bmson::Bms::InfoKey] = info.SaveBmson();
 	QJsonArray jsonBarLines;
 	for (BarLine barLine : barLines){

@@ -94,6 +94,10 @@ bool EditHistory::CanRedo(QString *out_name) const
 
 void EditHistory::Undo()
 {
+    //
+    // TODO: Return errors instead of exceptions.
+    //
+
 	if (undoActions.empty())
 		return;
 	try{
@@ -111,6 +115,10 @@ void EditHistory::Undo()
 
 void EditHistory::Redo()
 {
+    //
+    // TODO: Return errors instead of exceptions.
+    //
+
 	if (redoActions.empty())
 		return;
 	try{

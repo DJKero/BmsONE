@@ -17,7 +17,7 @@ public:
 	static int GetAcceptableDivider(QSet<int> locs){
 		if (locs.isEmpty()) return 0;
 		int n = *locs.begin();
-		for (auto i=locs.begin()+1; i!=locs.end(); i++){
+        for (auto i=++locs.begin(); i!=locs.constEnd(); i++){
 			int l = (*i) % n;
 			if (l != 0){
 				n = gcd(n, l);

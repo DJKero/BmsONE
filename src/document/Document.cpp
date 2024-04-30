@@ -42,6 +42,8 @@ Document::Document(QObject *parent)
 
 Document::~Document()
 {
+    delete history;
+    delete master;
 }
 
 void Document::Initialize()
@@ -97,7 +99,7 @@ void Document::LoadFile(QString filePath)
 		bpmEvents.insert(event.location, event);
 	}
 	QJsonArray soundChannelsJson = bmsonFields[Bmson::Bms::SoundChannelsKey].toArray();
-	for (size_t i=0; i<soundChannelsJson.size(); i++){
+    for (int i=0; i<soundChannelsJson.size(); i++){
 		auto *channel = new SoundChannel(this);
 		channel->LoadBmson(soundChannelsJson[i]);
 		soundChannelLength.insert(channel, channel->GetLength());
@@ -528,7 +530,7 @@ bool Document::DetectConflictsAroundNotes(const QMultiMap<int, SoundNote> &notes
 
 void Document::InsertNewSoundChannels(const QList<QString> &soundFilePaths, int index)
 {
-	for (size_t i=0; i<soundFilePaths.size(); i++){
+    for (int i=0; i<soundFilePaths.size(); i++){
 		auto *channel = new SoundChannel(this);
 		channel->LoadSound(soundFilePaths[i]);
 

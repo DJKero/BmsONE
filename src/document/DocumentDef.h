@@ -21,7 +21,7 @@ class BmsonObject
 protected:
 	QJsonObject bmsonFields;
 public:
-	BmsonObject(){}
+    BmsonObject(){}
 	BmsonObject(const QJsonValue &json) : bmsonFields(json.toObject()){}
 	BmsonObject(const QJsonObject &json) : bmsonFields(json){}
 	virtual QJsonObject AsJson() const{ return bmsonFields; }
@@ -66,7 +66,7 @@ struct BpmEvent : public BmsonObject
 	int location;
 	qreal value;
 
-	BpmEvent(){}
+    BpmEvent(){}
 	BpmEvent(int location, qreal value) : location(location), value(value){}
 
 	BpmEvent(const QJsonValue &json);

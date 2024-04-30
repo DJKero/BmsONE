@@ -115,10 +115,10 @@ public:
 
 	EditValueAction(std::function<void(T)> setter, T oldValue, T newValue, const QString &name, bool doImmediately=false, std::function<void()> shower=[](){})
 		: setter(setter)
+        , shower(shower)
 		, oldValue(oldValue)
 		, newValue(newValue)
 		, name(name)
-		, shower(shower)
 	{
 		if (doImmediately){
 			setter(newValue);
@@ -146,10 +146,10 @@ public:
 
 	BiEditValueAction(std::function<void(T,T)> setter, T oldValue, T newValue, const QString &name, bool doImmediately=false, std::function<void()> shower=[](){})
 		: setter(setter)
+        , shower(shower)
 		, oldValue(oldValue)
 		, newValue(newValue)
 		, name(name)
-		, shower(shower)
 	{
 		if (doImmediately){
 			setter(oldValue, newValue);
@@ -179,9 +179,9 @@ public:
 	AddValueAction(std::function<void(T)> adder, std::function<void(T)> remover, T value, const QString &name, bool doImmediately=false, std::function<void()> shower=[](){})
 		: adder(adder)
 		, remover(remover)
+        , shower(shower)
 		, value(value)
 		, name(name)
-		, shower(shower)
 	{
 		if (doImmediately){
 			adder(value);
@@ -211,9 +211,9 @@ public:
 	RemoveValueAction(std::function<void(T)> adder, std::function<void(T)> remover, T value, const QString &name, bool doImmediately=false, std::function<void()> shower=[](){})
 		: adder(adder)
 		, remover(remover)
+        , shower(shower)
 		, value(value)
 		, name(name)
-		, shower(shower)
 	{
 		if (doImmediately){
 			remover(value);

@@ -53,8 +53,8 @@ public:
 	};
 
 private:
-        Mode mode;
-	QString name;
+    QString name;
+    Mode mode;
 	QMap<int, LaneDef> lanes;
 
 	static QStringList ModeHints;

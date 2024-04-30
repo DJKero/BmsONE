@@ -8,11 +8,13 @@
 #define APP_URL "https://github.com/excln/BmsONE"
 #define ORGANIZATION_NAME "ExclusionBms"
 
-#ifdef Q_OS_WIN64
-#define APP_PLATFORM_NAME "Windows 64bit"
-#elif defined(Q_OS_WIN32)
-#define APP_PLATFORM_NAME "Windows 32bit"
-#elif defined(Q_OS_OSX) || defined(Q_OS_MACOS)
+#ifdef Q_OS_LINUX
+#define APP_PLATFORM_NAME "Linux"
+#endif
+#if Q_OS_WIN
+#define APP_PLATFORM_NAME "Windows"
+#endif
+#if Q_OS_MACOS
 #define APP_PLATFORM_NAME "macOS"
 #endif
 
@@ -21,7 +23,4 @@
 #define OGG_URL "https://www.xiph.org/"
 #define VORBIS_URL "https://www.xiph.org/"
 
-
-
 #endif // APPINFO
-

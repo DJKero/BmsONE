@@ -2,78 +2,100 @@
 #
 # Project created by QtCreator 2015-08-14T09:15:37
 #
+# Project modified by DJKero 2024-04-29T22:30:00
+#
 #-------------------------------------------------
 
-QT       += core concurrent gui multimedia
-#QT += gui-private
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 TARGET = BmsONE
+CONFIG += c++11
+FORMS    +=
+QT       += core concurrent gui multimedia
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+#QT += gui-private
 TEMPLATE = app
+INCLUDEPATH += $$PWD/ $$PWD/libvorbis
+DEPENDPATH += $$PWD/
+RESOURCES += bmsone.qrc
+#DISTFILES += images/symbols/sound_channel_lane.png
+TRANSLATIONS = i18n/ja.ts
 
-macx_clang: QMAKE_CXXFLAGS += -std=c++11 -stdlib=libc++
+linux-g++ {
+    QMAKE_CXXFLAGS += -std=c++11
+    QMAKE_CXXFLAGS_DEBUG += -ggdb -O0 # For use with GDB
+}
 
-win32_msvc2015: QMAKE_LFLAGS_DEBUG += /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:libcmt
-win32_msvc2015: QMAKE_LFLAGS_RELEASE += /NODEFAULTLIB:libcmt
+macx_clang {
+    QMAKE_CXXFLAGS += -std=c++11 -stdlib=libc++
+    QMAKE_CXXFLAGS_DEBUG += -g3 -O0 # For use with other debuggers.
+}
+
+# Don't know how to update it to a newer version of MSVC or make it use MINGW.
+win32_msvc2015 {
+    QMAKE_LFLAGS_DEBUG += /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:libcmt
+    QMAKE_LFLAGS_RELEASE += /NODEFAULTLIB:libcmt
+}
+
+# You can make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp\
-		MainWindow.cpp \
+                MainWindow.cpp \
     InfoView.cpp \
-	ChannelInfoView.cpp \
+        ChannelInfoView.cpp \
     AudioPlayer.cpp \
     SequenceTools.cpp \
-	BpmEditTool.cpp \
-	StatusBar.cpp \
-	PreviewConfig.cpp \
-	Preferences.cpp \
-	ViewMode.cpp \
-	MasterView.cpp \
-	EditConfig.cpp \
-	PrefEdit.cpp \
-	ChannelFindTools.cpp \
-	PrefPreview.cpp \
-	ExternalViewer.cpp \
-	ExternalViewerTools.cpp \
-	NoteEditTool.cpp \
+        BpmEditTool.cpp \
+        StatusBar.cpp \
+        PreviewConfig.cpp \
+        Preferences.cpp \
+        ViewMode.cpp \
+        MasterView.cpp \
+        EditConfig.cpp \
+        PrefEdit.cpp \
+        ChannelFindTools.cpp \
+        PrefPreview.cpp \
+        ExternalViewer.cpp \
+        ExternalViewerTools.cpp \
+        NoteEditTool.cpp \
     MasterOutDialog.cpp \
     PrefBms.cpp \
-	sequence_view/SequenceView.cpp \
-	sequence_view/SequenceViewInternal.cpp \
-	sequence_view/SequenceViewContents.cpp \
-	sequence_view/SequenceViewCursor.cpp \
-	sequence_view/SequenceViewEditMode.cpp \
-	sequence_view/SequenceViewWriteMode.cpp \
-	sequence_view/SequenceViewPreview.cpp \
-	sequence_view/SequenceViewChannelInternal.cpp \
-	sequence_view/Skin.cpp \
-	util/ScrollableForm.cpp \
-	util/QuasiModalEdit.cpp \
-	util/CollapseButton.cpp \
-	util/JsonExtension.cpp \
-	util/Util.cpp \
-	util/SymbolIconManager.cpp \
-	util/ScalarRegion.cpp \
-	util/SignalFunction.cpp \
-	audio/QOggVorbisAdapter.cpp \
-	audio/WaveMix.cpp \
-	audio/WaveData.cpp \
-	audio/WaveStream.cpp \
-	document/History.cpp \
-	document/Document.cpp \
-	document/SoundChannel.cpp \
-	document/SoundChannelPreview.cpp \
-	document/SoundChannelInternal.cpp \
-	document/HistoryUtil.cpp \
-	document/DocumentInfo.cpp \
+        sequence_view/SequenceView.cpp \
+        sequence_view/SequenceViewInternal.cpp \
+        sequence_view/SequenceViewContents.cpp \
+        sequence_view/SequenceViewCursor.cpp \
+        sequence_view/SequenceViewEditMode.cpp \
+        sequence_view/SequenceViewWriteMode.cpp \
+        sequence_view/SequenceViewPreview.cpp \
+        sequence_view/SequenceViewChannelInternal.cpp \
+        sequence_view/Skin.cpp \
+        util/ScrollableForm.cpp \
+        util/QuasiModalEdit.cpp \
+        util/CollapseButton.cpp \
+        util/JsonExtension.cpp \
+        util/Util.cpp \
+        util/SymbolIconManager.cpp \
+        util/ScalarRegion.cpp \
+        util/SignalFunction.cpp \
+        audio/QOggVorbisAdapter.cpp \
+        audio/WaveMix.cpp \
+        audio/WaveData.cpp \
+        audio/WaveStream.cpp \
+        document/History.cpp \
+        document/Document.cpp \
+        document/SoundChannel.cpp \
+        document/SoundChannelPreview.cpp \
+        document/SoundChannelInternal.cpp \
+        document/HistoryUtil.cpp \
+        document/DocumentInfo.cpp \
     document/MasterCache.cpp \
     document/Bga.cpp \
-	bmson/Bmson021.cpp \
-	bmson/Bmson100.cpp \
-	bmson/Bmson100Convert.cpp \
-	bmson/BmsonConvertDef.cpp \
-	bmson/Bmson.cpp \
-	bms/Bms.cpp \
+        bmson/Bmson021.cpp \
+        bmson/Bmson100.cpp \
+        bmson/Bmson100Convert.cpp \
+        bmson/BmsonConvertDef.cpp \
+        bmson/Bmson.cpp \
+        bms/Bms.cpp \
     bms/BmsUtil.cpp \
     bms/BmsImportDialog.cpp \
     libogg/bitwise.c \
@@ -102,58 +124,58 @@ SOURCES += main.cpp\
     libvorbis/window.c
 
 HEADERS  += MainWindow.h \
-	ChannelInfoView.h \
+        ChannelInfoView.h \
     AudioPlayer.h \
-	InfoView.h \
-	SequenceTools.h \
-	Preferences.h \
-	ViewMode.h \
-	MasterView.h \
-	EditConfig.h \
-	PrefEdit.h \
-	AppInfo.h \
-	ChannelFindTools.h \
-	PreviewConfig.h \
-	PrefPreview.h \
-	ExternalViewer.h \
-	ExternalViewerTools.h \
-	NoteEditTool.h \
-	MasterOutDialog.h \
+        InfoView.h \
+        SequenceTools.h \
+        Preferences.h \
+        ViewMode.h \
+        MasterView.h \
+        EditConfig.h \
+        PrefEdit.h \
+        AppInfo.h \
+        ChannelFindTools.h \
+        PreviewConfig.h \
+        PrefPreview.h \
+        ExternalViewer.h \
+        ExternalViewerTools.h \
+        NoteEditTool.h \
+        MasterOutDialog.h \
     BpmEditTool.h \
     PrefBms.h \
-	sequence_view/SequenceView.h \
-	sequence_view/SequenceDef.h \
-	sequence_view/SequenceViewChannelInternal.h \
-	sequence_view/Skin.h \
-	sequence_view/SequenceViewInternal.h \
-	sequence_view/SequenceViewDef.h \
-	sequence_view/SequenceViewContexts.h \
-	util/QuasiModalEdit.h \
-	util/ScrollableForm.h \
-	util/CollapseButton.h \
-	util/SignalFunction.h \
-	util/JsonExtension.h \
-	util/UIDef.h \
-	util/ScalarRegion.h \
-	util/ResolutionUtil.h \
-	util/SymbolIconManager.h \
-	util/Counter.h \
-	audio/Wave.h \
-	audio/QOggVorbisAdapter.h \
-	document/History.h \
-	document/Document.h \
-	document/SoundChannel.h \
-	document/SoundChannelInternal.h \
-	document/DocumentDef.h \
-	document/SoundChannelDef.h \
-	document/MasterCache.h \
-	document/HistoryUtil.h \
-	document/DocumentAux.h \
-	bmson/Bmson100.h \
-	bmson/Bmson021.h \
-	bmson/Bmson100Convert.h \
-	bmson/BmsonConvertDef.h \
-	bmson/Bmson.h \
+        sequence_view/SequenceView.h \
+        sequence_view/SequenceDef.h \
+        sequence_view/SequenceViewChannelInternal.h \
+        sequence_view/Skin.h \
+        sequence_view/SequenceViewInternal.h \
+        sequence_view/SequenceViewDef.h \
+        sequence_view/SequenceViewContexts.h \
+        util/QuasiModalEdit.h \
+        util/ScrollableForm.h \
+        util/CollapseButton.h \
+        util/SignalFunction.h \
+        util/JsonExtension.h \
+        util/UIDef.h \
+        util/ScalarRegion.h \
+        util/ResolutionUtil.h \
+        util/SymbolIconManager.h \
+        util/Counter.h \
+        audio/Wave.h \
+        audio/QOggVorbisAdapter.h \
+        document/History.h \
+        document/Document.h \
+        document/SoundChannel.h \
+        document/SoundChannelInternal.h \
+        document/DocumentDef.h \
+        document/SoundChannelDef.h \
+        document/MasterCache.h \
+        document/HistoryUtil.h \
+        document/DocumentAux.h \
+        bmson/Bmson100.h \
+        bmson/Bmson021.h \
+        bmson/Bmson100Convert.h \
+        bmson/BmsonConvertDef.h \
+        bmson/Bmson.h \
     bms/Bms.h \
     bms/BmsImportDialog.h \
     libvorbis/books/coupled/res_books_51.h \
@@ -180,22 +202,14 @@ HEADERS  += MainWindow.h \
     libvorbis/modes/setup_44u.h \
     libvorbis/modes/setup_X.h
 
-FORMS    +=
-
-TRANSLATIONS = i18n/ja.ts
-
-RESOURCES += \
-    bmsone.qrc
-
-win32: RC_ICONS = bmsone.ico
 
 macx: ICON = bmsone.icns
+win32: RC_ICONS = bmsone.ico
 
 
 
-INCLUDEPATH += $$PWD/ $$PWD/libvorbis
-DEPENDPATH += $$PWD/
 
-DISTFILES += \
-    images/symbols/sound_channel_lane.png
-
+# Default rules for deployment.
+#qnx: target.path = /tmp/$${TARGET}/bin
+#else: unix:!android: target.path = /opt/$${TARGET}/bin
+#!isEmpty(target.path): INSTALLS += target

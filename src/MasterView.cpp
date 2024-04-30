@@ -545,7 +545,7 @@ void MasterLaneView::UpdateBackBuffer(const QRect &rect)
 	painter.fillRect(rect, QColor(34, 34, 34));
 
 	QMap<int, QPair<int, BarLine>> bars = sview->BarsInRange(tBegin, tEnd);
-    QSet<int> barSet(bars.keys().begin(), bars.keys().end());
+    QSet<int> barSet(bars.keyBegin(), bars.keyEnd());
     QSet<int> coarseGrids = sview->CoarseGridsInRange(tBegin, tEnd) - barSet;
     QSet<int> fineGrids = sview->FineGridsInRange(tBegin, tEnd) - barSet - coarseGrids;
 	{

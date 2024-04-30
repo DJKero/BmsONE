@@ -4,6 +4,13 @@
 #include <QtCore>
 #include <QtMultimedia>
 
+enum class UpdateNotePolicy
+{
+    Conservative = 0,
+    BestEffort,
+    ForceMove,
+};
+
 class BmsConsts
 {
 public:
@@ -13,8 +20,8 @@ public:
 
 	static bool IsBpmValid(double value);
 	static double ClampBpm(double value);
-
 };
+
 
 class BmsonObject
 {
@@ -22,23 +29,11 @@ protected:
 	QJsonObject bmsonFields;
 public:
     BmsonObject(){}
-	BmsonObject(const QJsonValue &json) : bmsonFields(json.toObject()){}
-	BmsonObject(const QJsonObject &json) : bmsonFields(json){}
-	virtual QJsonObject AsJson() const{ return bmsonFields; }
+    BmsonObject(const QJsonObject &json) : bmsonFields(json){}
+    BmsonObject(const QJsonValue &json) : bmsonFields(json.toObject()){}
+    virtual ~BmsonObject(){ delete bmsonFields; }
+    virtual QJsonObject AsJson() const{ return bmsonFields; }
 };
-
-
-
-struct WaveSummary
-{
-	QAudioFormat Format;
-	qint64 FrameCount;
-
-	WaveSummary() : FrameCount(0){}
-	WaveSummary(const QAudioFormat &format, qint64 frameCount) : Format(format), FrameCount(frameCount){}
-	bool IsValid() const{ return FrameCount > 0; }
-};
-
 
 
 struct BarLine : public BmsonObject
@@ -49,14 +44,15 @@ struct BarLine : public BmsonObject
 	bool Ephemeral;
 
 	BarLine() : Ephemeral(false){}
-	BarLine(int location, int kind, bool ephemeral=false) : Location(location), Kind(kind), Ephemeral(ephemeral){}
+    BarLine(const QJsonValue &json);
+    BarLine(int location, int kind, bool ephemeral=false) : Location(location), Kind(kind), Ephemeral(ephemeral){}
+    ~BarLine(){}
+    QJsonObject AsJson() const;
 
-	BarLine(const QJsonValue &json);
 	QJsonValue SaveBmson();
 	QMap<QString, QJsonValue> GetExtraFields() const;
 	void SetExtraFields(const QMap<QString, QJsonValue> &fields);
 
-	QJsonObject AsJson() const;
 	bool operator ==(const BarLine &r) const;
 };
 
@@ -150,14 +146,15 @@ struct Bga : public BmsonObject
 	QJsonObject AsJson() const;
 };
 
-
-enum class UpdateNotePolicy
+struct WaveSummary
 {
-	Conservative = 0,
-	BestEffort,
-	ForceMove,
-};
+    QAudioFormat Format;
+    qint64 FrameCount;
 
+    WaveSummary() : FrameCount(0){}
+    WaveSummary(const QAudioFormat &format, qint64 frameCount) : Format(format), FrameCount(frameCount){}
+    bool IsValid() const{ return FrameCount > 0; }
+};
 
 
 #endif // DOCUMENTDEF_H

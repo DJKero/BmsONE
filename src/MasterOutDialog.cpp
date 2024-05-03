@@ -259,9 +259,10 @@ void MasterOutDialog::ProcessSoftClip(QDataStream &dout)
 	Rms peak(0.f, 0.f);
 	Rms rmsSat(0.f, 0.f);
 	Rms peakSat(0.f, 0.f);
-	int samples = master->GetAllData().size();
-	for (QAudioBuffer::S32F s : master->GetAllData()){
-		float l = s.left * gain, r = s.right * gain;
+    int samples = master->GetDataSize();
+    const QAudioBuffer::StereoFrame<float> *s = master->GetAllData();
+    for (int i = 0; i < samples; s++){
+        float l = s[i].left * gain, r = s[i].right * gain;
 		float satL = saturate(0.8f, l), satR = saturate(0.8f, r);
 		qint16 outL = satL * 32767.f, outR = satR * 32767.f;
 		dout.writeRawData((const char *)&outL, 2);
@@ -320,9 +321,10 @@ void MasterOutDialog::ProcessHardClip(QDataStream &dout)
 	Rms peak(0.f, 0.f);
 	Rms rmsSat(0.f, 0.f);
 	Rms peakSat(0.f, 0.f);
-	int samples = master->GetAllData().size();
-	for (QAudioBuffer::S32F s : master->GetAllData()){
-		float l = s.left * gain, r = s.right * gain;
+    int samples = master->GetDataSize();
+    const QAudioBuffer::StereoFrame<float> *s = master->GetAllData();
+    for (int i = 0; i < samples; s++){
+        float l = s[i].left * gain, r = s[i].right * gain;
 		float satL = std::max(-1.0f, std::min(1.0f, l));
 		float satR = std::max(-1.0f, std::min(1.0f, r));
 		qint16 outL = satL * 32767.f, outR = satR * 32767.f;
@@ -381,10 +383,11 @@ void MasterOutDialog::ProcessNormalize(QDataStream &dout)
 	Rms peakOrg(0.f, 0.f);
 	Rms rms(0.f, 0.f);
 	Rms peakSat(0.f, 0.f);
-	int samples = master->GetAllData().size();
-	for (QAudioBuffer::S32F s : master->GetAllData()){
-		float l = std::fabs(s.left);
-		float r = std::fabs(s.right);
+    int samples = master->GetDataSize();
+    const QAudioBuffer::StereoFrame<float> *s = master->GetAllData();
+    for (int i = 0; i < samples; s++){
+        float l = std::fabs(s[i].left);
+        float r = std::fabs(s[i].right);
 		if (peakOrg.L < l)
 			peakOrg.L = l;
 		if (peakOrg.R < r)
@@ -392,8 +395,8 @@ void MasterOutDialog::ProcessNormalize(QDataStream &dout)
 	}
 	float pk = std::max(peakOrg.L, peakOrg.R);
 	const float gainWithNorm = pk * gain > 1.0f ? (1.0f / pk) : gain;
-	for (QAudioBuffer::S32F s : master->GetAllData()){
-		float l = s.left * gainWithNorm, r = s.right * gainWithNorm;
+    for (int i = 0; i < samples; s++){
+        float l = s[i].left * gainWithNorm, r = s[i].right * gainWithNorm;
 		float satL = std::max(-1.0f, std::min(1.0f, l));
 		float satR = std::max(-1.0f, std::min(1.0f, r));
 		qint16 outL = satL * 32767.f, outR = satR * 32767.f;

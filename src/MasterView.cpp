@@ -16,9 +16,9 @@ MiniMapView::MiniMapView(SequenceView *sview)
 	, sview(sview)
 	, document(nullptr)
 	, master(nullptr)
-	, buffer(BufferWidth, BufferHeight, QImage::Format_RGB32)
 	, present(false)
 	, opacity(1)
+    , buffer(BufferWidth, BufferHeight, QImage::Format_RGB32)
 {
 	posX = x();
 	posWidth = 50;
@@ -341,7 +341,7 @@ void MiniMapView::PopOutAnimationFinished()
 	hide();
 }
 
-void MiniMapView::paintEvent(QPaintEvent *event)
+void MiniMapView::paintEvent([[maybe_unused]] QPaintEvent *event)
 {
 	QPainter painter(this);
 	if (!fixed){
@@ -418,7 +418,7 @@ void MiniMapView::mouseMoveEvent(QMouseEvent *event)
 	}
 }
 
-void MiniMapView::mouseReleaseEvent(QMouseEvent *event)
+void MiniMapView::mouseReleaseEvent([[maybe_unused]] QMouseEvent *event)
 {
 	dragging = false;
 	releaseMouse();
@@ -456,7 +456,7 @@ MasterLaneView::~MasterLaneView()
 
 void MasterLaneView::paintEvent(QPaintEvent *event)
 {
-	static const int my = 4;
+    //static const int my = 4;
 	QPainter painter(this);
 	QRect rect = event->rect();
 
@@ -729,7 +729,7 @@ MasterLaneView::Context *MasterLaneView::Context::MousePress(QMouseEvent *event)
 	return this;
 }
 
-MasterLaneView::Context *MasterLaneView::Context::MouseRelease(QMouseEvent *event)
+MasterLaneView::Context *MasterLaneView::Context::MouseRelease([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }
@@ -808,23 +808,25 @@ void MasterLaneView::PreviewContext::Progress(int currentSamples)
 	ml->sview->cursor->SetTime(iTime);
 	switch (button)
 	{
-	case Qt::MouseButton::LeftButton:
-	case Qt::MouseButton::RightButton:
-		if (qApp->keyboardModifiers() & Qt::ControlModifier){
-			ml->sview->ScrollToLocation(iTime, mousePosition.y());
-		}else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
-		}else{
-			ml->sview->ShowLocation(iTime);
-		}
-		break;
-	case Qt::MouseButton::MiddleButton:
-		if (qApp->keyboardModifiers() & Qt::ControlModifier){
-			ml->sview->ScrollToLocation(iTime, mousePosition.y());
-		}else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
-			ml->sview->ShowLocation(iTime);
-		}else{
-		}
-		break;
+        case Qt::MouseButton::LeftButton:
+        case Qt::MouseButton::RightButton:
+            if (qApp->keyboardModifiers() & Qt::ControlModifier){
+                ml->sview->ScrollToLocation(iTime, mousePosition.y());
+            }else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
+            }else{
+                ml->sview->ShowLocation(iTime);
+            }
+            break;
+        case Qt::MouseButton::MiddleButton:
+            if (qApp->keyboardModifiers() & Qt::ControlModifier){
+                ml->sview->ScrollToLocation(iTime, mousePosition.y());
+            }else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
+                ml->sview->ShowLocation(iTime);
+            }else{
+            }
+            break;
+        default:
+            break;
 	}
 }
 

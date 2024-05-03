@@ -31,7 +31,7 @@ public:
     BmsonObject(){}
     BmsonObject(const QJsonObject &json) : bmsonFields(json){}
     BmsonObject(const QJsonValue &json) : bmsonFields(json.toObject()){}
-    virtual ~BmsonObject(){ delete bmsonFields; }
+    virtual ~BmsonObject(){}
     virtual QJsonObject AsJson() const{ return bmsonFields; }
 };
 

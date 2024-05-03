@@ -189,7 +189,7 @@ QString ExternalViewer::EvalArgument(QString argumentFormat, QMap<QString, QStri
 	//QRegExp escapedDollar("\\\\\\$");
 	QRegExp variable("\\$\\(([\\_a-zA-Z][\\_a-zA-Z0-9]*)\\)");
 	QString result;
-	int pos = 0, posnext, esc;
+    int pos = 0, posnext; //, esc;
 	//qDebug().noquote() << "Eval: " << argumentFormat;
 	while ((posnext = variable.indexIn(argumentFormat, pos)) != -1){
 		/*

@@ -52,7 +52,7 @@ InfoView::InfoView(MainWindow *mainWindow)
 	editModeHint->insertItems(0, ViewMode::GetAllModeHints());
 	editExtraFields->setAcceptRichText(false);
 	editExtraFields->setAcceptDrops(false);
-	editExtraFields->setTabStopWidth(24);
+    editExtraFields->setTabStopDistance(24);
 	editExtraFields->setLineWrapMode(QTextEdit::WidgetWidth);
 	//editExtraFields->setMinimumHeight(24);
 	//editExtraFields->setMaximumHeight(999999); // (チート)
@@ -292,7 +292,7 @@ void InfoView::ArtistEdited()
 void InfoView::SubartistsEdited()
 {
 	QString text = editSubartists->toPlainText().trimmed();
-	auto entries = text.split('\n', QString::SkipEmptyParts);
+    auto entries = text.split('\n', Qt::SkipEmptyParts);
 	document->GetInfo()->SetSubartists(entries);
 }
 

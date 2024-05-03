@@ -84,12 +84,12 @@ QHash<int, QByteArray> GridSetting::roleNames() const
 }
 
 
-int GridSetting::rowCount(const QModelIndex &parent) const
+int GridSetting::rowCount([[maybe_unused]] const QModelIndex &parent) const
 {
 	return grids.count();
 }
 
-int GridSetting::columnCount(const QModelIndex &parent) const
+int GridSetting::columnCount([[maybe_unused]] const QModelIndex &parent) const
 {
 	return 4;
 }
@@ -117,7 +117,7 @@ QVariant GridSetting::data(const QModelIndex &index, int role) const
 	}
 }
 
-bool GridSetting::setData(const QModelIndex &index, const QVariant &value, int role)
+bool GridSetting::setData(const QModelIndex &index, const QVariant &value, [[maybe_unused]] int role)
 {
 	if (!index.isValid())
 		return false;

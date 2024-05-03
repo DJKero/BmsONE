@@ -7,7 +7,7 @@
 #-------------------------------------------------
 
 TARGET = BmsONE
-CONFIG += c++11
+CONFIG += c++17
 FORMS    +=
 QT       += core concurrent gui multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -20,20 +20,28 @@ RESOURCES += bmsone.qrc
 TRANSLATIONS = i18n/ja.ts
 
 linux-g++ {
-    QMAKE_CXXFLAGS += -std=c++11
+    QMAKE_CXXFLAGS += -std=c++17
     QMAKE_CXXFLAGS_DEBUG += -ggdb -O0 # For use with GDB
 }
 
 macx_clang {
-    QMAKE_CXXFLAGS += -std=c++11 -stdlib=libc++
+    QMAKE_CXXFLAGS += -std=c++17 -stdlib=libc++
     QMAKE_CXXFLAGS_DEBUG += -g3 -O0 # For use with other debuggers.
 }
 
+#
+# TODO: UPDATE TO MSVC2017+
+#
 # Don't know how to update it to a newer version of MSVC or make it use MINGW.
 win32_msvc2015 {
     QMAKE_LFLAGS_DEBUG += /NODEFAULTLIB:MSVCRT /NODEFAULTLIB:libcmt
     QMAKE_LFLAGS_RELEASE += /NODEFAULTLIB:libcmt
 }
+
+debug {
+    CONFIG += sanitizer sanitize_address
+}
+
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.

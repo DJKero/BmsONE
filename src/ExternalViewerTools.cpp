@@ -513,7 +513,7 @@ void ElidableLabel::SetElideMode(Qt::TextElideMode mode)
 	this->resize(size());
 }
 
-void ElidableLabel::resizeEvent(QResizeEvent *event)
+void ElidableLabel::resizeEvent([[maybe_unused]] QResizeEvent *event)
 {
 	QFontMetrics metrics(font());
 	QString elidedText = metrics.elidedText(originalText, elideMode, width());

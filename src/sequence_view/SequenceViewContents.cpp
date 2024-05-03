@@ -341,18 +341,20 @@ QList<SoundNoteView *> SequenceView::HitTestPlayingPaneMulti(int lane, int y, in
 bool SequenceView::mouseEventPlayingPane(QWidget *playingPane, QMouseEvent *event)
 {
 	switch (event->type()){
-	case QEvent::MouseMove:
-		context = context->PlayingPane_MouseMove(event);
-		return true;
-	case QEvent::MouseButtonPress:
-		context = context->PlayingPane_MousePress(event);
-		return true;
-	case QEvent::MouseButtonRelease:
-		context = context->PlayingPane_MouseRelease(event);
-		return true;
-	case QEvent::MouseButtonDblClick:
-		context = context->PlayingPane_MouseDblClick(event);
-		return true;
+        case QEvent::MouseMove:
+            context = context->PlayingPane_MouseMove(event);
+            return true;
+        case QEvent::MouseButtonPress:
+            context = context->PlayingPane_MousePress(event);
+            return true;
+        case QEvent::MouseButtonRelease:
+            context = context->PlayingPane_MouseRelease(event);
+            return true;
+        case QEvent::MouseButtonDblClick:
+            context = context->PlayingPane_MouseDblClick(event);
+            return true;
+        default:
+            break;
 	}
 	return false;
 }
@@ -377,31 +379,35 @@ bool SequenceView::mouseEventTimeLine(QWidget *timeLine, QMouseEvent *event)
 {
 	if (event->x() < timeLineMeasureWidth){
 		switch (event->type()){
-		case QEvent::MouseMove:
-			context = context->MeasureArea_MouseMove(event);
-			return true;
-		case QEvent::MouseButtonPress:
-			context = context->MeasureArea_MousePress(event);
-			return true;
-		case QEvent::MouseButtonRelease:
-			context = context->MeasureArea_MouseRelease(event);
-			return true;
-		case QEvent::MouseButtonDblClick:
-			return true;
+            case QEvent::MouseMove:
+                context = context->MeasureArea_MouseMove(event);
+                return true;
+            case QEvent::MouseButtonPress:
+                context = context->MeasureArea_MousePress(event);
+                return true;
+            case QEvent::MouseButtonRelease:
+                context = context->MeasureArea_MouseRelease(event);
+                return true;
+            case QEvent::MouseButtonDblClick:
+                return true;
+            default:
+                break;
 		}
 	}else{
 		switch (event->type()){
-		case QEvent::MouseMove:
-			context = context->BpmArea_MouseMove(event);
-			return true;
-		case QEvent::MouseButtonPress:
-			context = context->BpmArea_MousePress(event);
-			return true;
-		case QEvent::MouseButtonRelease:
-			context = context->BpmArea_MouseRelease(event);
-			return true;
-		case QEvent::MouseButtonDblClick:
-			return true;
+            case QEvent::MouseMove:
+                context = context->BpmArea_MouseMove(event);
+                return true;
+            case QEvent::MouseButtonPress:
+                context = context->BpmArea_MousePress(event);
+                return true;
+            case QEvent::MouseButtonRelease:
+                context = context->BpmArea_MouseRelease(event);
+                return true;
+            case QEvent::MouseButtonDblClick:
+                return true;
+            default:
+                break;
 		}
 	}
 	return false;

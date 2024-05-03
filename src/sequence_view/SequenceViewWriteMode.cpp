@@ -75,66 +75,68 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MousePress(QM
 	}
 	if (notes.size() > 0){
 		switch (event->button()){
-		case Qt::LeftButton:
-			// select note
-			if (event->modifiers() & Qt::ControlModifier){
-				for (auto note : notes)
-					sview->ToggleNoteSelection(note);
-			}else{
-				if (sview->selectedNotes.intersects(notes.toSet())){
-					// don't deselect other notes
-				}else{
-					sview->ClearNotesSelection();
-				}
-				for (auto note : notes)
-					sview->SelectAdditionalNote(note);
-			}
-			if (conflicts){
-				sview->cursor->SetLayeredSoundNotesWithConflict(notes, conf);
-			}else{
-				sview->cursor->SetExistingSoundNote(notes[0]);
-			}
-			if ((event->modifiers() & Qt::ControlModifier) == 0){
-				sview->ClearChannelSelection();
-			}
-			for (auto note : notes){
-				sview->SetCurrentChannel(note->GetChannelView(), true);
-			}
-			sview->PreviewMultiNote(notes);
-			break;
-		case Qt::RightButton:
-		{
-			// if single note in the current channel, delete it
-			// otherwise, simply select them
-			auto note = notes[0]->GetNote();
-			if (notes.size() == 1 && notes[0]->GetChannelView()->IsCurrent()
-				&& notes[0]->GetChannelView()->GetChannel()->RemoveNote(note))
-			{
-				sview->ClearNotesSelection();
-				sview->cursor->SetNewSoundNote(note);
-			}else{
-				sview->ClearNotesSelection();
-				for (auto note : notes)
-					sview->SelectAdditionalNote(note);
-				if (conflicts){
-					sview->cursor->SetLayeredSoundNotesWithConflict(notes, conf);
-				}else{
-					sview->cursor->SetExistingSoundNote(notes[0]);
-				}
-				if ((event->modifiers() & Qt::ControlModifier) == 0){
-					sview->ClearChannelSelection();
-				}
-				for (auto note : notes){
-					sview->SetCurrentChannel(note->GetChannelView(), true);
-				}
-			}
-			break;
-		}
-		case Qt::MidButton:
-			// preview only one channel
-			sview->ClearNotesSelection();
-			sview->SetCurrentChannel(notes[0]->GetChannelView());
-			return new PreviewContext(this, sview, event->pos(), event->button(), iTime);
+            case Qt::LeftButton:
+                // select note
+                if (event->modifiers() & Qt::ControlModifier){
+                    for (auto note : notes)
+                        sview->ToggleNoteSelection(note);
+                }else{
+                    if (sview->selectedNotes.intersects(notes.toSet())){
+                        // don't deselect other notes
+                    }else{
+                        sview->ClearNotesSelection();
+                    }
+                    for (auto note : notes)
+                        sview->SelectAdditionalNote(note);
+                }
+                if (conflicts){
+                    sview->cursor->SetLayeredSoundNotesWithConflict(notes, conf);
+                }else{
+                    sview->cursor->SetExistingSoundNote(notes[0]);
+                }
+                if ((event->modifiers() & Qt::ControlModifier) == 0){
+                    sview->ClearChannelSelection();
+                }
+                for (auto note : notes){
+                    sview->SetCurrentChannel(note->GetChannelView(), true);
+                }
+                sview->PreviewMultiNote(notes);
+                break;
+            case Qt::RightButton:
+            {
+                // if single note in the current channel, delete it
+                // otherwise, simply select them
+                auto note = notes[0]->GetNote();
+                if (notes.size() == 1 && notes[0]->GetChannelView()->IsCurrent()
+                    && notes[0]->GetChannelView()->GetChannel()->RemoveNote(note))
+                {
+                    sview->ClearNotesSelection();
+                    sview->cursor->SetNewSoundNote(note);
+                }else{
+                    sview->ClearNotesSelection();
+                    for (auto note : notes)
+                        sview->SelectAdditionalNote(note);
+                    if (conflicts){
+                        sview->cursor->SetLayeredSoundNotesWithConflict(notes, conf);
+                    }else{
+                        sview->cursor->SetExistingSoundNote(notes[0]);
+                    }
+                    if ((event->modifiers() & Qt::ControlModifier) == 0){
+                        sview->ClearChannelSelection();
+                    }
+                    for (auto note : notes){
+                        sview->SetCurrentChannel(note->GetChannelView(), true);
+                    }
+                }
+                break;
+            }
+            case Qt::MidButton:
+                // preview only one channel
+                sview->ClearNotesSelection();
+                sview->SetCurrentChannel(notes[0]->GetChannelView());
+                return new PreviewContext(this, sview, event->pos(), event->button(), iTime);
+            default:
+                break;
 		}
 	}else{
 		if (sview->currentChannel >= 0 && lane > 0 && event->button() == Qt::LeftButton){

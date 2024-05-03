@@ -273,7 +273,7 @@ void ChannelInfoView::SoundChannelInserted(int index, SoundChannel *channel)
 	connect(channelList, SIGNAL(currentIndexChanged(int)), this, SLOT(ChannelListSelectChanged(int)));
 }
 
-void ChannelInfoView::SoundChannelRemoved(int index, SoundChannel *channel)
+void ChannelInfoView::SoundChannelRemoved(int index, [[maybe_unused]] SoundChannel *channel)
 {
 	SetCurrentChannel(-1);
 	disconnect(channelList, SIGNAL(currentIndexChanged(int)), this, SLOT(ChannelListSelectChanged(int)));

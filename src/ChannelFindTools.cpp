@@ -110,13 +110,13 @@ void ChannelFindTools::ReplaceSequenceView(SequenceView *newSView)
 
 
 
-void ChannelFindTools::hideEvent(QHideEvent *event)
+void ChannelFindTools::hideEvent([[maybe_unused]] QHideEvent *event)
 {
 	actionChannelFindHideOthers->setChecked(false);
 	UpdateConditions();
 }
 
-void ChannelFindTools::showEvent(QShowEvent *event)
+void ChannelFindTools::showEvent[[maybe_unused]] ([[maybe_unused]] QShowEvent *event)
 {
 	UpdateConditions();
 }

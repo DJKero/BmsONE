@@ -36,7 +36,7 @@ BpmEditView::BpmEditView(MainWindow *mainWindow)
 	layout->setSizeConstraint(QLayout::SetNoConstraint);
 	editExtraFields->setAcceptRichText(false);
 	editExtraFields->setAcceptDrops(false);
-	editExtraFields->setTabStopWidth(24);
+    editExtraFields->setTabStopDistance(24);
 	editExtraFields->setLineWrapMode(QTextEdit::WidgetWidth);
 	//editExtraFields->setMinimumHeight(24);
 	//editExtraFields->setMaximumHeight(999999); // (チート)

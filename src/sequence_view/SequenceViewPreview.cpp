@@ -36,23 +36,25 @@ void SequenceView::PreviewContext::Progress(int currentTicks)
 	sview->cursor->SetTime(currentTicks);
 	switch (mouseButton)
 	{
-	case Qt::MouseButton::LeftButton:
-	case Qt::MouseButton::RightButton:
-		if (qApp->keyboardModifiers() & Qt::ControlModifier){
-			sview->ScrollToLocation(currentTicks, mousePosition.y());
-		}else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
-		}else{
-			sview->ShowLocation(currentTicks);
-		}
-		break;
-	case Qt::MouseButton::MiddleButton:
-		if (qApp->keyboardModifiers() & Qt::ControlModifier){
-			sview->ScrollToLocation(currentTicks, mousePosition.y());
-		}else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
-			sview->ShowLocation(currentTicks);
-		}else{
-		}
-		break;
+        case Qt::MouseButton::LeftButton:
+        case Qt::MouseButton::RightButton:
+            if (qApp->keyboardModifiers() & Qt::ControlModifier){
+                sview->ScrollToLocation(currentTicks, mousePosition.y());
+            }else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
+            }else{
+                sview->ShowLocation(currentTicks);
+            }
+            break;
+        case Qt::MouseButton::MiddleButton:
+            if (qApp->keyboardModifiers() & Qt::ControlModifier){
+                sview->ScrollToLocation(currentTicks, mousePosition.y());
+            }else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
+                sview->ShowLocation(currentTicks);
+            }else{
+            }
+            break;
+        default:
+            break;
 	}
 }
 

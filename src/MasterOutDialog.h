@@ -1,7 +1,9 @@
 #ifndef MASTEROUTDIALOG_H
 #define MASTEROUTDIALOG_H
 
+#include <QVector>
 #include <QtWidgets>
+#include <QtMultimedia>
 
 class Document;
 class MasterCache;

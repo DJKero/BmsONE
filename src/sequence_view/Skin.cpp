@@ -1243,18 +1243,20 @@ QVariant SkinEnumProperty::GetValue() const
 void SkinEnumProperty::SetValue(QVariant va)
 {
 	switch (va.type()){
-	case QVariant::String: {
-		int i = choices.indexOf(va.toString());
-		if (i >= 0){
-			value = i;
-			emit Changed();
-		}
-		return;
-	}
-	case QVariant::Int:
-		value = va.toInt();
-		emit Changed();
-		return;
+        case QVariant::String: {
+            int i = choices.indexOf(va.toString());
+            if (i >= 0){
+                value = i;
+                emit Changed();
+            }
+            return;
+        }
+        case QVariant::Int:
+            value = va.toInt();
+            emit Changed();
+            return;
+        default:
+            break;
 	}
 }
 

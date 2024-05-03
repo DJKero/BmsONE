@@ -148,9 +148,10 @@ public:
 	void AddSound(int time, int v, SoundChannel *channel, int frames);
 	void MultiAddSound(QList<MasterCacheMultiWorker::Patch> patches, SoundChannel *channel);
 
+    int GetDataSize();
+    const QAudioBuffer::StereoFrame<float> *GetAllData() const;
 	void GetData(int position, std::function<bool(int, QAudioBuffer::S32F)> f);
 	QPair<int, QAudioBuffer::S32F> GetData(int position);
-	QVector<QAudioBuffer::S32F> GetAllData() const;
 
 	bool IsComplete() const;
 

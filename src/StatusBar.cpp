@@ -67,7 +67,7 @@ QSize StatusBarSection::sizeHint() const
 	return QSize(baseWidth, BaseHeight);
 }
 
-void StatusBarSection::paintEvent(QPaintEvent *event)
+void StatusBarSection::paintEvent([[maybe_unused]] QPaintEvent *event)
 {
 	QPainter painter(this);
 	int x = 0;

@@ -149,6 +149,16 @@ void MasterCache::WorkerComplete(MasterCacheWorkerBase *worker)
 	}
 }
 
+int MasterCache::GetDataSize()
+{
+    return data.size();
+}
+
+const QAudioBuffer::StereoFrame<float> *MasterCache::GetAllData() const
+{
+    return data.constData();
+}
+
 void MasterCache::GetData(int position, std::function<bool (int, QAudioBuffer::S32F)> f)
 {
 	QMutexLocker locker(&dataMutex);
@@ -171,11 +181,6 @@ QPair<int, QAudioBuffer::S32F> MasterCache::GetData(int position)
 	auto f = data[position];
 	auto i = counter.lowerBound(position);
 	return QPair<int, QAudioBuffer::S32F>(i->first, f);
-}
-
-QVector<QAudioBuffer::S32F> MasterCache::GetAllData() const
-{
-	return data;
 }
 
 bool MasterCache::IsComplete() const

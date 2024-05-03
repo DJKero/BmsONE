@@ -65,43 +65,45 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MousePress(QMouseE
 	}
 	if (noteHit){
 		switch (event->button()){
-		case Qt::LeftButton:
-			// select note
-			if (event->modifiers() & Qt::ControlModifier){
-				sview->ToggleNoteSelection(noteHit);
-			}else{
-				if (sview->selectedNotes.contains(noteHit)){
-					// don't deselect other notes
-				}else{
-					sview->SelectSingleNote(noteHit);
-				}
-			}
-			sview->cursor->SetExistingSoundNote(noteHit);
-			sview->SetCurrentChannel(noteHit->GetChannelView(), true);
-			sview->PreviewSingleNote(noteHit);
-			break;
-		case Qt::RightButton: {
-			// select note & cxt menu
-			if (event->modifiers() & Qt::ControlModifier){
-				sview->SelectAdditionalNote(noteHit);
-			}else{
-				if (!sview->selectedNotes.contains(noteHit)){
-					sview->SelectSingleNote(noteHit);
-					sview->PreviewSingleNote(noteHit);
-				}
-			}
-			sview->cursor->SetExistingSoundNote(noteHit);
-			sview->SetCurrentChannel(noteHit->GetChannelView(), true);
-			QMenu menu(cview);
-			menu.addAction(cview->actionDeleteNotes);
-			menu.addAction(cview->actionTransferNotes);
-			menu.exec(event->globalPos());
-			break;
-		}
-		case Qt::MidButton:
-			sview->ClearNotesSelection();
-			sview->cursor->SetExistingSoundNote(noteHit);
-			break;
+            case Qt::LeftButton:
+                // select note
+                if (event->modifiers() & Qt::ControlModifier){
+                    sview->ToggleNoteSelection(noteHit);
+                }else{
+                    if (sview->selectedNotes.contains(noteHit)){
+                        // don't deselect other notes
+                    }else{
+                        sview->SelectSingleNote(noteHit);
+                    }
+                }
+                sview->cursor->SetExistingSoundNote(noteHit);
+                sview->SetCurrentChannel(noteHit->GetChannelView(), true);
+                sview->PreviewSingleNote(noteHit);
+                break;
+            case Qt::RightButton: {
+                // select note & cxt menu
+                if (event->modifiers() & Qt::ControlModifier){
+                    sview->SelectAdditionalNote(noteHit);
+                }else{
+                    if (!sview->selectedNotes.contains(noteHit)){
+                        sview->SelectSingleNote(noteHit);
+                        sview->PreviewSingleNote(noteHit);
+                    }
+                }
+                sview->cursor->SetExistingSoundNote(noteHit);
+                sview->SetCurrentChannel(noteHit->GetChannelView(), true);
+                QMenu menu(cview);
+                menu.addAction(cview->actionDeleteNotes);
+                menu.addAction(cview->actionTransferNotes);
+                menu.exec(event->globalPos());
+                break;
+            }
+            case Qt::MidButton:
+                sview->ClearNotesSelection();
+                sview->cursor->SetExistingSoundNote(noteHit);
+                break;
+            default:
+                break;
 		}
 	}else{
 		if (event->modifiers() & Qt::ControlModifier){
@@ -301,37 +303,39 @@ SoundChannelView::Context *SoundChannelView::WriteModeContext::MousePress(QMouse
 	}
 	if (noteHit){
 		switch (event->button()){
-		case Qt::LeftButton:
-			// select note
-			if (event->modifiers() & Qt::ControlModifier){
-				sview->ToggleNoteSelection(noteHit);
-			}else{
-				sview->SelectSingleNote(noteHit);
-			}
-			sview->cursor->SetExistingSoundNote(noteHit);
-			sview->PreviewSingleNote(noteHit);
-			break;
-		case Qt::RightButton:
-		{
-			// delete note
-			SoundNote note = noteHit->GetNote();
-			if (cview->channel->GetNotes().contains(noteHit->GetNote().location)
-				&& cview->channel->RemoveNote(note))
-			{
-				sview->ClearNotesSelection();
-				sview->cursor->SetNewSoundNote(note);
-			}else{
-				// noteHit was in inactive channel, or failed to delete note
-				sview->SelectSingleNote(noteHit);
-				sview->cursor->SetExistingSoundNote(noteHit);
-				sview->PreviewSingleNote(noteHit);
-			}
-			break;
-		}
-		case Qt::MidButton:
-			sview->ClearNotesSelection();
-			sview->cursor->SetExistingSoundNote(noteHit);
-			break;
+            case Qt::LeftButton:
+                // select note
+                if (event->modifiers() & Qt::ControlModifier){
+                    sview->ToggleNoteSelection(noteHit);
+                }else{
+                    sview->SelectSingleNote(noteHit);
+                }
+                sview->cursor->SetExistingSoundNote(noteHit);
+                sview->PreviewSingleNote(noteHit);
+                break;
+            case Qt::RightButton:
+            {
+                // delete note
+                SoundNote note = noteHit->GetNote();
+                if (cview->channel->GetNotes().contains(noteHit->GetNote().location)
+                    && cview->channel->RemoveNote(note))
+                {
+                    sview->ClearNotesSelection();
+                    sview->cursor->SetNewSoundNote(note);
+                }else{
+                    // noteHit was in inactive channel, or failed to delete note
+                    sview->SelectSingleNote(noteHit);
+                    sview->cursor->SetExistingSoundNote(noteHit);
+                    sview->PreviewSingleNote(noteHit);
+                }
+                break;
+            }
+            case Qt::MidButton:
+                sview->ClearNotesSelection();
+                sview->cursor->SetExistingSoundNote(noteHit);
+                break;
+            default:
+                break;
 		}
 	}else{
 		if (event->button() == Qt::LeftButton){
@@ -395,23 +399,25 @@ void SoundChannelView::PreviewContext::Progress(int currentTicks)
 	sview->cursor->SetTime(currentTicks);
 	switch (mouseButton)
 	{
-	case Qt::MouseButton::LeftButton:
-	case Qt::MouseButton::RightButton:
-		if (qApp->keyboardModifiers() & Qt::ControlModifier){
-			sview->ScrollToLocation(currentTicks, mousePosition.y());
-		}else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
-		}else{
-			sview->ShowLocation(currentTicks);
-		}
-		break;
-	case Qt::MouseButton::MiddleButton:
-		if (qApp->keyboardModifiers() & Qt::ControlModifier){
-			sview->ScrollToLocation(currentTicks, mousePosition.y());
-		}else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
-			sview->ShowLocation(currentTicks);
-		}else{
-		}
-		break;
+        case Qt::MouseButton::LeftButton:
+        case Qt::MouseButton::RightButton:
+            if (qApp->keyboardModifiers() & Qt::ControlModifier){
+                sview->ScrollToLocation(currentTicks, mousePosition.y());
+            }else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
+            }else{
+                sview->ShowLocation(currentTicks);
+            }
+            break;
+        case Qt::MouseButton::MiddleButton:
+            if (qApp->keyboardModifiers() & Qt::ControlModifier){
+                sview->ScrollToLocation(currentTicks, mousePosition.y());
+            }else if (qApp->keyboardModifiers() & Qt::ShiftModifier){
+                sview->ShowLocation(currentTicks);
+            }else{
+            }
+            break;
+        default:
+            break;
 	}
 }
 

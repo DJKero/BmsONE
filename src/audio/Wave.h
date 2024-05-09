@@ -135,7 +135,7 @@ private:
 	static const uint InputBufferSize = 4096;
 
 public:
-	typedef QAudioBuffer::S32F SampleType;
+    typedef QAudioBuffer::F32S SampleType;
 
 private:
 	AudioStreamSource *src;
@@ -155,7 +155,7 @@ public:
 	virtual void SeekRelative(qint64 relativeFrames);
 	virtual void SeekAbsolute(quint64 absoluteFrames);
 
-	quint64 Read(QAudioBuffer::S32F *buffer, quint64 frames);
+    quint64 Read(QAudioBuffer::F32S *buffer, quint64 frames);
 };
 
 
@@ -252,7 +252,7 @@ class AudioPlaySource : public QObject
 	Q_OBJECT
 
 public:
-	typedef QAudioBuffer::S32F SampleType;
+    typedef QAudioBuffer::F32S SampleType;
 
 	AudioPlaySource(QObject *parent=nullptr) : QObject(parent){}
 	~AudioPlaySource(){}

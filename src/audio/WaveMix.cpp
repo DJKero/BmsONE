@@ -27,7 +27,8 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 {
 	QMutexLocker lock(&mtx);
 	for (int i=0; i<bufferSampleCount; i++){
-		buffer[i].left = buffer[i].right = 0.0f;
+        buffer[i].setValue(QAudioFormat::FrontLeft, 0.0f);
+        buffer[i].setValue(QAudioFormat::FrontRight, 0.0f);
 	}
     [[maybe_unused]] static int k = 0;
 	for (auto source : sources){
@@ -35,8 +36,8 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 		while (bufferSampleCount - cur >= BufferSize){
 			int sizeRead = source->AudioPlayRead(internalBuf, BufferSize);
 			for (int i=0; i<sizeRead; i++){
-				buffer[cur+i].left += internalBuf[i].left;
-				buffer[cur+i].right += internalBuf[i].right;
+                buffer[cur+i].setValue(QAudioFormat::FrontLeft, buffer[cur+i].value(QAudioFormat::FrontLeft) + internalBuf[i].value(QAudioFormat::FrontLeft));
+                buffer[cur+i].setValue(QAudioFormat::FrontRight, buffer[cur+i].value(QAudioFormat::FrontRight) + internalBuf[i].value(QAudioFormat::FrontRight));
 			}
 			cur += sizeRead;
 			if (sizeRead < BufferSize)
@@ -46,8 +47,8 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 			int sizeToRead = bufferSampleCount - cur;
 			int sizeRead = source->AudioPlayRead(internalBuf, sizeToRead);
 			for (int i=0; i<sizeRead; i++){
-				buffer[cur+i].left += internalBuf[i].left;
-				buffer[cur+i].right += internalBuf[i].right;
+                buffer[cur+i].setValue(QAudioFormat::FrontLeft, buffer[cur+i].value(QAudioFormat::FrontLeft) + internalBuf[i].value(QAudioFormat::FrontLeft));
+                buffer[cur+i].setValue(QAudioFormat::FrontRight, buffer[cur+i].value(QAudioFormat::FrontRight) + internalBuf[i].value(QAudioFormat::FrontRight));
 			}
 		}
 	}

@@ -81,7 +81,8 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MousePress(QM
                     for (auto note : notes)
                         sview->ToggleNoteSelection(note);
                 }else{
-                    if (sview->selectedNotes.intersects(notes.toSet())){
+                    QSet<SoundNoteView *> noteSet(notes.begin(), notes.end());
+                    if (sview->selectedNotes.intersects(noteSet)){
                         // don't deselect other notes
                     }else{
                         sview->ClearNotesSelection();
@@ -130,7 +131,7 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MousePress(QM
                 }
                 break;
             }
-            case Qt::MidButton:
+            case Qt::MiddleButton:
                 // preview only one channel
                 sview->ClearNotesSelection();
                 sview->SetCurrentChannel(notes[0]->GetChannelView());
@@ -264,7 +265,7 @@ SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MousePress(QM
 	return this;
 }
 
-SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MouseRelease(QMouseEvent *event)
+SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MouseRelease([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }
@@ -416,13 +417,13 @@ SequenceView::Context *SequenceView::WriteModeDrawNoteContext::PlayingPane_Mouse
 	}
 	qreal time = sview->Y2Time(event->y());
 	int iTime = time;
-	int iTimeUpper = time;
+    [[maybe_unused]] int iTimeUpper = time;
 	int lane = sview->X2Lane(event->x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
-	int laneX;
+    [[maybe_unused]] int laneX;
 	if (lane < 0){
 		if (event->x() < sview->sortedLanes[0].left){
 			laneX = 0;
@@ -450,7 +451,7 @@ SequenceView::Context *SequenceView::WriteModeDrawNoteContext::PlayingPane_Mouse
 	return this;
 }
 
-SequenceView::Context *SequenceView::WriteModeDrawNoteContext::PlayingPane_MousePress(QMouseEvent *event)
+SequenceView::Context *SequenceView::WriteModeDrawNoteContext::PlayingPane_MousePress([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }

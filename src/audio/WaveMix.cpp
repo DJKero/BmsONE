@@ -29,7 +29,7 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 	for (int i=0; i<bufferSampleCount; i++){
 		buffer[i].left = buffer[i].right = 0.0f;
 	}
-	static int k = 0;
+    [[maybe_unused]] static int k = 0;
 	for (auto source : sources){
 		int cur = 0;
 		while (bufferSampleCount - cur >= BufferSize){

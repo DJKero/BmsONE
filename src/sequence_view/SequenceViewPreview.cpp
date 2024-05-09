@@ -8,7 +8,7 @@
 
 SequenceView::PreviewContext::PreviewContext(SequenceView::Context *parent, SequenceView *sview, QPoint pos, Qt::MouseButton button, int time)
 	: QObject(sview), Context(sview, parent), locker(sview)
-	, mousePosition(pos), mouseButton(button), previewer(nullptr)
+    , mouseButton(button), mousePosition(pos), previewer(nullptr)
 {
 	if (sview->currentChannel < 0)
 		return;
@@ -75,7 +75,7 @@ SequenceView::Context *SequenceView::PreviewContext::PlayingPane_MouseMove(QMous
 	return this;
 }
 
-SequenceView::Context *SequenceView::PreviewContext::PlayingPane_MousePress(QMouseEvent *event)
+SequenceView::Context *SequenceView::PreviewContext::PlayingPane_MousePress([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }

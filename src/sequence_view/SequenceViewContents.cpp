@@ -38,8 +38,9 @@ bool SequenceView::paintEventPlayingPane(QWidget *playingPane, QPaintEvent *even
 	painter.setClipRegion(rgn);
 	{
 		QMap<int, QPair<int, BarLine>> bars = BarsInRange(tBegin, tEnd);
-		QSet<int> coarseGrids = CoarseGridsInRange(tBegin, tEnd) - bars.keys().toSet();
-		QSet<int> fineGrids = FineGridsInRange(tBegin, tEnd) - bars.keys().toSet() - coarseGrids;
+        QSet<int> barSet(bars.keyBegin(), bars.keyEnd());
+        QSet<int> coarseGrids = CoarseGridsInRange(tBegin, tEnd) - barSet;
+        QSet<int> fineGrids = FineGridsInRange(tBegin, tEnd) - barSet - coarseGrids;
 		{
 			QVector<QLine> lines;
 			for (int t : fineGrids){
@@ -248,7 +249,7 @@ bool SequenceView::paintEventPlayingPane(QWidget *playingPane, QPaintEvent *even
 	return true;
 }
 
-bool SequenceView::enterEventPlayingPane(QWidget *playingPane, QEvent *event)
+bool SequenceView::enterEventPlayingPane([[maybe_unused]] QWidget *playingPane, QEvent *event)
 {
 	switch (event->type()){
 	case QEvent::Enter:
@@ -338,7 +339,7 @@ QList<SoundNoteView *> SequenceView::HitTestPlayingPaneMulti(int lane, int y, in
 
 
 
-bool SequenceView::mouseEventPlayingPane(QWidget *playingPane, QMouseEvent *event)
+bool SequenceView::mouseEventPlayingPane([[maybe_unused]] QWidget *playingPane, QMouseEvent *event)
 {
 	switch (event->type()){
         case QEvent::MouseMove:
@@ -362,7 +363,7 @@ bool SequenceView::mouseEventPlayingPane(QWidget *playingPane, QMouseEvent *even
 
 
 
-bool SequenceView::enterEventTimeLine(QWidget *timeLine, QEvent *event)
+bool SequenceView::enterEventTimeLine([[maybe_unused]] QWidget *timeLine, QEvent *event)
 {
 	switch (event->type()){
 	case QEvent::Enter:
@@ -375,7 +376,7 @@ bool SequenceView::enterEventTimeLine(QWidget *timeLine, QEvent *event)
 	}
 }
 
-bool SequenceView::mouseEventTimeLine(QWidget *timeLine, QMouseEvent *event)
+bool SequenceView::mouseEventTimeLine([[maybe_unused]] QWidget *timeLine, QMouseEvent *event)
 {
 	if (event->x() < timeLineMeasureWidth){
 		switch (event->type()){
@@ -430,8 +431,9 @@ bool SequenceView::paintEventTimeLine(QWidget *timeLine, QPaintEvent *event)
 	painter.fillRect(QRect(timeLineMeasureWidth, rect.top(), timeLineBpmWidth, rect.height()), QColor(34, 34, 34));
 
 	QMap<int, QPair<int, BarLine>> bars = BarsInRange(tBegin, tEnd);
-	QSet<int> coarseGrids = CoarseGridsInRange(tBegin, tEnd) - bars.keys().toSet();
-	QSet<int> fineGrids = FineGridsInRange(tBegin, tEnd) - bars.keys().toSet() - coarseGrids;
+    QSet<int> barSet(bars.keyBegin(), bars.keyEnd());
+    QSet<int> coarseGrids = CoarseGridsInRange(tBegin, tEnd) - barSet;
+    QSet<int> fineGrids = FineGridsInRange(tBegin, tEnd) - barSet - coarseGrids;
 	{
 		QVector<QLine> lines;
 		for (int t : fineGrids){

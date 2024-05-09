@@ -73,7 +73,7 @@ QFont UIUtil::GetPlatformDefaultUIFont()
 #endif
 }
 
-void UIUtil::SetFont(QWidget *widget)
+void UIUtil::SetFont([[maybe_unused]] QWidget *widget)
 {
 #ifdef Q_OS_WIN
 	if (defaultFontInitialized){

@@ -175,9 +175,10 @@ void ExternalViewer::RunCommand(QString path, QString argument, QString executeD
 	process->setNativeArguments(argument);
 	process->start();
 #else
-	QString command = QString("\"%1\" %2").arg(path).arg(argument);
-	qDebug().noquote() << "Run command: " << command;
-	process->start(command);
+    QString program = QString("%1").arg(path);
+    QStringList arguments = argument.split(" ", Qt::SkipEmptyParts, Qt::CaseInsensitive);
+    qDebug().noquote() << "Run command: " << program << " " << arguments;
+    process->start(program, arguments);
 #endif
 	if (process->state() == QProcess::NotRunning){
 		QMessageBox::warning(mainWindow, tr("Error"), tr("Failed to run the viewer."));

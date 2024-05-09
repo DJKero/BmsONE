@@ -103,7 +103,7 @@ SequenceView::SequenceView(MainWindow *parent)
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 	viewport()->setAutoFillBackground(true);
 	QPalette palette;
-	palette.setBrush(QPalette::Background, QColor(102, 102, 102));
+    palette.setBrush(QPalette::Window, QColor(102, 102, 102));
 	viewport()->setPalette(palette);
 	viewport()->installEventFilter(this);
 	viewport()->setMouseTracking(true);
@@ -1410,7 +1410,7 @@ void SequenceView::SoundChannelInserted(int index, SoundChannel *channel)
 	OnViewportResize();
 }
 
-void SequenceView::SoundChannelRemoved(int index, SoundChannel *channel)
+void SequenceView::SoundChannelRemoved(int index, [[maybe_unused]] SoundChannel *channel)
 {
 	OnCurrentChannelChanged(-1);
 	//delete soundChannelHeaders.takeAt(index);
@@ -1428,7 +1428,7 @@ void SequenceView::SoundChannelMoved(int indexBefore, int indexAfter)
 	OnViewportResize();
 }
 
-void SequenceView::TotalLengthChanged(int totalLength)
+void SequenceView::TotalLengthChanged([[maybe_unused]] int totalLength)
 {
 	int oldVL = viewLength;
 	viewLength = document->GetTotalVisibleLength();
@@ -2015,7 +2015,7 @@ bool SequenceView::paintEventPlayingHeader(QWidget *widget, QPaintEvent *event)
 	return true;
 }
 */
-bool SequenceView::paintEventPlayingFooter(QWidget *widget, QPaintEvent *event)
+bool SequenceView::paintEventPlayingFooter(QWidget *widget, [[maybe_unused]] QPaintEvent *event)
 {
 	QPainter painter(widget);
 	QRect rect(0, 0, widget->width(), widget->height());
@@ -2131,7 +2131,7 @@ bool SequenceView::paintEventHeaderEntity(QWidget *widget, QPaintEvent *event)
 	return true;
 }
 */
-bool SequenceView::paintEventFooterEntity(QWidget *widget, QPaintEvent *event)
+bool SequenceView::paintEventFooterEntity(QWidget *widget, [[maybe_unused]] QPaintEvent *event)
 {
 	QPainter painter(widget);
 	QRect rect(0, 0, widget->width(), widget->height());
@@ -2221,7 +2221,7 @@ SequenceView::Context *SequenceView::Context::MeasureArea_MousePress(QMouseEvent
 	return this;
 }
 
-SequenceView::Context *SequenceView::Context::MeasureArea_MouseRelease(QMouseEvent *event)
+SequenceView::Context *SequenceView::Context::MeasureArea_MouseRelease([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }
@@ -2250,7 +2250,7 @@ SequenceView::Context *SequenceView::Context::BpmArea_MousePress(QMouseEvent *ev
 	return this;
 }
 
-SequenceView::Context *SequenceView::Context::BpmArea_MouseRelease(QMouseEvent *event)
+SequenceView::Context *SequenceView::Context::BpmArea_MouseRelease([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }
@@ -2284,7 +2284,7 @@ void SequenceViewFooterSizeGrip::mousePressEvent(QMouseEvent *event)
 	}
 }
 
-void SequenceViewFooterSizeGrip::mouseReleaseEvent(QMouseEvent *event)
+void SequenceViewFooterSizeGrip::mouseReleaseEvent([[maybe_unused]] QMouseEvent *event)
 {
 	if (QWidget::mouseGrabber() == this){
 		releaseMouse();

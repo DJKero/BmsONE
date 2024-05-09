@@ -23,19 +23,9 @@ WaveData::WaveData(const QString &srcPath)
 	QFileInfo fi(srcPath);
 	QString ext = fi.suffix().toLower();
 	if (ext == "wav"){
-		LoadWav(srcPath);
-		if (err == CannotOpenFile){
-			err = NoError;
-			QString srcPath2 = fi.dir().absoluteFilePath(fi.completeBaseName().append(".ogg"));
-			LoadOgg(srcPath2);
-		}
+        LoadWav(srcPath);
 	}else if (ext == "ogg"){
-		LoadOgg(srcPath);
-		if (err == CannotOpenFile){
-			err = NoError;
-			QString srcPath2 = fi.dir().absoluteFilePath(fi.completeBaseName().append(".wav"));
-			LoadWav(srcPath2);
-		}
+        LoadOgg(srcPath);
 	}else{
 		err = UnknownFileType;
 		return;
@@ -169,6 +159,7 @@ void WaveData::LoadWav(const QString &srcPath)
 			return;
 		}
 		data = new quint8[bytes];
+        fmt = WAV;
 		char *d = (char*)data;
 		int remainingSize = bytes;
 		static const int unitSize = 0x00100000;
@@ -228,6 +219,7 @@ void WaveData::LoadOgg(const QString &srcPath)
 	}
 	static const int bufferSize = 4096;
 	data = new char[bytes + bufferSize];
+    fmt = OGG;
 	char *d = (char*)data;
 	int bitstream;
 	int remainingSize = bytes;
@@ -287,12 +279,19 @@ void WaveData::LoadOgg(const QString &srcPath)
 
 WaveData::~WaveData()
 {
-	if (data){
-		delete[] data;
+    if (data != nullptr){
+        switch (fmt) {
+            case WAV:
+                delete[] static_cast<quint8*>(data);
+                break;
+            case OGG:
+                delete[] static_cast<char*>(data);
+                break;
+        }
 	}
 }
 
-void WaveData::Save(const QString &dstPath)
+void WaveData::Save([[maybe_unused]] const QString &dstPath)
 {
 	err = Unknown;
 }
@@ -308,8 +307,8 @@ StandardWaveData::StandardWaveData()
 
 
 StandardWaveData::StandardWaveData(WaveData *src)
-	: data(nullptr)
-	, frames(0)
+    : frames(0)
+    , data(nullptr)
 {
 	QAudioFormat fmt = src->GetFormat();
 	samplingRate = fmt.sampleRate();

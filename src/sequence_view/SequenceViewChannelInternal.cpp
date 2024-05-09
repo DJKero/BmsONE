@@ -18,7 +18,7 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MouseMove(QMouseEv
 {
 	qreal time = sview->Y2Time(event->y());
 	int iTime = time;
-	int iTimeUpper = time;
+    [[maybe_unused]] int iTimeUpper = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
@@ -42,7 +42,7 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MousePress(QMouseE
 		iTime = sview->SnapToLowerFineGrid(time);
 	}
 	SoundNoteView *noteHit = cview->HitTestBGPane(event->y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1);
-	if ((event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)) || (event->button() == Qt::MidButton)){
+    if ((event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)) || (event->button() == Qt::MiddleButton)){
 		// select this channel (if not selected) & preview
 		if (!cview->current){
 			sview->ClearAnySelection();
@@ -98,7 +98,7 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MousePress(QMouseE
                 menu.exec(event->globalPos());
                 break;
             }
-            case Qt::MidButton:
+            case Qt::MiddleButton:
                 sview->ClearNotesSelection();
                 sview->cursor->SetExistingSoundNote(noteHit);
                 break;
@@ -117,12 +117,12 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MousePress(QMouseE
 	return this;
 }
 
-SoundChannelView::Context *SoundChannelView::EditModeContext::MouseRelease(QMouseEvent *event)
+SoundChannelView::Context *SoundChannelView::EditModeContext::MouseRelease([[maybe_unused]] QMouseEvent *event)
 {
 	return this;
 }
 
-SoundChannelView::Context *SoundChannelView::EditModeContext::MouseDoubleClick(QMouseEvent *event)
+SoundChannelView::Context *SoundChannelView::EditModeContext::MouseDoubleClick([[maybe_unused]] QMouseEvent *event)
 {
 	if (!sview->selectedNotes.empty()){
 		sview->TransferSelectedNotesToKey();
@@ -195,7 +195,7 @@ SoundChannelView::Context *SoundChannelView::EditModeSelectNotesContext::MouseRe
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
-	int cursorTime = iTime;
+    [[maybe_unused]] int cursorTime = iTime;
 	int timeBegin, timeEnd;
 	if (iTime >= rubberBandOriginTime){
 		timeBegin = rubberBandOriginTime;
@@ -276,7 +276,7 @@ SoundChannelView::Context *SoundChannelView::WriteModeContext::MousePress(QMouse
 		iTime = sview->SnapToLowerFineGrid(time);
 	}
 	SoundNoteView *noteHit = cview->HitTestBGPane(event->y(), iTime);
-	if ((event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)) || (event->button() == Qt::MidButton)){
+    if ((event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)) || (event->button() == Qt::MiddleButton)){
 		// select this channel (if not selected) & preview
 		if (!cview->current){
 			sview->ClearAnySelection();
@@ -330,7 +330,7 @@ SoundChannelView::Context *SoundChannelView::WriteModeContext::MousePress(QMouse
                 }
                 break;
             }
-            case Qt::MidButton:
+            case Qt::MiddleButton:
                 sview->ClearNotesSelection();
                 sview->cursor->SetExistingSoundNote(noteHit);
                 break;
@@ -374,7 +374,7 @@ SoundChannelView::PreviewContext::PreviewContext(
 		QPoint pos, Qt::MouseButton button, int time
 		)
 	: Context(cview, parent), locker(cview->sview)
-	, mousePosition(pos), mouseButton(button), previewer(nullptr)
+    , mouseButton(button), mousePosition(pos), previewer(nullptr)
 {
 	previewer = new SoundChannelPreviewer(cview->GetChannel(), time, cview);
 	connect(previewer, SIGNAL(SmoothedDelayedProgress(int)), this, SLOT(Progress(int)));

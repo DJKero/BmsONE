@@ -87,12 +87,12 @@ int Bms::Math::LCM(int a, int b){
 	return m;
 }
 
-Bms::Rational Bms::Math::ToRational(double a)
+Bms::Rational Bms::Math::ToRational([[maybe_unused]] double a)
 {
 	return Rational(0);
 }
 
-Bms::Rational Bms::Math::ToRational(float a)
+Bms::Rational Bms::Math::ToRational([[maybe_unused]] float a)
 {
 	return Rational(0);
 }

@@ -131,7 +131,7 @@ void QuasiModalEditableComboBox::OnTextChanged()
 	SharedUIHelper::SetGloballyDirtyEdit(this);
 }
 
-void QuasiModalEditableComboBox::OnCurrentIndexChanged(QString s)
+void QuasiModalEditableComboBox::OnCurrentIndexChanged([[maybe_unused]] QString s)
 {
 	emit EditingFinished();
 }

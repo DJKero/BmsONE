@@ -87,8 +87,8 @@ Bms::BmsReader::BmsReader(QString path, QObject *parent)
 	: QObject(parent)
 	, config()
 	, file(path)
-	, progress(0.0f)
 	, status(STATUS_CONTINUE)
+    , progress(0.0f)
 	, log_data()
 	, log(&log_data)
 	, currentLine(0)
@@ -199,7 +199,7 @@ void Bms::BmsReader::StartWithCodec(QString codec)
 
 	skipping = false;
 
-	cont = [this](QVariant arg){
+    cont = [this]([[maybe_unused]] QVariant arg){
 		LoadMain();
 		return status;
 	};
@@ -234,7 +234,7 @@ void Bms::BmsReader::InitCommandHandlers()
 	headerCommandHandlers.insert(QString("PLAYLEVEL"), [this](QString value){ bms.level = ToInt(value, bms.level); });
 	headerCommandHandlers.insert(QString("DIFFICULTY"), [this](QString value){ bms.difficulty = ToInt(value, bms.difficulty); });
 	headerCommandHandlers.insert(QString("BPM"), [this](QString value){ bms.bpm = ToReal(value, bms.bpm); });
-	headerCommandHandlers.insert(QString("LNTYPE"), [this](QString value){ /* ignored */ });
+    headerCommandHandlers.insert(QString("LNTYPE"), [this]([[maybe_unused]] QString value){ /* ignored */ });
 	headerCommandHandlers.insert(QString("LNOBJ"), [this](QString value){ int n = BmsUtil::ZZtoInt(value); if (n >= 0) bms.lnobj = n; });
 
 	headerZZDefCommandHandlers.insert(QString("BPM"), [this](int def, QString value){
@@ -255,7 +255,7 @@ void Bms::BmsReader::LoadMain()
 {
 	static QRegExp rexpDelimiter("[:\\s]");
 
-	cont = [this](QVariant arg){
+    cont = [this]([[maybe_unused]] QVariant arg){
 		LoadMain();
 		return status;
 	};
@@ -539,7 +539,7 @@ void Bms::BmsReader::HandleELSEIF(QString value)
 	ifLabels.append(cond);
 }
 
-void Bms::BmsReader::HandleELSE(QString value)
+void Bms::BmsReader::HandleELSE([[maybe_unused]] QString value)
 {
 	if (randoms.isEmpty()){
 		Warning(tr("\"ELSE\" without random value."));
@@ -551,13 +551,13 @@ void Bms::BmsReader::HandleELSE(QString value)
 	}
 }
 
-void Bms::BmsReader::HandleENDIF(QString value)
+void Bms::BmsReader::HandleENDIF([[maybe_unused]] QString value)
 {
 	skipping = config.skipBetweenRandomAndIf;
 	ifLabels.clear();
 }
 
-void Bms::BmsReader::HandleENDRANDOM(QString value)
+void Bms::BmsReader::HandleENDRANDOM([[maybe_unused]] QString value)
 {
 	if (!randoms.isEmpty()){
 		randoms.pop();

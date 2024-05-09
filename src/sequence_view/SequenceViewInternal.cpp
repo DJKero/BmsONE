@@ -16,11 +16,11 @@ SoundChannelView::SoundChannelView(SequenceView *sview, SoundChannel *channel)
 	, channel(channel)
 	, current(false)
 	, selected(false)
+    , collapsed(false)
+    , animation(0)
+    , internalWidth(64)
 	, backBuffer(nullptr)
 	, context(nullptr)
-	, internalWidth(64)
-	, collapsed(false)
-	, animation(0)
 {
 	// this make scrolling fast, but the program must treat redrawing region carefully.
 	//setAttribute(Qt::WA_OpaquePaintEvent);
@@ -177,7 +177,7 @@ void SoundChannelView::paintEvent(QPaintEvent *event)
 	int right = rect.right() + mx;
 	int top = rect.y() - my;
 	int bottom = rect.bottom() + my;
-	int height = bottom - top;
+    [[maybe_unused]] int height = bottom - top;
 
 	qreal tBegin = sview->viewLength - (scrollY + bottom)/sview->zoomY;
 	qreal tEnd = sview->viewLength - (scrollY + top)/sview->zoomY;
@@ -419,7 +419,7 @@ void SoundChannelView::UpdateBackBuffer(const QRect &rect)
 	int scrollY = sview->verticalScrollBar()->value();
 	int top = rect.y() - my;
 	int bottom = rect.bottom() + my;
-	int height = bottom - top;
+    [[maybe_unused]] int height = bottom - top;
 	qreal tBegin = sview->viewLength - (scrollY + bottom)/sview->zoomY;
 	qreal tEnd = sview->viewLength - (scrollY + top)/sview->zoomY;
 	//painter.setCompositionMode(QPainter::CompositionMode_Clear);
@@ -429,8 +429,9 @@ void SoundChannelView::UpdateBackBuffer(const QRect &rect)
 	// grids
 	{
 		QMap<int, QPair<int, BarLine>> bars = sview->BarsInRange(tBegin, tEnd);
-		QSet<int> coarseGrids = sview->CoarseGridsInRange(tBegin, tEnd) - bars.keys().toSet();
-		QSet<int> fineGrids = sview->FineGridsInRange(tBegin, tEnd) - bars.keys().toSet() - coarseGrids;
+        QSet<int> barSet(bars.keyBegin(), bars.keyEnd());
+        QSet<int> coarseGrids = sview->CoarseGridsInRange(tBegin, tEnd) - barSet;
+        QSet<int> fineGrids = sview->FineGridsInRange(tBegin, tEnd) - barSet - coarseGrids;
 		{
 			QVector<QLine> lines;
 			for (int t : fineGrids){
@@ -597,11 +598,11 @@ void SoundChannelView::mouseDoubleClickEvent(QMouseEvent *event)
 	context = context->MouseDoubleClick(event);
 }
 
-void SoundChannelView::enterEvent(QEvent *event)
+void SoundChannelView::enterEvent([[maybe_unused]] QEvent *event)
 {
 }
 
-void SoundChannelView::leaveEvent(QEvent *event)
+void SoundChannelView::leaveEvent([[maybe_unused]] QEvent *event)
 {
 	sview->cursor->SetNothing();
 }
@@ -725,7 +726,7 @@ SoundChannelFooter::~SoundChannelFooter()
 {
 }
 
-void SoundChannelFooter::paintEvent(QPaintEvent *event)
+void SoundChannelFooter::paintEvent([[maybe_unused]] QPaintEvent *event)
 {
 	QPainter painter(this);
 	QRect rect(0, 0, width(), height());
@@ -771,7 +772,7 @@ void SoundChannelFooter::paintEvent(QPaintEvent *event)
 	}
 }
 
-void SoundChannelFooter::mouseMoveEvent(QMouseEvent *event)
+void SoundChannelFooter::mouseMoveEvent([[maybe_unused]] QMouseEvent *event)
 {
 
 }
@@ -788,7 +789,7 @@ void SoundChannelFooter::mousePressEvent(QMouseEvent *event)
 		break;
 	case Qt::RightButton:
 		break;
-	case Qt::MidButton:
+    case Qt::MiddleButton:
 		cview->Preview();
 		break;
 	default:
@@ -796,12 +797,12 @@ void SoundChannelFooter::mousePressEvent(QMouseEvent *event)
 	}
 }
 
-void SoundChannelFooter::mouseReleaseEvent(QMouseEvent *event)
+void SoundChannelFooter::mouseReleaseEvent([[maybe_unused]] QMouseEvent *event)
 {
 
 }
 
-void SoundChannelFooter::mouseDoubleClickEvent(QMouseEvent *event)
+void SoundChannelFooter::mouseDoubleClickEvent([[maybe_unused]] QMouseEvent *event)
 {
 	cview->Preview();
 }

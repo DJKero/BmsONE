@@ -221,6 +221,9 @@ AudioPlayerInternal::~AudioPlayerInternal()
 		srcPrev->AudioPlayRelease();
 		srcPrev = nullptr;
 	}
+    delete[] tmpCurrent;
+    delete[] tmpPrev;
+    delete[] tmp;
 }
 
 void AudioPlayerInternal::OnSourceDestroyed(QObject *src)

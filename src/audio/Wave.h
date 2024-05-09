@@ -187,9 +187,15 @@ public:
 		VorbisUnknown = 39,
 		Unknown = -1
 	};
+    enum Formats{
+        WAV = 0,
+        FLAC = 1,
+        OGG = 2
+    };
 
 private:
 	int err;
+    int fmt;
 	QAudioFormat format;
 	void *data;
 	quint64 frames;

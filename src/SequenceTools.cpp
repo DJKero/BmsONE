@@ -654,7 +654,7 @@ GridSettingDialog::GridSettingDialog(QList<GridSize> grids, GridSize mediumGrid,
 	buttonsLayout->addStretch(1);
 	buttonsLayout->addWidget(okButton);
 	buttonsLayout->addWidget(cancelButton);
-	buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(0,0,0,0);
 	auto buttons = new QWidget(this);
 	buttons->setLayout(buttonsLayout);
 	buttons->setContentsMargins(0, 0, 0, 0);

@@ -558,7 +558,7 @@ void Document::MoveSoundChannel(int indexBefore, int indexAfter)
 {
 	if (indexBefore < 0 || indexBefore >= (int)soundChannels.size())
 		return;
-	indexAfter = std::max(0, std::min(soundChannels.size()-1, indexAfter));
+    indexAfter = std::max(0, (int) std::min( (int) soundChannels.size()-1, indexAfter));
 	if (indexBefore == indexAfter)
 		return;
 	auto updater = [this](int indexOld, int indexNew){

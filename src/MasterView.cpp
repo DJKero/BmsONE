@@ -176,12 +176,12 @@ void MiniMapView::ReconstructRmsCache()
 #if 1
 		// INTERNAL ITERATOR
 		int s = smp_prev;
-		master->GetData(smp_prev, [&](int pending, QAudioBuffer::S32F signal){
+        master->GetData(smp_prev, [&](int pending, QAudioBuffer::F32S signal){
 			packet.available &= pending == 0;
-			packet.rms.L += signal.left * signal.left;
-			packet.rms.R += signal.right * signal.right;
-            packet.peak.L = std::max(packet.peak.L, std::fabs(signal.left));
-            packet.peak.R = std::max(packet.peak.R, std::fabs(signal.right));
+            packet.rms.L += signal.value(QAudioFormat::FrontLeft) * signal.value(QAudioFormat::FrontLeft);
+            packet.rms.R += signal.value(QAudioFormat::FrontRight) * signal.value(QAudioFormat::FrontRight);
+            packet.peak.L = std::max(packet.peak.L, std::fabs(signal.value(QAudioFormat::FrontLeft)));
+            packet.peak.R = std::max(packet.peak.R, std::fabs(signal.value(QAudioFormat::FrontRight)));
 			return ++s < smp;
 		});
 #else
@@ -245,12 +245,12 @@ void MiniMapView::UpdateRmsCachePartially()
 #if 1
 			// INTERNAL ITERATOR
 			int s = smp_prev;
-			master->GetData(smp_prev, [&](int pending, QAudioBuffer::S32F signal){
+            master->GetData(smp_prev, [&](int pending, QAudioBuffer::F32S signal){
 				packet.available &= pending == 0;
-				packet.rms.L += signal.left * signal.left;
-				packet.rms.R += signal.right * signal.right;
-                packet.peak.L = std::max(packet.peak.L, std::fabs(signal.left));
-                packet.peak.R = std::max(packet.peak.R, std::fabs(signal.right));
+                packet.rms.L += signal.value(QAudioFormat::FrontLeft) * signal.value(QAudioFormat::FrontLeft);
+                packet.rms.R += signal.value(QAudioFormat::FrontRight) * signal.value(QAudioFormat::FrontRight);
+                packet.peak.L = std::max(packet.peak.L, std::fabs(signal.value(QAudioFormat::FrontLeft)));
+                packet.peak.R = std::max(packet.peak.R, std::fabs(signal.value(QAudioFormat::FrontRight)));
 				return ++s < smp;
 			});
 #else
@@ -294,8 +294,8 @@ void MiniMapView::UpdateBuffer()
 	buffer.fill(QColor(0x33, 0x33, 0x33));
 	QPainter painter(&buffer);
 	for (int y=0; y<height(); y++){
-		int t = y * sview->viewLength / height();
-		int t2 = (y+1) * sview->viewLength / height();
+        qsizetype t = y * sview->viewLength / height();
+        qsizetype t2 = (y+1) * sview->viewLength / height();
 		if (std::min(t2, rmsCacheOfTicks.size()) > t){
 			if (t2 > rmsCacheOfTicks.size())
 				t2 = rmsCacheOfTicks.size();
@@ -581,8 +581,8 @@ void MasterLaneView::UpdateBackBuffer(const QRect &rect)
 		mview->ReconstructRmsCache();
 	}
 	for (int y=rect.bottom()+my; y>=rect.top()-my; y--){
-		int t = sview->Y2Time(y);
-		int t2 = sview->Y2Time(y-1);
+        qsizetype t = sview->Y2Time(y);
+        qsizetype t2 = sview->Y2Time(y-1);
 		if (std::min(t2, mview->rmsCacheOfTicks.size()) > t){
 			if (t2 > mview->rmsCacheOfTicks.size())
 				t2 = mview->rmsCacheOfTicks.size();

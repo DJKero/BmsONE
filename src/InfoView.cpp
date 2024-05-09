@@ -231,7 +231,7 @@ void InfoView::ReplaceDocument(Document *newDocument)
 void InfoView::UpdateFormGeom()
 {
 	Form()->setGeometry(0, 0, Form()->width(), 33333);
-	Form()->setGeometry(0, 0, Form()->width(), dummy->y()+formLayout->spacing()+formLayout->margin());
+    Form()->setGeometry(0, 0, Form()->width(), dummy->y()+formLayout->spacing()+formLayout->contentsMargins().top());
 }
 
 void InfoView::SetSubartists(QStringList value)

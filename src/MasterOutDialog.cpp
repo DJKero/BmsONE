@@ -22,7 +22,7 @@ MasterOutDialog::MasterOutDialog(Document *document, QWidget *parent)
 	buttonsLayout->addStretch(1);
 	buttonsLayout->addWidget(okButton);
 	buttonsLayout->addWidget(cancelButton);
-	buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(0,0,0,0);
 	buttons = new QWidget(this);
 	buttons->setLayout(buttonsLayout);
 	buttons->setContentsMargins(0, 0, 0, 0);
@@ -260,9 +260,9 @@ void MasterOutDialog::ProcessSoftClip(QDataStream &dout)
 	Rms rmsSat(0.f, 0.f);
 	Rms peakSat(0.f, 0.f);
     int samples = master->GetDataSize();
-    const QAudioBuffer::StereoFrame<float> *s = master->GetAllData();
+    const QAudioBuffer::F32S *s = master->GetAllData();
     for (int i = 0; i < samples; s++){
-        float l = s[i].left * gain, r = s[i].right * gain;
+        float l = s[i].value(QAudioFormat::FrontLeft) * gain, r = s[i].value(QAudioFormat::FrontRight) * gain;
 		float satL = saturate(0.8f, l), satR = saturate(0.8f, r);
 		qint16 outL = satL * 32767.f, outR = satR * 32767.f;
 		dout.writeRawData((const char *)&outL, 2);
@@ -322,9 +322,9 @@ void MasterOutDialog::ProcessHardClip(QDataStream &dout)
 	Rms rmsSat(0.f, 0.f);
 	Rms peakSat(0.f, 0.f);
     int samples = master->GetDataSize();
-    const QAudioBuffer::StereoFrame<float> *s = master->GetAllData();
+    const QAudioBuffer::F32S *s = master->GetAllData();
     for (int i = 0; i < samples; s++){
-        float l = s[i].left * gain, r = s[i].right * gain;
+        float l = s[i].value(QAudioFormat::FrontLeft) * gain, r = s[i].value(QAudioFormat::FrontRight) * gain;
 		float satL = std::max(-1.0f, std::min(1.0f, l));
 		float satR = std::max(-1.0f, std::min(1.0f, r));
 		qint16 outL = satL * 32767.f, outR = satR * 32767.f;
@@ -384,10 +384,10 @@ void MasterOutDialog::ProcessNormalize(QDataStream &dout)
 	Rms rms(0.f, 0.f);
 	Rms peakSat(0.f, 0.f);
     int samples = master->GetDataSize();
-    const QAudioBuffer::StereoFrame<float> *s = master->GetAllData();
+    const QAudioBuffer::F32S *s = master->GetAllData();
     for (int i = 0; i < samples; s++){
-        float l = std::fabs(s[i].left);
-        float r = std::fabs(s[i].right);
+        float l = std::fabs(s[i].value(QAudioFormat::FrontLeft));
+        float r = std::fabs(s[i].value(QAudioFormat::FrontRight));
 		if (peakOrg.L < l)
 			peakOrg.L = l;
 		if (peakOrg.R < r)
@@ -396,7 +396,7 @@ void MasterOutDialog::ProcessNormalize(QDataStream &dout)
 	float pk = std::max(peakOrg.L, peakOrg.R);
 	const float gainWithNorm = pk * gain > 1.0f ? (1.0f / pk) : gain;
     for (int i = 0; i < samples; s++){
-        float l = s[i].left * gainWithNorm, r = s[i].right * gainWithNorm;
+        float l = s[i].value(QAudioFormat::FrontLeft) * gainWithNorm, r = s[i].value(QAudioFormat::FrontRight) * gainWithNorm;
 		float satL = std::max(-1.0f, std::min(1.0f, l));
 		float satR = std::max(-1.0f, std::min(1.0f, r));
 		qint16 outL = satL * 32767.f, outR = satR * 32767.f;

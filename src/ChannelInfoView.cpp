@@ -37,7 +37,7 @@ ChannelInfoView::ChannelInfoView(MainWindow *mainWindow)
 	connect(buttonFile, SIGNAL(clicked()), this, SLOT(SelectSourceFile()));
 	auto headerLayout = new QHBoxLayout();
 	headerLayout->setSpacing(0);
-	headerLayout->setMargin(0);
+    headerLayout->setContentsMargins(0,0,0,0);
 	headerLayout->addWidget(buttonPreview);
 	headerLayout->addWidget(buttonFile);
 	auto header = new QWidget();
@@ -58,7 +58,7 @@ ChannelInfoView::ChannelInfoView(MainWindow *mainWindow)
 	labelLength->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	auto footerLayout = new QHBoxLayout();
 	footerLayout->setSpacing(0);
-	footerLayout->setMargin(0);
+    footerLayout->setContentsMargins(0,0,0,0);
 	footerLayout->addWidget(labelFormat);
 	footerLayout->addWidget(labelLength);
 	auto footer = new QWidget();
@@ -66,7 +66,7 @@ ChannelInfoView::ChannelInfoView(MainWindow *mainWindow)
 	footer->setFixedHeight(24);
 	auto boxLayout = new QVBoxLayout();
 	boxLayout->setSpacing(0);
-	boxLayout->setMargin(0);
+    boxLayout->setContentsMargins(0,0,0,0);
 	boxLayout->addWidget(header, 0);
 	boxLayout->addWidget(labelImage, 1);
 	boxLayout->addWidget(footer, 0);
@@ -203,7 +203,7 @@ void ChannelInfoView::WaveSummaryUpdated()
 	WaveSummary summary = channel->GetWaveSummary();
 	if (summary.FrameCount > 0){
 		labelFormat->setText(QString("%1bit/%2ch/%3")
-							 .arg(summary.Format.sampleSize())
+                             .arg(summary.Format.bytesPerFrame())
 							 .arg(summary.Format.channelCount())
 							 .arg(TextForSamplingRate(summary.Format.sampleRate())));
 		qreal sec = (qreal)summary.FrameCount / summary.Format.sampleRate();

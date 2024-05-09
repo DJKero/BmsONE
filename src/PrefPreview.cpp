@@ -26,7 +26,7 @@ PrefPreviewPage::PrefPreviewPage(QWidget *parent, MainWindow *mainWindow)
 	{
 		auto delayWidget = new QWidget(this);
 		auto delayLayout = new QHBoxLayout();
-		delayLayout->setMargin(0);
+        delayLayout->setContentsMargins(0,0,0,0);
 		delayLayout->setSpacing(10);
 
 		delayRatioSlider = new QSlider(Qt::Horizontal);
@@ -61,7 +61,7 @@ PrefPreviewPage::PrefPreviewPage(QWidget *parent, MainWindow *mainWindow)
 	{
 		auto durationWidget = new QWidget(this);
 		auto durationLayout = new QHBoxLayout();
-		durationLayout->setMargin(0);
+        durationLayout->setContentsMargins(0,0,0,0);
 		durationLayout->setSpacing(10);
 
 		singleMaxDuration = new QSlider(Qt::Horizontal);

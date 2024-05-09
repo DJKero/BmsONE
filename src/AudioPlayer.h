@@ -14,8 +14,8 @@ class AudioPlayerInternal : public QIODevice
 
 private:
 	typedef QAudioBuffer::S16S SampleTypePlay;
-	typedef QAudioBuffer::S32F SampleTypeRead;
-	typedef QAudioBuffer::S32F SampleTypeTemp;
+    typedef QAudioBuffer::F32S SampleTypeRead;
+    typedef QAudioBuffer::F32S SampleTypeTemp;
 	static const float EnvPrevRelease;
 	static const float EnvPrevThreshold;
 
@@ -87,7 +87,7 @@ class AudioPlayerOutput : public QObject
 	Q_OBJECT
 
 private:
-	QAudioOutput *aout;
+    QAudioSink *aout;
 
 private slots:
 	void OnStateChanged(QAudio::State newState);

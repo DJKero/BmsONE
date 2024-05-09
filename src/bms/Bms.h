@@ -143,6 +143,8 @@ public:
 
 class BmsReader : public QObject
 {
+    Q_OBJECT
+
 public:
 	enum Status{
 		STATUS_COMPLETE,

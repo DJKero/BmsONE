@@ -142,20 +142,17 @@ AudioPlayerOutput::~AudioPlayerOutput()
 void AudioPlayerOutput::Start(AudioPlayerInternal *io)
 {
 	QAudioFormat format;
-	format.setCodec("audio/pcm");
-	format.setSampleSize(16);
-	format.setSampleType(QAudioFormat::SignedInt);
-	format.setByteOrder(QAudioFormat::LittleEndian);
-	format.setChannelCount(2);
+    format.setChannelConfig(QAudioFormat::ChannelConfigStereo);
+    format.setSampleFormat(QAudioFormat::Int16);
 	format.setSampleRate(44100);
 
-	QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+    QAudioDevice info(QMediaDevices::defaultAudioOutput());
 	if (!info.isFormatSupported(format)){
 		qDebug() << "AudioPlayer: format is not supported.";
 		return;
 	}
 
-	aout = new QAudioOutput(format, this);
+    aout = new QAudioSink(format, this);
 	connect(aout, SIGNAL(stateChanged(QAudio::State)), this, SLOT(OnStateChanged(QAudio::State)));
 
 	aout->setBufferSize(16384);
@@ -271,8 +268,8 @@ qint64 AudioPlayerInternal::readData(char *data, qint64 maxSize)
 			int posOut = 0;
 			while (posOut + tmpCurrentPosition <= samplesToRead){
 				for (int i=0; i<tmpCurrentPosition; i++){
-					tmp[posOut].left += tmpCurrent[i].left;
-					tmp[posOut].right += tmpCurrent[i].right;
+                    tmp[posOut].setValue(QAudioFormat::FrontLeft, tmp[posOut].value(QAudioFormat::FrontLeft) + tmpCurrent[i].value(QAudioFormat::FrontLeft));
+                    tmp[posOut].setValue(QAudioFormat::FrontRight, tmp[posOut].value(QAudioFormat::FrontRight) + tmpCurrent[i].value(QAudioFormat::FrontRight));
 					posOut++;
 				}
 				tmpCurrentPosition = srcCurrent->AudioPlayRead(tmpCurrent, BufferSampleCount);
@@ -282,8 +279,8 @@ qint64 AudioPlayerInternal::readData(char *data, qint64 maxSize)
 			if (tmpCurrentPosition > 0){
 				const int remaining = samplesToRead - posOut;
 				for (int i=0; i<remaining; i++){
-					tmp[posOut].left += tmpCurrent[i].left;
-					tmp[posOut].right += tmpCurrent[i].right;
+                    tmp[posOut].setValue(QAudioFormat::FrontLeft, tmp[posOut].value(QAudioFormat::FrontLeft) + tmpCurrent[i].value(QAudioFormat::FrontLeft));
+                    tmp[posOut].setValue(QAudioFormat::FrontRight, tmp[posOut].value(QAudioFormat::FrontRight) + tmpCurrent[i].value(QAudioFormat::FrontRight));
 					posOut++;
 				}
 				for (int i=0; i<tmpCurrentPosition-remaining; i++){
@@ -300,8 +297,8 @@ qint64 AudioPlayerInternal::readData(char *data, qint64 maxSize)
 			int posOut = 0;
 			while (posOut + tmpPrevPosition <= samplesToRead){
 				for (int i=0; i<tmpPrevPosition; i++){
-					tmp[posOut].left += envPrev * tmpPrev[i].left;
-					tmp[posOut].right += envPrev * tmpPrev[i].right;
+                    tmp[posOut].setValue(QAudioFormat::FrontLeft, tmp[posOut].value(QAudioFormat::FrontLeft) + (envPrev * tmpPrev[i].value(QAudioFormat::FrontLeft)));
+                    tmp[posOut].setValue(QAudioFormat::FrontRight, tmp[posOut].value(QAudioFormat::FrontRight) + (envPrev * tmpPrev[i].value(QAudioFormat::FrontRight)));
 					posOut++;
 					envPrev -= envPrev * EnvPrevRelease;
 				}
@@ -312,8 +309,8 @@ qint64 AudioPlayerInternal::readData(char *data, qint64 maxSize)
 			if (tmpPrevPosition > 0){
 				const int remaining = samplesToRead - posOut;
 				for (int i=0; i<remaining; i++){
-					tmp[posOut].left += envPrev * tmpPrev[i].left;
-					tmp[posOut].right += envPrev * tmpPrev[i].right;
+                    tmp[posOut].setValue(QAudioFormat::FrontLeft, tmp[posOut].value(QAudioFormat::FrontLeft) + (envPrev * tmpPrev[i].value(QAudioFormat::FrontLeft)));
+                    tmp[posOut].setValue(QAudioFormat::FrontRight, tmp[posOut].value(QAudioFormat::FrontRight) + (envPrev * tmpPrev[i].value(QAudioFormat::FrontRight)));
 					posOut++;
 					envPrev -= envPrev * EnvPrevRelease;
 				}
@@ -329,8 +326,8 @@ qint64 AudioPlayerInternal::readData(char *data, qint64 maxSize)
 			}
 		}
 		for (int i=0; i<samplesToRead; i++){
-			float l = saturate(0.95f, tmp[i].left * volume);
-			float r = saturate(0.95f, tmp[i].right * volume);
+            float l = saturate(0.95f, tmp[i].value(QAudioFormat::FrontLeft) * volume);
+            float r = saturate(0.95f, tmp[i].value(QAudioFormat::FrontRight) * volume);
             float absL = std::fabs(l);
             float absR = std::fabs(r);
 			if (absL > peakL){
@@ -344,8 +341,8 @@ qint64 AudioPlayerInternal::readData(char *data, qint64 maxSize)
 			if (mute){
 				buf[i].clear();
 			}else{
-				buf[i].left = l * 32767.f;
-				buf[i].right = r * 32767.f;
+                buf[i].setValue(QAudioFormat::FrontLeft, l * 32767.f);
+                buf[i].setValue(QAudioFormat::FrontRight, r * 32767.f);
 			}
 		}
 	}

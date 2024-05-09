@@ -112,7 +112,7 @@ PrefGeneralPage::PrefGeneralPage(QWidget *parent)
 	{
 		auto subLayout = new QHBoxLayout();
 		subLayout->setSpacing(10);
-		subLayout->setMargin(0);
+        subLayout->setContentsMargins(0,0,0,0);
 		language = new QComboBox();
 		language->addItem("(System)"); // 0
 		language->addItem("English");  // 1

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	qRegisterMetaType<QList<QString>>("QList<QString>");
 	qRegisterMetaType<BmsonIO::BmsonVersion>("BmsonIO::BmsonVersion");
 
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    //QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
 	Q_INIT_RESOURCE(bmsone);
 
@@ -53,12 +53,12 @@ App::App(int argc, char *argv[])
 	}
 
 	QTranslator *qtTranslator = new QTranslator(this);
-	if (qtTranslator->load(locale, "qt", "_", QLibraryInfo::location(QLibraryInfo::TranslationsPath))){
+    if (qtTranslator->load(locale, "qt", "_", QLibraryInfo::path(QLibraryInfo::TranslationsPath))){
 		installTranslator(qtTranslator);
 	}
 
 	QTranslator *qtBaseTranslator = new QTranslator(this);
-	if (qtBaseTranslator->load("qtbase_" + locale, QLibraryInfo::location(QLibraryInfo::TranslationsPath))){
+    if (qtBaseTranslator->load("qtbase_" + locale, QLibraryInfo::path(QLibraryInfo::TranslationsPath))){
 		installTranslator(qtBaseTranslator);
 	}
 

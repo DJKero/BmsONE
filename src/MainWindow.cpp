@@ -71,7 +71,7 @@ MainWindow::MainWindow(QSettings *settings)
 	QObject::connect(actionFileSaveAs, SIGNAL(triggered()), this, SLOT(FileSaveAs()));
 
 	actionFileMasterOut = new QAction(tr("Export WAV..."), this);
-	actionFileMasterOut->setShortcut(Qt::ShiftModifier + Qt::Key_F5);
+    actionFileMasterOut->setShortcut(Qt::ShiftModifier | Qt::Key_F5);
 	SharedUIHelper::RegisterGlobalShortcut(actionFileMasterOut);
 	QObject::connect(actionFileMasterOut, SIGNAL(triggered(bool)), this, SLOT(MasterOut()));
 
@@ -135,31 +135,31 @@ MainWindow::MainWindow(QSettings *settings)
 
 	actionEditModeEdit = new QAction(tr("Edit Mode"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditModeEdit);
-	actionEditModeEdit->setShortcut(Qt::ControlModifier + Qt::Key_1);
+    actionEditModeEdit->setShortcut(Qt::ControlModifier | Qt::Key_1);
 
 	actionEditModeWrite = new QAction(tr("Write Mode"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditModeWrite);
-	actionEditModeWrite->setShortcut(Qt::ControlModifier + Qt::Key_2);
+    actionEditModeWrite->setShortcut(Qt::ControlModifier | Qt::Key_2);
 
 	actionEditModeInteractive = new QAction(tr("Interactive Mode"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditModeInteractive);
-	actionEditModeInteractive->setShortcut(Qt::ControlModifier + Qt::Key_3);
+    actionEditModeInteractive->setShortcut(Qt::ControlModifier | Qt::Key_3);
 
 	actionEditLockCreation = new QAction(tr("Lock Note Creation"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditLockCreation);
-	actionEditLockCreation->setShortcut(Qt::AltModifier + Qt::ShiftModifier + Qt::Key_N);
+    actionEditLockCreation->setShortcut(Qt::AltModifier | Qt::ShiftModifier | Qt::Key_N);
 
 	actionEditLockDeletion = new QAction(tr("Lock Note Deletion"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditLockDeletion);
-	actionEditLockDeletion->setShortcut(Qt::AltModifier + Qt::ShiftModifier + Qt::Key_D);
+    actionEditLockDeletion->setShortcut(Qt::AltModifier | Qt::ShiftModifier | Qt::Key_D);
 
 	actionEditLockVerticalMove = new QAction(tr("Lock Vertical Move"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditLockVerticalMove);
-	actionEditLockVerticalMove->setShortcut(Qt::AltModifier + Qt::ShiftModifier + Qt::Key_V);
+    actionEditLockVerticalMove->setShortcut(Qt::AltModifier | Qt::ShiftModifier | Qt::Key_V);
 
 	actionEditPlay = new QAction(tr("Play"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditPlay);
-	actionEditPlay->setShortcut(Qt::ControlModifier + Qt::Key_P);
+    actionEditPlay->setShortcut(Qt::ControlModifier | Qt::Key_P);
 
 	actionEditClearMasterCache = new QAction(tr("Clear Master Cache"), this);
 	SharedUIHelper::RegisterGlobalShortcut(actionEditClearMasterCache);
@@ -177,11 +177,11 @@ MainWindow::MainWindow(QSettings *settings)
 	connect(actionViewFullScreen, SIGNAL(triggered()), this, SLOT(ViewFullScreen()));
 
 	actionViewSnapToGrid = new QAction(tr("Snap to Grid"), this);
-	actionViewSnapToGrid->setShortcut(Qt::ControlModifier + Qt::Key_T);
+    actionViewSnapToGrid->setShortcut(Qt::ControlModifier | Qt::Key_T);
 	SharedUIHelper::RegisterGlobalShortcut(actionViewSnapToGrid);
 
 	actionViewDarkenNotesInInactiveChannels = new QAction(tr("Darken Notes in Inactive Channels"), this);
-	actionViewDarkenNotesInInactiveChannels->setShortcut(Qt::ControlModifier + Qt::Key_D);
+    actionViewDarkenNotesInInactiveChannels->setShortcut(Qt::ControlModifier | Qt::Key_D);
 	SharedUIHelper::RegisterGlobalShortcut(actionViewDarkenNotesInInactiveChannels);
 
 	actionViewZoomIn = new QAction(tr("Zoom In"), this);
@@ -193,11 +193,11 @@ MainWindow::MainWindow(QSettings *settings)
 	SharedUIHelper::RegisterGlobalShortcut(actionViewZoomOut);
 
 	actionViewZoomReset = new QAction(tr("Reset", "Zoom"), this);
-	actionViewZoomReset->setShortcut(Qt::ControlModifier + Qt::Key_0);
+    actionViewZoomReset->setShortcut(Qt::ControlModifier | Qt::Key_0);
 	SharedUIHelper::RegisterGlobalShortcut(actionViewZoomReset);
 
 	actionChannelNew = new QAction(tr("Add..."), this);
-	actionChannelNew->setShortcut(Qt::ControlModifier + Qt::ShiftModifier + Qt::Key_N);
+    actionChannelNew->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_N);
 	SharedUIHelper::RegisterGlobalShortcut(actionChannelNew);
 	connect(actionChannelNew, SIGNAL(triggered()), this, SLOT(ChannelNew()));
 
@@ -212,12 +212,12 @@ MainWindow::MainWindow(QSettings *settings)
 	connect(actionChannelNext, SIGNAL(triggered()), this, SLOT(ChannelNext()));
 
 	actionChannelMoveLeft = new QAction(tr("Move Left"), this);
-	actionChannelMoveLeft->setShortcut(Qt::ControlModifier + Qt::AltModifier + Qt::Key_Left);
+    actionChannelMoveLeft->setShortcut(Qt::ControlModifier | Qt::AltModifier | Qt::Key_Left);
 	SharedUIHelper::RegisterGlobalShortcut(actionChannelMoveLeft);
 	connect(actionChannelMoveLeft, SIGNAL(triggered()), this, SLOT(ChannelMoveLeft()));
 
 	actionChannelMoveRight = new QAction(tr("Move Right"), this);
-	actionChannelMoveRight->setShortcut(Qt::ControlModifier + Qt::AltModifier + Qt::Key_Right);
+    actionChannelMoveRight->setShortcut(Qt::ControlModifier | Qt::AltModifier | Qt::Key_Right);
 	SharedUIHelper::RegisterGlobalShortcut(actionChannelMoveRight);
 	connect(actionChannelMoveRight, SIGNAL(triggered()), this, SLOT(ChannelMoveRight()));
 

@@ -19,7 +19,7 @@ PrefBmsPage::PrefBmsPage(QWidget *parent)
 		grid->addWidget(new QLabel(tr("Game Mode:")), 3, 0, Qt::AlignRight);
 		{
 			auto gameModeLayout = new QVBoxLayout();
-			gameModeLayout->setMargin(0);
+            gameModeLayout->setContentsMargins(0,0,0,0);
 			gameModeLayout->addWidget(trustPlayerCommand = new QCheckBox(tr("Trust #PLAYER command")));
 			gameModeLayout->addWidget(ignoreExtension = new QCheckBox(tr("Ignore file extension")));
 			gameModeLayout->addWidget(preferExModes = new QCheckBox(tr("Prefer 7/14/9key to 5/10/5key.")));

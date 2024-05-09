@@ -24,7 +24,7 @@ NoteEditView::NoteEditView(MainWindow *mainWindow)
 	icon->setPixmap(SymbolIconManager::GetIcon(SymbolIconManager::Icon::SoundNote).pixmap(UIUtil::ToolBarIconSize, QIcon::Normal));
 	{
 		auto *captionLayout = new QHBoxLayout();
-		captionLayout->setMargin(0);
+        captionLayout->setContentsMargins(0,0,0,0);
 		captionLayout->addWidget(icon);
 		captionLayout->addWidget(message = new QLabel(), 1);
 		layout->addRow(captionLayout);
@@ -248,6 +248,6 @@ void NoteEditView::ExtraFieldsEscPressed()
 void NoteEditView::UpdateFormGeom()
 {
 	Form()->setGeometry(0, 0, Form()->width(), 33333);
-	Form()->setGeometry(0, 0, Form()->width(), dummy->y()+formLayout->spacing()+formLayout->margin());
+    Form()->setGeometry(0, 0, Form()->width(), dummy->y()+formLayout->spacing()+formLayout->contentsMargins().top());
 }
 

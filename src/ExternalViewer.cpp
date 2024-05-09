@@ -175,10 +175,9 @@ void ExternalViewer::RunCommand(QString path, QString argument, QString executeD
 	process->setNativeArguments(argument);
 	process->start();
 #else
-    QString program = QString("%1").arg(path);
-    QStringList arguments = argument.split(" ", Qt::SkipEmptyParts, Qt::CaseInsensitive);
-    qDebug().noquote() << "Run command: " << program << " " << arguments;
-    process->start(program, arguments);
+    QString command = QString("\"%1\" %2").arg(path).arg(argument);
+    qDebug().noquote() << "Run command: " << command;
+    process->startCommand(command);
 #endif
 	if (process->state() == QProcess::NotRunning){
 		QMessageBox::warning(mainWindow, tr("Error"), tr("Failed to run the viewer."));
@@ -188,11 +187,11 @@ void ExternalViewer::RunCommand(QString path, QString argument, QString executeD
 QString ExternalViewer::EvalArgument(QString argumentFormat, QMap<QString, QString> env)
 {
 	//QRegExp escapedDollar("\\\\\\$");
-	QRegExp variable("\\$\\(([\\_a-zA-Z][\\_a-zA-Z0-9]*)\\)");
+    QRegularExpression variable("\\$\\(([\\_a-zA-Z][\\_a-zA-Z0-9]*)\\)");
 	QString result;
     int pos = 0, posnext; //, esc;
 	//qDebug().noquote() << "Eval: " << argumentFormat;
-	while ((posnext = variable.indexIn(argumentFormat, pos)) != -1){
+    while ((posnext = variable.match(argumentFormat, pos).capturedStart()) != -1){
 		/*
 		esc = escapedDollar.indexIn(argumentFormat, pos);
 		if (esc >= 0 && esc == posnext - 1){
@@ -204,8 +203,8 @@ QString ExternalViewer::EvalArgument(QString argumentFormat, QMap<QString, QStri
 		*/
 		result += argumentFormat.mid(pos, posnext-pos);
 		pos = posnext;
-		pos += variable.matchedLength();
-		QString var = variable.cap(1);
+        pos += variable.match(argumentFormat, pos).capturedLength();
+        QString var = variable.match(argumentFormat, pos).captured(1);
 		result += env.contains(var) ? env[var] : "";
 	}
 	result += argumentFormat.mid(pos);

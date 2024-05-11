@@ -15,22 +15,22 @@ void ScalarRegion::Clear()
 
 bool ScalarRegion::IsEmpty() const
 {
-	return cregs.begin()+1 == cregs.end()-1;
+    return std::next(cregs.begin()) == std::prev(cregs.end());
 }
 
 bool ScalarRegion::NotEmpty() const
 {
-	return cregs.begin()+1 != cregs.end()-1;
+    return std::next(cregs.begin()) != std::prev(cregs.end());
 }
 
 ScalarRegion::Iterator ScalarRegion::Begin()
 {
-	return Iterator(this, cregs.begin()+1);
+    return Iterator(this, std::next(cregs.begin()));
 }
 
 ScalarRegion::Iterator ScalarRegion::End()
 {
-	return Iterator(this, cregs.end()-1);
+    return Iterator(this, std::prev(cregs.end()));
 }
 
 ScalarRegion &ScalarRegion::Union(KeyType t0, KeyType t1)
@@ -114,13 +114,13 @@ bool ScalarRegion::Iterator::IsEnd() const
 
 ScalarRegion::Iterator &ScalarRegion::Iterator::operator ++()
 {
-	i += 2;
+    i = std::next(i, 2);
 	return *this;
 }
 
 ScalarRegion::Iterator &ScalarRegion::Iterator::operator --()
 {
-	i -= 2;
+    i = std::prev(i, 2);
 	return *this;
 }
 
@@ -131,6 +131,6 @@ int ScalarRegion::Iterator::T0() const
 
 int ScalarRegion::Iterator::T1() const
 {
-	return (i+1).key();
+    return std::next(i).key();
 }
 

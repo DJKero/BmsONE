@@ -50,7 +50,7 @@ Document::~Document()
 
 void Document::Initialize()
 {
-	directory = QDir::root();
+    directory.setPath(QDir::root().absolutePath());
 
 	bmsonFields = BmsonIO::InitialBmson();
 	actualLength = 0;
@@ -70,7 +70,7 @@ void Document::LoadFile(QString filePath)
     // TODO: Return errors instead of exceptions.
     //
 
-	directory = QFileInfo(filePath).absoluteDir();
+    directory.setPath(QFileInfo(filePath).absolutePath());
 
 	QFile file(filePath);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -127,7 +127,7 @@ void Document::LoadFile(QString filePath)
 
 void Document::LoadBms(const Bms::Bms &bms)
 {
-	directory = QFileInfo(bms.path).absoluteDir();
+    directory.setPath(QFileInfo(bms.path).absolutePath());
 
 	bmsonFields = BmsonIO::InitialBmson();
 	actualLength = 0;
@@ -262,7 +262,7 @@ QString Document::GetRelativePath(QString filePath)
 {
 	QFileInfo fi(filePath);
 	if (directory.isRoot()){
-		directory = fi.absoluteDir();
+        directory.setPath(fi.absolutePath());
 		return fi.fileName();
 	}else{
 		return directory.relativeFilePath(filePath);
@@ -298,7 +298,7 @@ QStringList Document::FindTraversalFilePaths(const QStringList &filePaths) const
 	QDir dirTemp = directory;
 	for (auto path : filePaths){
 		if (dirTemp.isRoot()){
-			dirTemp = QFileInfo(path).absoluteDir();
+            dirTemp.setPath(QFileInfo(path).absolutePath());
 		}else{
 			if (IsFilePathTraversalInternal(path)){
 				traversalPaths << path;
@@ -360,7 +360,7 @@ void Document::Save()
 void Document::SaveAs(const QString &filePath)
 {
 	this->filePath = filePath;
-	this->directory = QFileInfo(filePath).absoluteDir();
+    this->directory.setPath(QFileInfo(filePath).absolutePath());
 	Save();
 	emit FilePathChanged();
 }

@@ -119,7 +119,7 @@ QuasiModalEditableComboBox::QuasiModalEditableComboBox(QWidget *parent)
 	setEditable(true);
 
 	connect(this, SIGNAL(editTextChanged(QString)), this, SLOT(OnTextChanged()));
-	connect(this, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnCurrentIndexChanged(QString)));
+    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(OnCurrentIndexChanged(int)));
 }
 
 QuasiModalEditableComboBox::~QuasiModalEditableComboBox()
@@ -131,7 +131,7 @@ void QuasiModalEditableComboBox::OnTextChanged()
 	SharedUIHelper::SetGloballyDirtyEdit(this);
 }
 
-void QuasiModalEditableComboBox::OnCurrentIndexChanged([[maybe_unused]] QString s)
+void QuasiModalEditableComboBox::OnCurrentIndexChanged([[maybe_unused]] int index)
 {
 	emit EditingFinished();
 }

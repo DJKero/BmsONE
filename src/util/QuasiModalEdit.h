@@ -70,7 +70,7 @@ class QuasiModalEditableComboBox : public QComboBox, public IEdit
 
 private slots:
 	void OnTextChanged();
-	void OnCurrentIndexChanged(QString s);
+    void OnCurrentIndexChanged(int index);
 
 private:
 	virtual void keyPressEvent(QKeyEvent *event);
@@ -83,7 +83,7 @@ public:
 
 signals:
 	void EditingFinished();
-	void EscPressed();
+    void EscPressed();
 };
 
 

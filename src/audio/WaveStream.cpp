@@ -285,11 +285,6 @@ void OggStreamSource::SeekAbsolute(quint64 absoluteFrames)
 
 
 
-
-
-
-
-
 S16S44100StreamTransformer::S16S44100StreamTransformer(AudioStreamSource *src, QObject *parent)
 	: AudioStreamSource(parent)
 	, src(src)
@@ -401,276 +396,256 @@ void S16S44100StreamTransformer::Provide(qreal playHeadEnd)
 		   && src->GetCurrentFrame() < src->GetFrameCount())
 	{
 		quint64 sizeRead = src->Read(inputBuffer, InputBufferSize);
-		if (sizeRead == 0) break;
-        switch (fmt.bytesPerFrame()){
+        if (sizeRead == 0) break;
+        switch (fmt.channelConfig()){
+        case QAudioFormat::ChannelConfigMono:
+            switch (fmt.bytesPerFrame()){
+            // 8bit mono
             case 1:
                 switch (fmt.sampleFormat()){
-                    // 8bit unsigned int
-                    case QAudioFormat::UInt8:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
-                                for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
-                                    quint8 v = *b++;
-                                    short s = (short(v) - 128) * 256;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
-                                for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
-                                    quint8 l = *b++;
-                                    quint8 r = *b++;
-                                    short sl = (short(l) - 128) * 256;
-                                    short sr = (short(r) - 128) * 256;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    // 8bit signed int
-                    case QAudioFormat::Unknown:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
-                                for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
-                                    qint8 v = *b++;
-                                    short s = short(v) * 256;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
-                                for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
-                                    qint8 l = *b++;
-                                    qint8 r = *b++;
-                                    short sl = short(l) * 256;
-                                    short sr = short(r) * 256;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                // 8bit unsigned int mono
+                case QAudioFormat::UInt8:{
+                    const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
+                    for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
+                        quint8 v = *b++;
+                        short s = (short(v) - 128) * 256;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 8bit signed int mono
+                case QAudioFormat::Unknown:{
+                    const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
+                    for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
+                        qint8 v = *b++;
+                        short s = short(v) * 256;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
                 }
                 break;
+            // 16bit mono
             case 2:
                 switch (fmt.sampleFormat()){
-                    // 16bit unsigned int
-                    case QAudioFormat::Unknown:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
-                                for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
-                                    quint16 v = *b++;
-                                    int s = int(v) - 32768;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
-                                for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
-                                    quint16 l = *b++;
-                                    quint16 r = *b++;
-                                    int sl = int(l) - 32768;
-                                    int sr = int(r) - 32768;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    // 16bit signed int
-                    case QAudioFormat::Int16:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono:{
-                                const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
-                                for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
-                                    qint16 s = *b++;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
-                                for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
-                                    qint16 sl = *b++;
-                                    qint16 sr = *b++;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                // 16bit unsigned int mono
+                case QAudioFormat::Unknown: {
+                    const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
+                    for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
+                        quint16 v = *b++;
+                        int s = int(v) - 32768;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 16bit signed int mono
+                case QAudioFormat::Int16:{
+                    const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
+                    for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
+                        qint16 s = *b++;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
                 }
                 break;
+            // 24bit mono
             case 3:
                 switch (fmt.sampleFormat()){
-                    // 24bit unsigned int
-                    /*case QAudioFormat::NSampleFormats:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 3;
-                                for (int i=0; i<samples; i++){
-                                    qint16 s = (b[i*3+1] | (b[i*3+2] << 8)) - 32768;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 6;
-                                for (int i=0; i<samples; i++){
-                                    qint16 sl = (b[i*6+1] | (b[i*6+2] << 8)) - 32768;
-                                    qint16 sr = (b[i*6+4] | (b[i*6+5] << 8)) - 32768;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;*/
-                    // 24bit signed int
-                    case QAudioFormat::NSampleFormats:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 3;
-                                for (int i=0; i<samples; i++){
-                                    qint16 s = (qint16)(b[i*3+1] | (b[i*3+2] << 8));
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 6;
-                                for (int i=0; i<samples; i++){
-                                    qint16 sl = (qint16)(b[i*6+1] | (b[i*6+2] << 8));
-                                    qint16 sr = (qint16)(b[i*6+4] | (b[i*6+5] << 8));
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                // 24bit unsigned int mono
+                case QAudioFormat::Unknown:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 3;
+                    for (int i=0; i<samples; i++){
+                        qint16 s = (b[i*3+1] | (b[i*3+2] << 8)) - 32768;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                    break;
+                } break;
+                // 24bit signed int mono
+                case QAudioFormat::NSampleFormats:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 3;
+                    for (int i=0; i<samples; i++){
+                        qint16 s = (qint16)(b[i*3+1] | (b[i*3+2] << 8));
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
                 }
                 break;
+            // 32bit mono
             case 4:
                 switch (fmt.sampleFormat()){
-                    // 32bit float
-                    case QAudioFormat::Float:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const float *b = (const float*)inputBuffer;
-                                int samples = sizeRead / 4;
-                                for (int i=0; i<samples; i++){
-                                    qint16 s = b[i] * 32767.f;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo:{
-                                const float *b = (const float*)inputBuffer;
-                                int samples = sizeRead / 8;
-                                for (int i=0; i<samples; i++){
-                                    qint16 sl = b[i*2] * 32767.f;
-                                    qint16 sr = b[i*2+1] * 32767.f;
-                                    QAudioBuffer::S16S buf = QAudioBuffer::S16S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    // 32bit unsigned int
-                    /*case QAudioFormat::UnSignedInt:
-                        switch (src->GetFormat().channelCount()){
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                        }
-                        break;*/
-                    // 32bit signed int
-                    /*case QAudioFormat::SignedInt:
-                        switch (src->GetFormat().channelCount()){
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                        }
-                        break;*/
-                    default:
-                        break;
+                // 32bit float mono
+                case QAudioFormat::Float:{
+                    const float *b = (const float*)inputBuffer;
+                    int samples = sizeRead / 4;
+                    for (int i=0; i<samples; i++){
+                        qint16 s = b[i] * 32767.f;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 32bit unsigned int mono
+                // 32bit signed int mono
+                default:
+                    break;
                 }
                 break;
-		}
+            }
+            break; // end mono
+        case QAudioFormat::ChannelConfigStereo:
+            switch (fmt.bytesPerFrame()){
+            // 8bit stereo
+            case 1:
+                switch (fmt.sampleFormat()){
+                // 8bit unsigned int stereo
+                case QAudioFormat::UInt8:{
+                    const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
+                    for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
+                        quint8 l = *b++;
+                        quint8 r = *b++;
+                        short sl = (short(l) - 128) * 256;
+                        short sr = (short(r) - 128) * 256;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 8bit signed int stereo
+                case QAudioFormat::Unknown:{
+                    const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
+                    for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
+                        qint8 l = *b++;
+                        qint8 r = *b++;
+                        short sl = short(l) * 256;
+                        short sr = short(r) * 256;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
+                }
+                break;
+            // 16bit stereo
+            case 2:
+                switch (fmt.sampleFormat()){
+                // 16bit unsigned int stereo
+                case QAudioFormat::Unknown: {
+                    const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
+                    for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
+                        quint16 l = *b++;
+                        quint16 r = *b++;
+                        int sl = int(l) - 32768;
+                        int sr = int(r) - 32768;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 16bit signed int stereo
+                case QAudioFormat::Int16:{
+                    const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
+                    for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
+                        qint16 sl = *b++;
+                        qint16 sr = *b++;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
+                }
+                break;
+            // 24bit stereo
+            case 3:
+                switch (fmt.sampleFormat()){
+                // 24bit unsigned int stereo
+                case QAudioFormat::Unknown:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 6;
+                    for (int i=0; i<samples; i++){
+                        qint16 sl = (b[i*6+1] | (b[i*6+2] << 8)) - 32768;
+                        qint16 sr = (b[i*6+4] | (b[i*6+5] << 8)) - 32768;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 24bit signed int stereo
+                case QAudioFormat::NSampleFormats:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 6;
+                    for (int i=0; i<samples; i++){
+                        qint16 sl = (qint16)(b[i*6+1] | (b[i*6+2] << 8));
+                        qint16 sr = (qint16)(b[i*6+4] | (b[i*6+5] << 8));
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
+                }
+                break;
+            // 32bit stereo
+            case 4:
+                switch (fmt.sampleFormat()){
+                // 32bit float stereo
+                case QAudioFormat::Float:{
+                    const float *b = (const float*)inputBuffer;
+                    int samples = sizeRead / 8;
+                    for (int i=0; i<samples; i++){
+                        qint16 sl = b[i*2] * 32767.f;
+                        qint16 sr = b[i*2+1] * 32767.f;
+                        QAudioBuffer::S16S buf = QAudioBuffer::S16S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 32bit unsigned int stereo
+                // 32bit signed int stereo
+                default:
+                    break;
+                }
+                break;
+            }
+            break; // end stereo
+        default:
+            break;
+        }
 	}
 }
 
@@ -683,9 +658,6 @@ void S16S44100StreamTransformer::Forget(qreal playHeadEnd)
 		auxBuffer.removeFirst();
 	}
 }
-
-
-
 
 
 
@@ -801,274 +773,254 @@ void F32S44100StreamTransformer::Provide(qreal playHeadEnd)
 	{
 		quint64 sizeRead = src->Read(inputBuffer, InputBufferSize);
 		if (sizeRead == 0) break;
-        switch (fmt.bytesPerFrame()){
+        switch (fmt.channelConfig()){
+        case QAudioFormat::ChannelConfigMono:
+            switch (fmt.bytesPerFrame()){
+            // 8bit mono
             case 1:
                 switch (fmt.sampleFormat()){
-                    // 8bit unsigned int
-                    case QAudioFormat::UInt8:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                    const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
-                                    for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
-                                        quint8 v = *b++;
-                                        float s = (short(v) - 128) / 128.f;
-                                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                        buf.setValue(QAudioFormat::FrontLeft, s);
-                                        buf.setValue(QAudioFormat::FrontRight, s);
-                                        auxBuffer.append(buf);
-                                    }
-                                    break;
-                                }
-                                case QAudioFormat::ChannelConfigStereo: {
-                                    const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
-                                    for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
-                                        quint8 l = *b++;
-                                        quint8 r = *b++;
-                                        float sl = (short(l) - 128) / 128.f;
-                                        float sr = (short(r) - 128) / 128.f;
-                                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                        buf.setValue(QAudioFormat::FrontLeft, sl);
-                                        buf.setValue(QAudioFormat::FrontRight, sr);
-                                        auxBuffer.append(buf);
-                                    }
-                                    break;
-                                }
-                                default:
-                                    break;
-                        }
-                        break;
-                    // 8bit signed int
-                    case QAudioFormat::Unknown:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
-                                for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
-                                    qint8 v = *b++;
-                                    float s = float(v) / 128.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
-                                for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
-                                    qint8 l = *b++;
-                                    qint8 r = *b++;
-                                    float sl = float(l) * 128.f;
-                                    float sr = float(r) * 128.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                // 8bit unsigned int mono
+                case QAudioFormat::UInt8:{
+                    const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
+                    for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
+                        quint8 v = *b++;
+                        float s = (short(v) - 128) / 128.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 8bit signed int mono
+                case QAudioFormat::Unknown:{
+                    const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
+                    for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
+                        qint8 v = *b++;
+                        float s = float(v) / 128.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
                 }
                 break;
+            // 16bit mono
             case 2:
                 switch (fmt.sampleFormat()){
-                    // 16bit unsigned int
-                    case QAudioFormat::Unknown:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
-                                for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
-                                    quint16 v = *b++;
-                                    float s = (int(v) - 32768) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
-                                for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
-                                    quint16 l = *b++;
-                                    quint16 r = *b++;
-                                    float sl = (int(l) - 32768) / 32768.f;
-                                    float sr = (int(r) - 32768) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    // 16bit signed int
-                    case QAudioFormat::Int16:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono:{
-                                const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
-                                for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
-                                    float s = (*b++) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
-                                for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
-                                    float sl = (*b++) / 32768.f;
-                                    float sr = (*b++) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                // 16bit unsigned int mono
+                case QAudioFormat::Unknown: {
+                    const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
+                    for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
+                        quint16 v = *b++;
+                        float s = (int(v) - 32768) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 16bit signed int mono
+                case QAudioFormat::Int16:{
+                    const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
+                    for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
+                        float s = (*b++) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
                 }
                 break;
+            // 24bit mono
             case 3:
                 switch (fmt.sampleFormat()){
-                    // 24bit unsigned int
-                    /*case QAudioFormat::NSampleFormats:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 3;
-                                for (int i=0; i<samples; i++){
-                                    float s = ((b[i*3+1] | (b[i*3+2] << 8 )) - 32768) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 6;
-                                for (int i=0; i<samples; i++){
-                                    float sl = ((b[i*6+1] | (b[i*6+2] << 8 )) - 32768) / 32768.f;
-                                    float sr = ((b[i*6+4] | (b[i*6+5] << 8 )) - 32768) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;*/
-                    case QAudioFormat::NSampleFormats:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 3;
-                                for (int i=0; i<samples; i++){
-                                    float s = (qint16)(b[i*3+1] | (b[i*3+2] << 8 )) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo: {
-                                const quint8 *b = (const quint8*)inputBuffer;
-                                int samples = sizeRead / 6;
-                                for (int i=0; i<samples; i++){
-                                    float sl = (qint16)(b[i*6+1] | (b[i*6+2] << 8 )) / 32768.f;
-                                    float sr = (qint16)(b[i*6+4] | (b[i*6+5] << 8 )) / 32768.f;
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    default:
-                        break;
+                // 24bit unsigned int mono
+                case QAudioFormat::Unknown:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 3;
+                    for (int i=0; i<samples; i++){
+                        float s = ((b[i*3+1] | (b[i*3+2] << 8 )) - 32768) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 24bit signed int mono
+                case QAudioFormat::NSampleFormats:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 3;
+                    for (int i=0; i<samples; i++){
+                        float s = (qint16)(b[i*3+1] | (b[i*3+2] << 8 )) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
                 }
                 break;
+            // 32bit mono
             case 4:
                 switch (fmt.sampleFormat()){
-                    // 32bit float
-                    case QAudioFormat::Float:
-                        switch (fmt.channelConfig()){
-                            case QAudioFormat::ChannelConfigMono: {
-                                const float *b = (const float*)inputBuffer;
-                                int samples = sizeRead / 4;
-                                for (int i=0; i<samples; i++){
-                                    float s = b[i];
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, s);
-                                    buf.setValue(QAudioFormat::FrontRight, s);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            case QAudioFormat::ChannelConfigStereo:{
-                                const float *b = (const float*)inputBuffer;
-                                int samples = sizeRead / 8;
-                                for (int i=0; i<samples; i++){
-                                    float sl = b[i*2];
-                                    float sr = b[i*2+1];
-                                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
-                                    buf.setValue(QAudioFormat::FrontLeft, sl);
-                                    buf.setValue(QAudioFormat::FrontRight, sr);
-                                    auxBuffer.append(buf);
-                                }
-                                break;
-                            }
-                            default:
-                                break;
-                        }
-                        break;
-                    // 32bit unsigned int
-                    /*case QAudioFormat::UnSignedInt:
-                        switch (src->GetFormat().channelCount()){
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                        }
-                        break;*/
-                    // 32bit signed int
-                    /*case QAudioFormat::SignedInt:
-                        switch (src->GetFormat().channelCount()){
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                        }
-                        break;*/
-                    default:
-                        break;
+                // 32bit float mono
+                case QAudioFormat::Float:{
+                    const float *b = (const float*)inputBuffer;
+                    int samples = sizeRead / 4;
+                    for (int i=0; i<samples; i++){
+                        float s = b[i];
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, s);
+                        buf.setValue(QAudioFormat::FrontRight, s);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 32bit unsigned int mono
+                // 32bit signed int mono
+                default:
+                    break;
                 }
                 break;
-		}
+            }
+            break; // end mono
+        case QAudioFormat::ChannelConfigStereo:
+            switch (fmt.bytesPerFrame()){
+            // 8bit stereo
+            case 1:
+                switch (fmt.sampleFormat()){
+                // 8bit unsigned int stereo
+                case QAudioFormat::UInt8:{
+                    const quint8 *be = (const quint8*)(inputBuffer + sizeRead);
+                    for (const quint8 *b = (const quint8*)inputBuffer; b<be; ){
+                        quint8 l = *b++;
+                        quint8 r = *b++;
+                        float sl = (short(l) - 128) / 128.f;
+                        float sr = (short(r) - 128) / 128.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 8bit signed int stereo
+                case QAudioFormat::Unknown:{
+                    const qint8 *be = (const qint8*)(inputBuffer + sizeRead);
+                    for (const qint8 *b = (const qint8*)inputBuffer; b<be; ){
+                        qint8 l = *b++;
+                        qint8 r = *b++;
+                        float sl = float(l) * 128.f;
+                        float sr = float(r) * 128.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
+                }
+                break;
+            // 16bit stereo
+            case 2:
+                switch (fmt.sampleFormat()){
+                // 16bit unsigned int stereo
+                case QAudioFormat::Unknown: {
+                    const quint16 *be = (const quint16*)(inputBuffer + sizeRead);
+                    for (const quint16 *b = (const quint16*)inputBuffer; b<be; ){
+                        quint16 l = *b++;
+                        quint16 r = *b++;
+                        float sl = (int(l) - 32768) / 32768.f;
+                        float sr = (int(r) - 32768) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 16bit signed int stereo
+                case QAudioFormat::Int16:{
+                    const qint16 *be = (const qint16*)(inputBuffer + sizeRead);
+                    for (const qint16 *b = (const qint16*)inputBuffer; b<be; ){
+                        float sl = (*b++) / 32768.f;
+                        float sr = (*b++) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
+                }
+                break;
+            // 24bit stereo
+            case 3:
+                switch (fmt.sampleFormat()){
+                // 24bit unsigned int stereo
+                case QAudioFormat::Unknown:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 6;
+                    for (int i=0; i<samples; i++){
+                        float sl = ((b[i*6+1] | (b[i*6+2] << 8 )) - 32768) / 32768.f;
+                        float sr = ((b[i*6+4] | (b[i*6+5] << 8 )) - 32768) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 24bit signed int stereo
+                case QAudioFormat::NSampleFormats:{
+                    const quint8 *b = (const quint8*)inputBuffer;
+                    int samples = sizeRead / 6;
+                    for (int i=0; i<samples; i++){
+                        float sl = (qint16)(b[i*6+1] | (b[i*6+2] << 8 )) / 32768.f;
+                        float sr = (qint16)(b[i*6+4] | (b[i*6+5] << 8 )) / 32768.f;
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                default:
+                    break;
+                }
+                break;
+            // 32bit stereo
+            case 4:
+                switch (fmt.sampleFormat()){
+                // 32bit float stereo
+                case QAudioFormat::Float:{
+                    const float *b = (const float*)inputBuffer;
+                    int samples = sizeRead / 8;
+                    for (int i=0; i<samples; i++){
+                        float sl = b[i*2];
+                        float sr = b[i*2+1];
+                        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                        buf.setValue(QAudioFormat::FrontLeft, sl);
+                        buf.setValue(QAudioFormat::FrontRight, sr);
+                        auxBuffer.append(buf);
+                    }
+                } break;
+                // 32bit unsigned int stereo
+                // 32bit signed int stereo
+                default:
+                    break;
+                }
+                break;
+            }
+            break; // end stereo
+        default:
+            break;
+        }
 	}
 }
 
@@ -1085,203 +1037,242 @@ void F32S44100StreamTransformer::Forget(qreal playHeadEnd)
 
 
 
-
-
-
-
-
-
 void AudioStreamSource::EnumerateAllAsFloat(std::function<void(float)> whenMonoral, std::function<void(float, float)> whenStereo)
 {
 	static const quint64 BufferSize = 4096;
 	char *buffer = new char[BufferSize];
-    switch (format.bytesPerFrame()){
+
+    switch (format.channelConfig()){
+    case QAudioFormat::ChannelConfigMono:
+        switch (format.bytesPerFrame()){
+        // 8bit mono
         case 1:
-            switch (format.channelConfig()){
-                case QAudioFormat::ChannelConfigMono:
-                    switch (format.sampleFormat()){
-                        // 8bit unsigned int
-                        case QAudioFormat::UInt8:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const quint8 *)(buffer + sizeRead);
-                                for (auto b = (const quint8 *)buffer; b<be; ){
-                                    quint8 v = *b++;
-                                    float vv = (float)((int)v - 128) / 128.0f;
-                                    whenMonoral(vv);
-                                }
-                            }
-                            break;
-                        // 8bit signed int
-                        case QAudioFormat::Unknown:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const qint8 *)(buffer + sizeRead);
-                                for (auto b = (const qint8 *)buffer; b<be; ){
-                                    qint8 v = *b++;
-                                    float vv = (float)v / 128.0f;
-                                    whenMonoral(vv);
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+            switch (format.sampleFormat()){
+            // 8bit unsigned int mono
+            case QAudioFormat::UInt8:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const quint8 *)(buffer + sizeRead);
+                    for (auto b = (const quint8 *)buffer; b<be; ){
+                        quint8 v = *b++;
+                        float vv = (float)((int)v - 128) / 128.0f;
+                        whenMonoral(vv);
                     }
-                    break;
-                case QAudioFormat::ChannelConfigStereo:
-                    switch (format.sampleFormat()){
-                        // 8bit unsigned int
-                        case QAudioFormat::UInt8:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const quint8 *)(buffer + sizeRead);
-                                for (auto b = (const quint8 *)buffer; b<be; ){
-                                    quint8 l = *b++;
-                                    quint8 r = *b++;
-                                    whenStereo(float((int)l - 128) / 128.0f, float((int)r-128) / 128.0f);
-                                }
-                            }
-                            break;
-                        // 8bit signed int
-                        case QAudioFormat::Unknown:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const qint8 *)(buffer + sizeRead);
-                                for (auto b = (const qint8 *)buffer; b<be; ){
-                                    qint8 l = *b++;
-                                    qint8 r = *b++;
-                                    whenStereo((float)l / 128.0f, (float)r / 128.0f);
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                }
+                break;
+            // 8bit signed int mono
+            case QAudioFormat::Unknown:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const qint8 *)(buffer + sizeRead);
+                    for (auto b = (const qint8 *)buffer; b<be; ){
+                        qint8 v = *b++;
+                        float vv = (float)v / 128.0f;
+                        whenMonoral(vv);
                     }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
             break;
+        // 16bit mono
         case 2:
-            switch (format.channelConfig()){
-                case QAudioFormat::ChannelConfigMono:
-                    switch (format.sampleFormat()){
-                        // 16bit unsigned int
-                        case QAudioFormat::Unknown:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const quint16*)(buffer + sizeRead);
-                                for (auto b = (const quint16 *)buffer; b<be; ){
-                                    quint16 v = *b++;
-                                    whenMonoral(float((int)v-32768) / 32768.0f);
-                                }
-                            }
-                            break;
-                        // 16bit signed int
-                        case QAudioFormat::Int16:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const qint16*)(buffer + sizeRead);
-                                for (auto b = (const qint16*)buffer; b<be; ){
-                                    qint16 v = *b++;
-                                    whenMonoral((float)v / 32768.0f);
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+            switch (format.sampleFormat()){
+            // 16bit unsigned int mono
+            case QAudioFormat::Unknown:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const quint16*)(buffer + sizeRead);
+                    for (auto b = (const quint16 *)buffer; b<be; ){
+                        quint16 v = *b++;
+                        whenMonoral(float((int)v-32768) / 32768.0f);
                     }
-                    break;
-                case QAudioFormat::ChannelConfigStereo:
-                    switch (format.sampleFormat()){
-                        // 16bit unsigned int
-                        case QAudioFormat::Unknown:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const quint16*)(buffer + sizeRead);
-                                for (auto b = (const quint16 *)buffer; b<be; ){
-                                    quint16 l = *b++;
-                                    quint16 r = *b++;
-                                    whenStereo(float((int)l-32768) / 32768.0f, float((int)r-32768) / 32768.0f);
-                                }
-                            }
-                            break;
-                        // 16bit signed int
-                        case QAudioFormat::Int16:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const qint16*)(buffer + sizeRead);
-                                for (auto b = (const qint16*)buffer; b<be; ){
-                                    qint16 l = *b++;
-                                    qint16 r = *b++;
-                                    whenStereo((float)l / 32768.0f, (float)r / 32768.0f);
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+                }
+                break;
+            // 16bit signed int mono
+            case QAudioFormat::Int16:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const qint16*)(buffer + sizeRead);
+                    for (auto b = (const qint16*)buffer; b<be; ){
+                        qint16 v = *b++;
+                        whenMonoral((float)v / 32768.0f);
                     }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
             break;
+        // 24bit mono
         case 3:
-            switch (format.channelConfig()){
-                case QAudioFormat::ChannelConfigMono:
-                    switch (format.sampleFormat()){
-                        // 24bit unsigned int
-                        /*case QAudioFormat::NSampleFormats:
+            switch (format.sampleFormat()){
+            // 24bit unsigned int mono
+            case QAudioFormat::Unknown:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const quint8*)(buffer + sizeRead);
+                    for (auto b = (const quint8 *)buffer; b<be; ){
+                        b++;
+                        int v = *((const quint16* &)b)++;
+                        whenMonoral(float(v-32768) / 32768.0f);
+                    }
+                }
+                break;
+            // 24bit signed int mono
+            case QAudioFormat::NSampleFormats:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const qint8*)(buffer + sizeRead);
+                    for (auto b = (const qint8*)buffer; b<be; ){
+                        b++;
+                        qint16 v = *((const qint16* &)b)++;
+                        whenMonoral((float)v / 32768.0f);
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+        // 32bit mono
+        case 4:
+            switch (format.sampleFormat()){
+            // 32bit float mono
+            case QAudioFormat::Float:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const float*)(buffer + sizeRead);
+                    for (auto b = (const float *)buffer; b<be; ){
+                        float v = *b++;
+                        whenMonoral(v);
+                    }
+                }
+                break;
+            // 32bit unsigned int
+            /*case QAudioFormat::UnSignedInt:
                             while (GetRemainingFrameCount() > 0){
                                 const quint64 sizeRead = Read(buffer, BufferSize);
                                 if (sizeRead == 0)
                                     break;
-                                auto be = (const quint8*)(buffer + sizeRead);
-                                for (auto b = (const quint8 *)buffer; b<be; ){
-                                    b++;
-                                    int v = *((const quint16* &)b)++;
-                                    whenMonoral(float(v-32768) / 32768.0f);
+                                auto be = (const quint32*)(buffer + sizeRead);
+                                for (auto b = (const quint32 *)buffer; b<be; ){
+                                    quint32 v = *b++;
+                                    whenMonoral(float(qint32(v-0x80000000)) / 0x7FFFFFFF);
                                 }
                             }
                             break;*/
-                        // 24bit signed int
-                        case QAudioFormat::NSampleFormats:
+            // 32 bit signed int
+            /*case QAudioFormat::SignedInt:
                             while (GetRemainingFrameCount() > 0){
                                 const quint64 sizeRead = Read(buffer, BufferSize);
                                 if (sizeRead == 0)
                                     break;
-                                auto be = (const qint8*)(buffer + sizeRead);
-                                for (auto b = (const qint8*)buffer; b<be; ){
-                                    b++;
-                                    qint16 v = *((const qint16* &)b)++;
-                                    whenMonoral((float)v / 32768.0f);
+                                auto be = (const qint32*)(buffer + sizeRead);
+                                for (auto b = (const qint32*)buffer; b<be; ){
+                                    qint32 v = *b++;
+                                    whenMonoral((float)v / 0x7FFFFFFF);
                                 }
                             }
-                            break;
-                        default:
-                            break;
+                            break;*/
+            default:
+                break;
+            }
+            break;
+        }
+        break;
+    case QAudioFormat::ChannelConfigStereo:
+        switch (format.bytesPerFrame()){
+        // 8bit stereo
+        case 2:
+            switch (format.sampleFormat()){
+            // 8bit unsigned int stereo
+            case QAudioFormat::UInt8:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const quint8 *)(buffer + sizeRead);
+                    for (auto b = (const quint8 *)buffer; b<be; ){
+                        quint8 l = *b++;
+                        quint8 r = *b++;
+                        whenStereo(float((int)l - 128) / 128.0f, float((int)r-128) / 128.0f);
                     }
-                    break;
-                case QAudioFormat::ChannelConfigStereo:
-                    switch (format.sampleFormat()){
-                        // 24bit unsigned int
-                        /*case QAudioFormat::NSampleFormats:
+                }
+                break;
+            // 8bit signed int stereo
+            case QAudioFormat::Unknown:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const qint8 *)(buffer + sizeRead);
+                    for (auto b = (const qint8 *)buffer; b<be; ){
+                        qint8 l = *b++;
+                        qint8 r = *b++;
+                        whenStereo((float)l / 128.0f, (float)r / 128.0f);
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+        // 16bit stereo
+        case 4:
+            switch (format.sampleFormat()){
+            // 16bit unsigned int stereo
+            case QAudioFormat::Unknown:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const quint16*)(buffer + sizeRead);
+                    for (auto b = (const quint16 *)buffer; b<be; ){
+                        quint16 l = *b++;
+                        quint16 r = *b++;
+                        whenStereo(float((int)l-32768) / 32768.0f, float((int)r-32768) / 32768.0f);
+                    }
+                }
+                break;
+            // 16bit signed int stereo
+            case QAudioFormat::Int16:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const qint16*)(buffer + sizeRead);
+                    for (auto b = (const qint16*)buffer; b<be; ){
+                        qint16 l = *b++;
+                        qint16 r = *b++;
+                        whenStereo((float)l / 32768.0f, (float)r / 32768.0f);
+                    }
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+        // 24bit stereo
+        case 6:
+            switch (format.sampleFormat()){
+            // 24bit unsigned int stereo
+            /*case QAudioFormat::NSampleFormats:
                             while (GetRemainingFrameCount() > 0){
                                 const quint64 sizeRead = Read(buffer, BufferSize);
                                 if (sizeRead == 0)
@@ -1296,101 +1287,51 @@ void AudioStreamSource::EnumerateAllAsFloat(std::function<void(float)> whenMonor
                                 }
                             }
                             break;*/
-                        // 24bit signed int
-                        case QAudioFormat::NSampleFormats:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const qint8*)(buffer + sizeRead);
-                                for (auto b = (const qint8*)buffer; b<be; ){
-                                    b++;
-                                    qint16 ltm1 = *((const qint16* &)b)++;
-                                    b++;
-                                    qint16 rtm1 = *((const qint16* &)b)++;
-                                    //b++;
-                                    //qint16 ltm2 = *((const qint16* &)b)++;
-                                    //b++;
-                                    //qint16 rtm2 = *((const qint16* &)b)++;
-                                    whenStereo((float)ltm1 / 32768.0f, (float)rtm1 / 32768.0f);
-                                    //whenStereo((float)ltm2 / 32768.0f, (float)rtm2 / 32768.0f);
-                                    //lout.write(QString("%1\n").arg(ltm1).toLocal8Bit());
-                                }
-                            }
-                            break;
-                        default:
-                            break;
+            // 24bit signed int stereo
+            case QAudioFormat::NSampleFormats:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const qint8*)(buffer + sizeRead);
+                    for (auto b = (const qint8*)buffer; b<be; ){
+                        b++;
+                        qint16 ltm1 = *((const qint16* &)b)++;
+                        b++;
+                        qint16 rtm1 = *((const qint16* &)b)++;
+                        //b++;
+                        //qint16 ltm2 = *((const qint16* &)b)++;
+                        //b++;
+                        //qint16 rtm2 = *((const qint16* &)b)++;
+                        whenStereo((float)ltm1 / 32768.0f, (float)rtm1 / 32768.0f);
+                        //whenStereo((float)ltm2 / 32768.0f, (float)rtm2 / 32768.0f);
+                        //lout.write(QString("%1\n").arg(ltm1).toLocal8Bit());
                     }
-                    break;
-                default:
-                    break;
+                }
+                break;
+            default:
+                break;
             }
             break;
-        case 4:
-            switch (format.channelConfig()){
-                case QAudioFormat::ChannelConfigMono:
-                    switch (format.sampleFormat()){
-                        // 32bit float
-                        case QAudioFormat::Float:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const float*)(buffer + sizeRead);
-                                for (auto b = (const float *)buffer; b<be; ){
-                                    float v = *b++;
-                                    whenMonoral(v);
-                                }
-                            }
-                            break;
-                        // 32bit unsigned int
-                        /*case QAudioFormat::UnSignedInt:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const quint32*)(buffer + sizeRead);
-                                for (auto b = (const quint32 *)buffer; b<be; ){
-                                    quint32 v = *b++;
-                                    whenMonoral(float(qint32(v-0x80000000)) / 0x7FFFFFFF);
-                                }
-                            }
-                            break;*/
-                        // 32 bit signed int
-                        /*case QAudioFormat::SignedInt:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const qint32*)(buffer + sizeRead);
-                                for (auto b = (const qint32*)buffer; b<be; ){
-                                    qint32 v = *b++;
-                                    whenMonoral((float)v / 0x7FFFFFFF);
-                                }
-                            }
-                            break;*/
-                        default:
-                            break;
+        // 32bit stereo
+        case 8:
+            switch (format.sampleFormat()){
+            // 32bit float stereo
+            case QAudioFormat::Float:
+                while (GetRemainingFrameCount() > 0){
+                    const quint64 sizeRead = Read(buffer, BufferSize);
+                    if (sizeRead == 0)
+                        break;
+                    auto be = (const float*)(buffer + sizeRead);
+                    for (auto b = (const float *)buffer; b<be; ){
+                        float l = *b++;
+                        float r = *b++;
+                        whenStereo(l, r);
                     }
-                    break;
-                case QAudioFormat::ChannelConfigStereo:
-                    switch (format.sampleFormat()){
-                        // 32bit float
-                        case QAudioFormat::Float:
-                            while (GetRemainingFrameCount() > 0){
-                                const quint64 sizeRead = Read(buffer, BufferSize);
-                                if (sizeRead == 0)
-                                    break;
-                                auto be = (const float*)(buffer + sizeRead);
-                                for (auto b = (const float *)buffer; b<be; ){
-                                    float l = *b++;
-                                    float r = *b++;
-                                    whenStereo(l, r);
-                                }
-                            }
-                            break;
-                        // 32bit unsigned int
-                        /*case QAudioFormat::UnSignedInt:
+                }
+                break;
+            // 32bit unsigned int stereo
+            /*case QAudioFormat::UnSignedInt:
                             while (GetRemainingFrameCount() > 0){
                                 const quint64 sizeRead = Read(buffer, BufferSize);
                                 if (sizeRead == 0)
@@ -1403,8 +1344,8 @@ void AudioStreamSource::EnumerateAllAsFloat(std::function<void(float)> whenMonor
                                 }
                             }
                             break;*/
-                        // 32bit signed int
-                        /*case QAudioFormat::SignedInt:
+            // 32bit signed int stereo
+            /*case QAudioFormat::SignedInt:
                             while (GetRemainingFrameCount() > 0){
                                 const quint64 sizeRead = Read(buffer, BufferSize);
                                 if (sizeRead == 0)
@@ -1417,17 +1358,13 @@ void AudioStreamSource::EnumerateAllAsFloat(std::function<void(float)> whenMonor
                                 }
                             }
                             break;*/
-                        default:
-                            break;
-                    }
-                    break;
-                default:
-                    break;
+            default:
+                break;
             }
-            break;
+        }
+        break;
+    default:
+        break;
 	}
 	delete[] buffer;
 }
-
-
-

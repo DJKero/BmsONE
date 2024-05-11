@@ -465,7 +465,7 @@ void SoundChannelView::UpdateBackBuffer(const QRect &rect)
 		QMap<int, SoundNoteView*>::const_iterator inote = notes.upperBound(tBegin);
 		quint32 color;
 		if (inote != notes.begin()){
-            auto iprev = inote--;
+            auto iprev = std::prev(inote);
 			if ((*iprev)->GetNote().lane == 0){
 				color = 0xFF009900;
 			}else{

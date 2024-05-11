@@ -202,7 +202,7 @@ void ChannelInfoView::WaveSummaryUpdated()
 	WaveSummary summary = channel->GetWaveSummary();
 	if (summary.FrameCount > 0){
 		labelFormat->setText(QString("%1bit/%2ch/%3")
-                             .arg(summary.Format.bytesPerFrame())
+                                 .arg(std::clamp(summary.Format.sampleFormat()*8,0,32))
 							 .arg(summary.Format.channelCount())
 							 .arg(TextForSamplingRate(summary.Format.sampleRate())));
 		qreal sec = (qreal)summary.FrameCount / summary.Format.sampleRate();

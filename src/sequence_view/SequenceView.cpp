@@ -295,6 +295,7 @@ void SequenceView::ReplaceSkin(Skin *newSkin)
 					prop->SetValue(i);
 				});
 			}
+            delete group;
 			menuView->insertMenu(mainWindow->GetViewSkinSettingSeparator(), menu);
 			skinPropertyMenuItems.append(menu);
 			break;
@@ -967,9 +968,9 @@ QSet<int> SequenceView::FineGridsInRange(qreal tBegin, qreal tEnd)
 	if (!documentReady)
 		return QSet<int>();
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
+    const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
 	QSet<int> fineGridLines;
-    int prevBarLoc = ibar == bars.begin() ? -1 : (ibar--)->Location;
+    int prevBarLoc = ibar == bars.begin() ? -1 : (std::prev(ibar))->Location;
 	for (QMap<int, BarLine>::const_iterator b=ibar; ; prevBarLoc=b->Location, b++){
 		if (prevBarLoc < 0){
 			continue;
@@ -995,9 +996,9 @@ QSet<int> SequenceView::CoarseGridsInRange(qreal tBegin, qreal tEnd)
 	if (!documentReady)
 		return QSet<int>();
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
+    const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
 	QSet<int> coarseGridLines;
-    int prevBarLoc = ibar==bars.begin() ? -1 : (ibar--)->Location;
+    int prevBarLoc = ibar==bars.begin() ? -1 : (std::prev(ibar))->Location;
 	for (QMap<int, BarLine>::const_iterator b=ibar; ; prevBarLoc=b->Location, b++){
 		if (prevBarLoc < 0){
 			continue;
@@ -1036,11 +1037,11 @@ QMap<int, QPair<int, BarLine>> SequenceView::BarsInRange(qreal tBegin, qreal tEn
 int SequenceView::SnapToLowerFineGrid(qreal time) const
 {
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(time);
+    const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(time);
 	if (ibar == bars.begin()){
 		return time;
 	}
-    int prevBarLoc = (ibar--)->Location;
+    int prevBarLoc = (std::prev(ibar))->Location;
 	return int(prevBarLoc + fineGrid.NthGrid(resolution, fineGrid.GridNumber(resolution, time - prevBarLoc)) + 0.5);
 }
 
@@ -1051,7 +1052,7 @@ int SequenceView::SnapToUpperFineGrid(qreal time) const
 	if (ibar == bars.begin()){
 		return time;
 	}
-    int prevBarLoc = (ibar--)->Location;
+    int prevBarLoc = (std::prev(ibar))->Location;
 	int nextBarLoc = ibar->Location;
 	int snapped = int(prevBarLoc + fineGrid.NthGrid(resolution,
 													1+fineGrid.GridNumber(resolution, time - 1.0 - prevBarLoc)) + 0.5);

@@ -336,206 +336,163 @@ StandardWaveData::StandardWaveData(WaveData *src)
 	if (fmt.channelCount() <= 0 || fmt.channelCount() > 2){
 		return;
 	}
-    switch (fmt.bytesPerFrame()){
+
+    frames = src->GetFrameCount();
+    data = new SampleType[frames];
+
+    switch (fmt.channelConfig()){
+    case QAudioFormat::ChannelConfigMono:
+        switch (fmt.bytesPerSample()){
         case 1:
-            // 8bit unsigned int
-            if (fmt.sampleFormat() == QAudioFormat::UInt8){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        quint8 v = ((const quint8*)s)[i];
-                        data[i].setValue(QAudioFormat::FrontLeft, (v-128)*256);
-                        data[i].setValue(QAudioFormat::FrontRight, (v-128)*256);
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        quint8 l = ((const quint8*)s)[i*2];
-                        quint8 r = ((const quint8*)s)[i*2+1];
-                        data[i].setValue(QAudioFormat::FrontLeft, (l-128)*256);
-                        data[i].setValue(QAudioFormat::FrontRight, (r-128)*256);
-                    }
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::UInt8:
+                for (int i=0; i<frames; i++){
+                    quint8 v = ((const quint8*)s)[i];
+                    data[i].setValue(QAudioFormat::FrontLeft, (v-128)*256);
+                    data[i].setValue(QAudioFormat::FrontRight, (v-128)*256);
                 }
-            }
-            // 8bit signed int
-            else if (fmt.sampleFormat() == QAudioFormat::Unknown){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        qint8 v = ((const qint8*)s)[i];
-                        data[i].setValue(QAudioFormat::FrontLeft, v*256);
-                        data[i].setValue(QAudioFormat::FrontRight, v*256);
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        qint8 l = ((const qint8*)s)[i*2];
-                        qint8 r = ((const qint8*)s)[i*2+1];
-                        data[i].setValue(QAudioFormat::FrontLeft, l*256);
-                        data[i].setValue(QAudioFormat::FrontRight, r*256);
-                    }
+                break;
+            case QAudioFormat::Unknown:
+                for (int i=0; i<frames; i++){
+                    qint8 v = ((const qint8*)s)[i];
+                    data[i].setValue(QAudioFormat::FrontLeft, v*256);
+                    data[i].setValue(QAudioFormat::FrontRight, v*256);
                 }
-            }
-            else{
-                return;
+                break;
+            default:
+                break;
             }
             break;
         case 2:
-            // 16bit unsigned int
-            if (fmt.sampleFormat() == QAudioFormat::Unknown){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        quint16 v = ((const quint16*)s)[i];
-                        data[i].setValue(QAudioFormat::FrontLeft, v-32768);
-                        data[i].setValue(QAudioFormat::FrontRight, v-32768);
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        quint16 l = ((const quint16*)s)[i*2];
-                        quint16 r = ((const quint16*)s)[i*2+1];
-                        data[i].setValue(QAudioFormat::FrontLeft, l-32768);
-                        data[i].setValue(QAudioFormat::FrontRight, r-32768);
-                    }
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::Unknown:
+                for (int i=0; i<frames; i++){
+                    quint16 v = ((const quint16*)s)[i];
+                    data[i].setValue(QAudioFormat::FrontLeft, v-32768);
+                    data[i].setValue(QAudioFormat::FrontRight, v-32768);
                 }
-            }
-            // 16bit signed int
-            else if (fmt.sampleFormat() == QAudioFormat::Int16){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        qint16 v = ((const qint16*)s)[i];
-                        data[i].setValue(QAudioFormat::FrontLeft, v);
-                        data[i].setValue(QAudioFormat::FrontRight, v);
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        qint16 l = ((const qint16*)s)[i*2];
-                        qint16 r = ((const qint16*)s)[i*2+1];
-                        data[i].setValue(QAudioFormat::FrontLeft, l);
-                        data[i].setValue(QAudioFormat::FrontRight, r);
-                    }
+                break;
+            case QAudioFormat::Int16:
+                for (int i=0; i<frames; i++){
+                    qint16 v = ((const qint16*)s)[i];
+                    data[i].setValue(QAudioFormat::FrontLeft, v);
+                    data[i].setValue(QAudioFormat::FrontRight, v);
                 }
-            }
-            else{
-                return;
+                break;
+            default:
+                break;
             }
             break;
         case 3:
-            // 24bit unsigned int
-            /*if (fmt.sampleFormat() == QAudioFormat::NSampleFormats){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        qint32 vl = ((const quint8*)s)[i*3+1];
-                        qint32 vh = ((const quint8*)s)[i*3+2];
-                        data[i].setValue(QAudioFormat::FrontLeft, qint16((vl | (vh<<8)) - 32768));
-                        data[i].setValue(QAudioFormat::FrontRight, qint16((vl | (vh<<8)) - 32768));
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        qint32 ll = ((const quint8*)s)[i*6+1];
-                        qint32 lh = ((const quint8*)s)[i*6+2];
-                        qint32 rl = ((const quint8*)s)[i*6+4];
-                        qint32 rh = ((const quint8*)s)[i*6+5];
-                        data[i].setValue(QAudioFormat::FrontLeft, qint16((ll | (lh<<8)) - 32768));
-                        data[i].setValue(QAudioFormat::FrontRight, qint16((rl | (rh<<8)) - 32768));
-                    }
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::NSampleFormats:
+                for (int i=0; i<frames; i++){
+                    qint32 vl = ((const quint8*)s)[i*3+1];
+                    qint32 vh = ((const qint8*)s)[i*3+2];
+                    data[i].setValue(QAudioFormat::FrontLeft, qint16(vl | (vh<<8)));
+                    data[i].setValue(QAudioFormat::FrontRight, qint16(vl | (vh<<8)));
                 }
-            }*/
-            // 24bit signed int
-            if (fmt.sampleFormat() == QAudioFormat::NSampleFormats){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        qint32 vl = ((const quint8*)s)[i*3+1];
-                        qint32 vh = ((const qint8*)s)[i*3+2];
-                        data[i].setValue(QAudioFormat::FrontLeft, qint16(vl | (vh<<8)));
-                        data[i].setValue(QAudioFormat::FrontRight, qint16(vl | (vh<<8)));
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        qint32 ll = ((const quint8*)s)[i*6+1];
-                        qint32 lh = ((const qint8*)s)[i*6+2];
-                        qint32 rl = ((const quint8*)s)[i*6+4];
-                        qint32 rh = ((const qint8*)s)[i*6+5];
-                        data[i].setValue(QAudioFormat::FrontLeft, qint16(ll | (lh<<8)));
-                        data[i].setValue(QAudioFormat::FrontRight, qint16(rl | (rh<<8)));
-                    }
-                }
-            }
-            else{
-                return;
+                break;
+            default:
+                break;
             }
             break;
         case 4:
-            // 32bit float
-            if (fmt.sampleFormat() == QAudioFormat::Float){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        float v = ((const float*)s)[i];
-                        data[i].setValue(QAudioFormat::FrontLeft, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(v * 32768.0f))));
-                        data[i].setValue(QAudioFormat::FrontRight, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(v * 32768.0f))));
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        float l = ((const float*)s)[i*2];
-                        float r = ((const float*)s)[i*2+1];
-                        data[i].setValue(QAudioFormat::FrontLeft, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(l * 32768.0f))));
-                        data[i].setValue(QAudioFormat::FrontRight, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(r * 32768.0f))));
-                    }
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::Float:
+                for (int i=0; i<frames; i++){
+                    float v = ((const float*)s)[i];
+                    data[i].setValue(QAudioFormat::FrontLeft, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(v * 32768.0f))));
+                    data[i].setValue(QAudioFormat::FrontRight, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(v * 32768.0f))));
                 }
+                break;
+            default:
+                break;
             }
-            // 32bit unsigned int
-            /*else if (fmt.sampleFormat() == QAudioFormat::UnSignedInt){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        quint16 v = ((const quint16*)s)[i*2];
-                        data[i].setValue(QAudioFormat::FrontLeft, v-32768);
-                        data[i].setValue(QAudioFormat::FrontRight, v-32768);
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        quint16 l = ((const quint16*)s)[i*4];
-                        quint16 r = ((const quint16*)s)[i*4+2];
-                        data[i].setValue(QAudioFormat::FrontLeft, l-32768);
-                        data[i].setValue(QAudioFormat::FrontRight, r-32768);
-                    }
+            break;
+        }
+        break;
+    case QAudioFormat::ChannelConfigStereo:
+        switch (fmt.bytesPerSample()){
+        case 1:
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::UInt8:
+                for (int i=0; i<frames; i++){
+                    quint8 l = ((const quint8*)s)[i*2];
+                    quint8 r = ((const quint8*)s)[i*2+1];
+                    data[i].setValue(QAudioFormat::FrontLeft, (l-128)*256);
+                    data[i].setValue(QAudioFormat::FrontRight, (r-128)*256);
                 }
-            }*/
-            // 32bit signed int
-            /*else if (fmt.sampleFormat() == QAudioFormat::SignedInt){
-                frames = src->GetFrameCount();
-                data = new SampleType[frames];
-                if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
-                    for (int i=0; i<frames; i++){
-                        quint16 v = ((const quint16*)s)[i*2];
-                        data[i].setValue(QAudioFormat::FrontLeft, v);
-                        data[i].setValue(QAudioFormat::FrontRight, v);
-                    }
-                }else{
-                    for (int i=0; i<frames; i++){
-                        quint16 l = ((const quint16*)s)[i*4];
-                        quint16 r = ((const quint16*)s)[i*4+2];
-                        data[i].setValue(QAudioFormat::FrontLeft, l);
-                        data[i].setValue(QAudioFormat::FrontRight, r);
-                    }
+                break;
+            case QAudioFormat::Unknown:
+                for (int i=0; i<frames; i++){
+                    qint8 l = ((const qint8*)s)[i*2];
+                    qint8 r = ((const qint8*)s)[i*2+1];
+                    data[i].setValue(QAudioFormat::FrontLeft, l*256);
+                    data[i].setValue(QAudioFormat::FrontRight, r*256);
                 }
-            }*/
-            else{
-                return;
+                break;
+            default:
+                break;
             }
-        default:
-            return;
-	}
+            break;
+        case 2:
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::Unknown:
+                for (int i=0; i<frames; i++){
+                    quint16 l = ((const quint16*)s)[i*2];
+                    quint16 r = ((const quint16*)s)[i*2+1];
+                    data[i].setValue(QAudioFormat::FrontLeft, l-32768);
+                    data[i].setValue(QAudioFormat::FrontRight, r-32768);
+                }
+                break;
+            case QAudioFormat::Int16:
+                for (int i=0; i<frames; i++){
+                    qint16 l = ((const qint16*)s)[i*2];
+                    qint16 r = ((const qint16*)s)[i*2+1];
+                    data[i].setValue(QAudioFormat::FrontLeft, l);
+                    data[i].setValue(QAudioFormat::FrontRight, r);
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+        case 3:
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::NSampleFormats:
+                for (int i=0; i<frames; i++){
+                    qint32 ll = ((const quint8*)s)[i*6+1];
+                    qint32 lh = ((const qint8*)s)[i*6+2];
+                    qint32 rl = ((const quint8*)s)[i*6+4];
+                    qint32 rh = ((const qint8*)s)[i*6+5];
+                    data[i].setValue(QAudioFormat::FrontLeft, qint16(ll | (lh<<8)));
+                    data[i].setValue(QAudioFormat::FrontRight, qint16(rl | (rh<<8)));
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+        case 4:
+            switch (fmt.sampleFormat()){
+            case QAudioFormat::Float:
+                for (int i=0; i<frames; i++){
+                    float l = ((const float*)s)[i*2];
+                    float r = ((const float*)s)[i*2+1];
+                    data[i].setValue(QAudioFormat::FrontLeft, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(l * 32768.0f))));
+                    data[i].setValue(QAudioFormat::FrontRight, std::max<qint16>(-32768, std::min<qint16>(32767, qint16(r * 32768.0f))));
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 StandardWaveData::~StandardWaveData()

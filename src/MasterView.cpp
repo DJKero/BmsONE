@@ -377,31 +377,31 @@ void MiniMapView::mousePressEvent(QMouseEvent *event)
 
 	if (event->button() == Qt::MiddleButton || (event->modifiers() & Qt::AltModifier)){
 		// preview on master lane
-		if (!(event->y() >= yEnd && event->y() < yBegin)){
-			int dy = event->y() - (yEnd + yBegin)/2;
+        if (!(event->position().y() >= yEnd && event->position().y() < yBegin)){
+            int dy = event->position().y() - (yEnd + yBegin)/2;
 			int ds = dy * sview->zoomY * sview->viewLength / height();
 			sview->verticalScrollBar()->setValue(sview->verticalScrollBar()->value() + ds);
 		}
-		int time = (height() - event->y()) * sview->viewLength / height();
+        int time = (height() - event->position().y()) * sview->viewLength / height();
 		sview->masterLane->EnterPreviewContext(time, event->pos(), event->button());
 		update();
 	}else{
 		// drag to scroll
-		if (event->y() >= yEnd && event->y() < yBegin){
+        if (event->position().y() >= yEnd && event->position().y() < yBegin){
 			grabMouse();
-			dragYOrigin = event->y();
+            dragYOrigin = event->position().y();
 			dragVOrigin = sview->verticalScrollBar()->value();
 			dragging = true;
 		}else{// if (event->y() < yEnd){
 			//sview->verticalScrollBar()->setValue(sview->verticalScrollBar()->value() - sview->verticalScrollBar()->pageStep());
 		//}else{
 			//sview->verticalScrollBar()->setValue(sview->verticalScrollBar()->value() + sview->verticalScrollBar()->pageStep());
-			int dy = event->y() - (yEnd + yBegin)/2;
+            int dy = event->position().y() - (yEnd + yBegin)/2;
 			int ds = dy * sview->zoomY * sview->viewLength / height();
 			sview->verticalScrollBar()->setValue(sview->verticalScrollBar()->value() + ds);
 
 			grabMouse();
-			dragYOrigin = event->y();
+            dragYOrigin = event->position().y();
 			dragVOrigin = sview->verticalScrollBar()->value();
 			dragging = true;
 		}
@@ -412,7 +412,7 @@ void MiniMapView::mousePressEvent(QMouseEvent *event)
 void MiniMapView::mouseMoveEvent(QMouseEvent *event)
 {
 	if (dragging){
-		int dy = event->y() - dragYOrigin;
+        int dy = event->position().y() - dragYOrigin;
 		int ds = dy * sview->zoomY * sview->viewLength / height();
 		sview->verticalScrollBar()->setValue(dragVOrigin + ds);
 	}
@@ -467,7 +467,8 @@ void MasterLaneView::paintEvent(QPaintEvent *event)
 		painter.drawImage(0, 0, *backBuffer);
 	}else{
 		RemakeBackBuffer();
-		painter.drawImage(0, 0, *backBuffer);
+        if (backBuffer)
+            painter.drawImage(0, 0, *backBuffer);
 	}
 
 	painter.setPen(palette().dark().color());
@@ -708,7 +709,7 @@ MasterLaneView::Context *MasterLaneView::Context::KeyPress(QKeyEvent *event)
 
 MasterLaneView::Context *MasterLaneView::Context::MouseMove(QMouseEvent *event)
 {
-	qreal time = ml->sview->Y2Time(event->y());
+    qreal time = ml->sview->Y2Time(event->position().y());
 	int iTime = int(time);
 	if (ml->sview->snapToGrid){
 		iTime = ml->sview->SnapToLowerFineGrid(time);
@@ -719,7 +720,7 @@ MasterLaneView::Context *MasterLaneView::Context::MouseMove(QMouseEvent *event)
 
 MasterLaneView::Context *MasterLaneView::Context::MousePress(QMouseEvent *event)
 {
-	qreal time = ml->sview->Y2Time(event->y());
+    qreal time = ml->sview->Y2Time(event->position().y());
 	int iTime = int(time);
 	if (ml->sview->snapToGrid){
 		iTime = ml->sview->SnapToLowerFineGrid(time);
@@ -748,7 +749,7 @@ MasterLaneView::BaseContext::~BaseContext()
 
 MasterLaneView::Context *MasterLaneView::BaseContext::MousePress(QMouseEvent *event)
 {
-	qreal time = ml->sview->Y2Time(event->y());
+    qreal time = ml->sview->Y2Time(event->position().y());
 	int iTime = int(time);
 	if (ml->sview->snapToGrid){
 		iTime = ml->sview->SnapToLowerFineGrid(time);

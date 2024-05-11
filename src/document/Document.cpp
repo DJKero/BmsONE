@@ -1,14 +1,17 @@
 #include "Document.h"
 #include "DocumentAux.h"
-#include "SoundChannel.h"
+#include "EditConfig.h"
 #include "History.h"
 #include "HistoryUtil.h"
 #include "MasterCache.h"
-#include <QFile>
+#include "SoundChannel.h"
 #include "../bmson/Bmson.h"
-#include "EditConfig.h"
+#include "../bmson/Bmson100.h"
 #include "../util/ResolutionUtil.h"
 #include "../bms/Bms.h"
+#include <QFile>
+
+using namespace Bmson100;
 
 const double BmsConsts::MaxBpm = 1.e+6;
 const double BmsConsts::MinBpm = 1.e-6;
@@ -91,17 +94,17 @@ void Document::LoadFile(QString filePath)
 	}
 	actualLength = 0;
 	totalLength = 0;
-	info.LoadBmson(bmsonFields[Bmson::Bms::InfoKey]);
+    info.LoadBmson(bmsonFields[Bmson::Bmson::InfoKey]);
 	barLines.insert(0, BarLine(0, 0)); // make sure BarLine at 0, even if bms.barLines is empty.
-	for (QJsonValue jsonBar : bmsonFields[Bmson::Bms::BarLinesKey].toArray()){
+    for (QJsonValue jsonBar : bmsonFields[Bmson::Bmson::BarLinesKey].toArray()){
 		BarLine barLine(jsonBar);
 		barLines.insert(barLine.Location, barLine);
 	}
-	for (QJsonValue jsonEvent : bmsonFields[Bmson::Bms::BpmEventsKey].toArray()){
+    for (QJsonValue jsonEvent : bmsonFields[Bmson::Bmson::BpmEventsKey].toArray()){
 		BpmEvent event(jsonEvent);
 		bpmEvents.insert(event.location, event);
 	}
-	QJsonArray soundChannelsJson = bmsonFields[Bmson::Bms::SoundChannelsKey].toArray();
+    QJsonArray soundChannelsJson = bmsonFields[Bmson::Bmson::SoundChannelsKey].toArray();
     for (int i=0; i<soundChannelsJson.size(); i++){
 		auto *channel = new SoundChannel(this);
 		channel->LoadBmson(soundChannelsJson[i]);
@@ -198,7 +201,7 @@ void Document::LoadBms(const Bms::Bms &bms)
 		for (auto ev : stopEvents){
 			jsonEvents.append(ev.AsJson());
 		}
-		bmsonFields[Bmson::Bms::StopEventsKey] = jsonEvents;
+        bmsonFields[Bmson::Bmson::StopEventsKey] = jsonEvents;
 	}
 	{
 		Bga bga;
@@ -232,7 +235,7 @@ void Document::LoadBms(const Bms::Bms &bms)
 			}
 		}
 
-		bmsonFields[Bmson::Bms::BgaKey] = bga.AsJson();
+        bmsonFields[Bmson::Bmson::BgaKey] = bga.AsJson();
 	}
 
 	QVector<QMap<int, SoundNote>> notes = Bms::BmsUtil::GetNotesOfBmson(bms, bms.mode, info.GetResolution());
@@ -313,24 +316,24 @@ void Document::ExportTo(const QString &exportFilePath)
     // TODO: Return errors instead of exceptions.
     //
 
-	bmsonFields[Bmson::Bms::InfoKey] = info.SaveBmson();
+    bmsonFields[Bmson::Bmson::InfoKey] = info.SaveBmson();
 	QJsonArray jsonBarLines;
 	for (BarLine barLine : barLines){
 		if (!barLine.Ephemeral || barLine.Location <= actualLength){
 			jsonBarLines.append(barLine.SaveBmson());
 		}
 	}
-	bmsonFields[Bmson::Bms::BarLinesKey] = jsonBarLines;
+    bmsonFields[Bmson::Bmson::BarLinesKey] = jsonBarLines;
 	QJsonArray jsonBpmEvents;
 	for (BpmEvent event : bpmEvents){
 		jsonBpmEvents.append(event.SaveBmson());
 	}
-	bmsonFields[Bmson::Bms::BpmEventsKey] = jsonBpmEvents;
+    bmsonFields[Bmson::Bmson::BpmEventsKey] = jsonBpmEvents;
 	QJsonArray jsonSoundChannels;
 	for (SoundChannel *channel : soundChannels){
 		jsonSoundChannels.append(channel->SaveBmson());
 	}
-	bmsonFields[Bmson::Bms::SoundChannelsKey] = jsonSoundChannels;
+    bmsonFields[Bmson::Bmson::SoundChannelsKey] = jsonSoundChannels;
 	QFile file(exportFilePath);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)){
 		throw tr("Failed to open file.");

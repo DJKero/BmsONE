@@ -4,8 +4,6 @@
 #include <QtCore>
 #include <QtConcurrent>
 #include <QtMultimedia>
-#include <string>
-#include <functional>
 #include "DocumentDef.h"
 #include "../bmson/Bmson.h"
 

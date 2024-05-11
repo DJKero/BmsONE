@@ -1,8 +1,10 @@
 #include "Document.h"
 #include "History.h"
 #include "HistoryUtil.h"
-#include "../bmson/Bmson.h"
+#include "../bmson/Bmson100.h"
 #include "../bms/Bms.h"
+
+using namespace Bmson100;
 
 QSet<QString> DocumentInfo::SupportedKeys;
 
@@ -12,23 +14,23 @@ DocumentInfo::DocumentInfo(Document *document)
 	, resolution(DefaultResolution)
 {
 	if (SupportedKeys.isEmpty()){
-		SupportedKeys.insert(Bmson::BmsInfo::TitleKey);
-		SupportedKeys.insert(Bmson::BmsInfo::SubtitleKey);
-		SupportedKeys.insert(Bmson::BmsInfo::GenreKey);
-		SupportedKeys.insert(Bmson::BmsInfo::ArtistKey);
-		SupportedKeys.insert(Bmson::BmsInfo::SubartistsKey);
-		SupportedKeys.insert(Bmson::BmsInfo::ChartNameKey);
-		SupportedKeys.insert(Bmson::BmsInfo::ModeHintKey);
-		SupportedKeys.insert(Bmson::BmsInfo::ResolutionKey);
-		SupportedKeys.insert(Bmson::BmsInfo::JudgeRankKey);
-		SupportedKeys.insert(Bmson::BmsInfo::TotalKey);
-		SupportedKeys.insert(Bmson::BmsInfo::InitBpmKey);
-		SupportedKeys.insert(Bmson::BmsInfo::LevelKey);
-		SupportedKeys.insert(Bmson::BmsInfo::BackImageKey);
-		SupportedKeys.insert(Bmson::BmsInfo::EyecatchImageKey);
-		SupportedKeys.insert(Bmson::BmsInfo::TitleImageKey);
-		SupportedKeys.insert(Bmson::BmsInfo::BannerKey);
-		SupportedKeys.insert(Bmson::BmsInfo::PreviewMusicKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::TitleKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::SubtitleKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::GenreKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::ArtistKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::SubartistsKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::ChartNameKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::ModeHintKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::ResolutionKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::JudgeRankKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::TotalKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::InitBpmKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::LevelKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::BackImageKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::EyecatchImageKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::TitleImageKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::BannerKey);
+        SupportedKeys.insert(Bmson::BmsonInfo::PreviewMusicKey);
 	}
 }
 
@@ -60,30 +62,30 @@ void DocumentInfo::Initialize()
 void DocumentInfo::LoadBmson(QJsonValue json)
 {
 	bmsonFields = json.toObject();
-	title = bmsonFields[Bmson::BmsInfo::TitleKey].toString();
-	subtitle = bmsonFields[Bmson::BmsInfo::SubtitleKey].toString();
-	genre = bmsonFields[Bmson::BmsInfo::GenreKey].toString();
-	artist = bmsonFields[Bmson::BmsInfo::ArtistKey].toString();
+    title = bmsonFields[Bmson::BmsonInfo::TitleKey].toString();
+    subtitle = bmsonFields[Bmson::BmsonInfo::SubtitleKey].toString();
+    genre = bmsonFields[Bmson::BmsonInfo::GenreKey].toString();
+    artist = bmsonFields[Bmson::BmsonInfo::ArtistKey].toString();
 	subartists.clear();
-	auto tmp_subartists = bmsonFields[Bmson::BmsInfo::SubartistsKey].toArray();
+    auto tmp_subartists = bmsonFields[Bmson::BmsonInfo::SubartistsKey].toArray();
 	for (auto entry : tmp_subartists){
 		subartists.append(entry.toString());
 	}
-	chartName = bmsonFields[Bmson::BmsInfo::ChartNameKey].toString();
-	modeHint = bmsonFields[Bmson::BmsInfo::ModeHintKey].toString();
-	resolution = bmsonFields[Bmson::BmsInfo::ResolutionKey].toInt();
+    chartName = bmsonFields[Bmson::BmsonInfo::ChartNameKey].toString();
+    modeHint = bmsonFields[Bmson::BmsonInfo::ModeHintKey].toString();
+    resolution = bmsonFields[Bmson::BmsonInfo::ResolutionKey].toInt();
 	if (resolution <= 0 || resolution > 24000){
 		resolution = DefaultResolution;
 	}
-	judgeRank = bmsonFields[Bmson::BmsInfo::JudgeRankKey].toDouble();
-	total = bmsonFields[Bmson::BmsInfo::TotalKey].toDouble();
-	initBpm = bmsonFields[Bmson::BmsInfo::InitBpmKey].toDouble();
-	level = bmsonFields[Bmson::BmsInfo::LevelKey].toInt();
-	backImage = bmsonFields[Bmson::BmsInfo::BackImageKey].toString();
-	eyecatchImage = bmsonFields[Bmson::BmsInfo::EyecatchImageKey].toString();
-	titleImage = bmsonFields[Bmson::BmsInfo::TitleImageKey].toString();
-	banner = bmsonFields[Bmson::BmsInfo::BannerKey].toString();
-	previewMusic = bmsonFields[Bmson::BmsInfo::PreviewMusicKey].toString();
+    judgeRank = bmsonFields[Bmson::BmsonInfo::JudgeRankKey].toDouble();
+    total = bmsonFields[Bmson::BmsonInfo::TotalKey].toDouble();
+    initBpm = bmsonFields[Bmson::BmsonInfo::InitBpmKey].toDouble();
+    level = bmsonFields[Bmson::BmsonInfo::LevelKey].toInt();
+    backImage = bmsonFields[Bmson::BmsonInfo::BackImageKey].toString();
+    eyecatchImage = bmsonFields[Bmson::BmsonInfo::EyecatchImageKey].toString();
+    titleImage = bmsonFields[Bmson::BmsonInfo::TitleImageKey].toString();
+    banner = bmsonFields[Bmson::BmsonInfo::BannerKey].toString();
+    previewMusic = bmsonFields[Bmson::BmsonInfo::PreviewMusicKey].toString();
 }
 
 void DocumentInfo::LoadBms(const Bms::Bms &bms)
@@ -180,27 +182,27 @@ void DocumentInfo::LoadBms(const Bms::Bms &bms)
 
 QJsonValue DocumentInfo::SaveBmson()
 {
-	bmsonFields[Bmson::BmsInfo::TitleKey] = title;
-	bmsonFields[Bmson::BmsInfo::SubtitleKey] = subtitle;
-	bmsonFields[Bmson::BmsInfo::GenreKey] = genre;
-	bmsonFields[Bmson::BmsInfo::ArtistKey] = artist;
+    bmsonFields[Bmson::BmsonInfo::TitleKey] = title;
+    bmsonFields[Bmson::BmsonInfo::SubtitleKey] = subtitle;
+    bmsonFields[Bmson::BmsonInfo::GenreKey] = genre;
+    bmsonFields[Bmson::BmsonInfo::ArtistKey] = artist;
 	auto tmp_subartists = QJsonArray();
 	for (auto entry : subartists){
 		tmp_subartists.append(entry);
 	}
-	bmsonFields[Bmson::BmsInfo::SubartistsKey] = tmp_subartists;
-	bmsonFields[Bmson::BmsInfo::ChartNameKey] = chartName;
-	bmsonFields[Bmson::BmsInfo::ModeHintKey] = modeHint;
-	bmsonFields[Bmson::BmsInfo::ResolutionKey] = resolution;
-	bmsonFields[Bmson::BmsInfo::JudgeRankKey] = judgeRank;
-	bmsonFields[Bmson::BmsInfo::TotalKey] = total;
-	bmsonFields[Bmson::BmsInfo::InitBpmKey] = initBpm;
-	bmsonFields[Bmson::BmsInfo::LevelKey] = level;
-	bmsonFields[Bmson::BmsInfo::BackImageKey] = backImage;
-	bmsonFields[Bmson::BmsInfo::EyecatchImageKey] = eyecatchImage;
-	bmsonFields[Bmson::BmsInfo::TitleImageKey] = titleImage;
-	bmsonFields[Bmson::BmsInfo::BannerKey] = banner;
-	bmsonFields[Bmson::BmsInfo::PreviewMusicKey] = previewMusic;
+    bmsonFields[Bmson::BmsonInfo::SubartistsKey] = tmp_subartists;
+    bmsonFields[Bmson::BmsonInfo::ChartNameKey] = chartName;
+    bmsonFields[Bmson::BmsonInfo::ModeHintKey] = modeHint;
+    bmsonFields[Bmson::BmsonInfo::ResolutionKey] = resolution;
+    bmsonFields[Bmson::BmsonInfo::JudgeRankKey] = judgeRank;
+    bmsonFields[Bmson::BmsonInfo::TotalKey] = total;
+    bmsonFields[Bmson::BmsonInfo::InitBpmKey] = initBpm;
+    bmsonFields[Bmson::BmsonInfo::LevelKey] = level;
+    bmsonFields[Bmson::BmsonInfo::BackImageKey] = backImage;
+    bmsonFields[Bmson::BmsonInfo::EyecatchImageKey] = eyecatchImage;
+    bmsonFields[Bmson::BmsonInfo::TitleImageKey] = titleImage;
+    bmsonFields[Bmson::BmsonInfo::BannerKey] = banner;
+    bmsonFields[Bmson::BmsonInfo::PreviewMusicKey] = previewMusic;
 	return bmsonFields;
 }
 

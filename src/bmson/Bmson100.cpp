@@ -2,64 +2,61 @@
 
 namespace Bmson100
 {
-namespace Bmson
-{
+    namespace Bmson
+    {
+        const char* Version = "1.0.0";
 
-const char* Bms::VersionKey = "version";
-const char* Bms::InfoKey = "info";
-const char* Bms::BarLinesKey = "lines";
-const char* Bms::BpmEventsKey = "bpm_events";
-const char* Bms::StopEventsKey = "stop_events";
-const char* Bms::SoundChannelsKey = "sound_channels";
-const char* Bms::BgaKey = "bga";
+        const char* Bmson::VersionKey = "version";
+        const char* Bmson::InfoKey = "info";
+        const char* Bmson::BarLinesKey = "lines";
+        const char* Bmson::BpmEventsKey = "bpm_events";
+        const char* Bmson::StopEventsKey = "stop_events";
+        const char* Bmson::SoundChannelsKey = "sound_channels";
+        const char* Bmson::BgaKey = "bga";
 
-const char* BmsInfo::TitleKey = "title";
-const char* BmsInfo::SubtitleKey = "subtitle";
-const char* BmsInfo::ArtistKey = "artist";
-const char* BmsInfo::SubartistsKey = "subartists";
-const char* BmsInfo::GenreKey = "genre";
-const char* BmsInfo::ModeHintKey = "mode_hint";
-const char* BmsInfo::ChartNameKey = "chart_name";
-const char* BmsInfo::LevelKey = "level";
-const char* BmsInfo::InitBpmKey = "init_bpm";
-const char* BmsInfo::JudgeRankKey = "judge_rank";
-const char* BmsInfo::TotalKey = "total";
-const char* BmsInfo::BackImageKey = "back_image";
-const char* BmsInfo::EyecatchImageKey = "eyecatch_image";
-const char* BmsInfo::TitleImageKey = "title_image";
-const char* BmsInfo::BannerKey = "banner_image";
-const char* BmsInfo::PreviewMusicKey = "preview_music";
-const char* BmsInfo::ResolutionKey = "resolution";
+        const char* BmsonInfo::TitleKey = "title";
+        const char* BmsonInfo::SubtitleKey = "subtitle";
+        const char* BmsonInfo::ArtistKey = "artist";
+        const char* BmsonInfo::SubartistsKey = "subartists";
+        const char* BmsonInfo::GenreKey = "genre";
+        const char* BmsonInfo::ModeHintKey = "mode_hint";
+        const char* BmsonInfo::ChartNameKey = "chart_name";
+        const char* BmsonInfo::LevelKey = "level";
+        const char* BmsonInfo::InitBpmKey = "init_bpm";
+        const char* BmsonInfo::JudgeRankKey = "judge_rank";
+        const char* BmsonInfo::TotalKey = "total";
+        const char* BmsonInfo::BackImageKey = "back_image";
+        const char* BmsonInfo::EyecatchImageKey = "eyecatch_image";
+        const char* BmsonInfo::TitleImageKey = "title_image";
+        const char* BmsonInfo::BannerKey = "banner_image";
+        const char* BmsonInfo::PreviewMusicKey = "preview_music";
+        const char* BmsonInfo::ResolutionKey = "resolution";
 
-const char* BarLine::LocationKey = "y";
+        const char* BarLine::LocationKey = "y";
 
-const char* SoundChannel::NameKey = "name";
-const char* SoundChannel::NotesKey = "notes";
+        const char* SoundChannel::NameKey = "name";
+        const char* SoundChannel::NotesKey = "notes";
 
-const char* Note::LaneKey = "x";
-const char* Note::LocationKey = "y";
-const char* Note::LengthKey = "l";
-const char* Note::ContinueKey = "c";
+        const char* Note::LaneKey = "x";
+        const char* Note::LocationKey = "y";
+        const char* Note::LengthKey = "l";
+        const char* Note::ContinueKey = "c";
 
-const char* BpmEvent::LocationKey = "y";
-const char* BpmEvent::BpmKey = "bpm";
+        const char* BpmEvent::LocationKey = "y";
+        const char* BpmEvent::BpmKey = "bpm";
 
-const char* StopEvent::LocationKey = "y";
-const char* StopEvent::DurationKey = "duration";
+        const char* StopEvent::LocationKey = "y";
+        const char* StopEvent::DurationKey = "duration";
 
-const char* Bga::HeaderKey = "bga_header";
-const char* Bga::BgaEventsKey = "bga_events";
-const char* Bga::LayerEventsKey = "layer_events";
-const char* Bga::MissEventsKey = "poor_events";
+        const char* Bga::HeaderKey = "bga_header";
+        const char* Bga::BgaEventsKey = "bga_events";
+        const char* Bga::LayerEventsKey = "layer_events";
+        const char* Bga::MissEventsKey = "poor_events";
 
-const char* BgaHeader::IdKey = "id";
-const char* BgaHeader::NameKey = "name";
+        const char* BgaHeader::IdKey = "id";
+        const char* BgaHeader::NameKey = "name";
 
-const char* BgaEvent::LocationKey = "y";
-const char* BgaEvent::IdKey = "id";
-
-const char* Version = "1.0.0";
-
-} // Bmson
+        const char* BgaEvent::LocationKey = "y";
+        const char* BgaEvent::IdKey = "id";
+    } // Bmson
 } // Bmson100
-

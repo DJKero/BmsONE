@@ -27,6 +27,3 @@ QString BmsonConvertContext::GetCombinedMessage() const
 	}
 	return string;
 }
-
-
-

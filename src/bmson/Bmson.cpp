@@ -1,8 +1,8 @@
 #include "Bmson.h"
-#include "Bmson021.h"
 #include "Bmson100.h"
 #include "Bmson100Convert.h"
 #include "../MainWindow.h"
+
 
 const char* BmsonIO::VersionKey = "version";
 
@@ -10,8 +10,6 @@ const char* BmsonIO::VersionKey = "version";
 const BmsonIO::BmsonVersion BmsonIO::NativeVersion = BmsonIO::BMSON_V_1_0;
 
 const BmsonIO::BmsonVersion BmsonIO::LatestVersion = BmsonIO::BMSON_V_1_0;
-
-
 
 const char* BmsonIO::SettingsFileSaveFormatKey = "File/SaveFormat";
 const char* BmsonIO::SettingsFileSaveJsonFormatKey = "File/SaveJsonFormat";
@@ -35,7 +33,7 @@ BmsonIO *BmsonIO::Instance()
 QJsonObject BmsonIO::InitialBmson()
 {
 	QJsonObject json;
-	json[VersionKey] = Bmson100::Bmson::Version;
+    json[VersionKey] = Bmson100::Bmson::Version;
 	return json;
 }
 
@@ -49,7 +47,7 @@ QJsonObject BmsonIO::NormalizeBmson(BmsonConvertContext &cxt, const QJsonObject 
 		qDebug() << "Version field is empty. Treating as v0.21.";
 #endif
 		v = BMSON_V_0_21;
-	}else if (version == Bmson100::Bmson::Version){
+    }else if (version == Bmson100::Bmson::Version){
 		// v1.0
 #ifdef _DEBUG
 		qDebug() << "Version 1.0.0.";
@@ -82,7 +80,7 @@ QJsonObject BmsonIO::NormalizeBmson(BmsonConvertContext &cxt, const QJsonObject 
 	case BMSON_V_0_21:
 	default:
 		cxt.MarkConverted();
-		return Bmson100::ConverterFrom021::Convert(bms);
+        return Bmson100::ConverterFrom021::Convert(bms);
 	}
 }
 
@@ -94,7 +92,7 @@ QJsonObject BmsonIO::Convert(BmsonConvertContext &cxt, const QJsonObject &bms, B
 	case BMSON_V_0_21:
 	default:
 		cxt.MarkConverted();
-		return Bmson100::ConverterTo021::Convert(bms);
+        return Bmson100::ConverterTo021::Convert(bms);
 	}
 }
 
@@ -113,6 +111,7 @@ void BmsonIO::SetSaveFormat(BmsonIO::BmsonVersion format)
 	emit SaveFormatChanged(format);
 }
 */
+
 QStringList BmsonIO::SaveFormatStringList()
 {
 	QStringList list;
@@ -216,5 +215,3 @@ QJsonDocument::JsonFormat BmsonIO::GetSaveJsonFormat()
 {
 	return GetSaveJsonFormatOfString(GetSaveJsonFormatString());
 }
-
-

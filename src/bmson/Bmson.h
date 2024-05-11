@@ -2,12 +2,7 @@
 #define BMSON_H
 
 #include "BmsonConvertDef.h"
-#include "Bmson100.h"
 #include <QtCore>
-
-using namespace Bmson100;
-
-
 
 
 class BmsonIO : public QObject
@@ -45,6 +40,7 @@ public:
 
 
 
+
 	static BmsonVersion GetSaveFormat();
 	//static void SetSaveFormat(BmsonVersion format);
 
@@ -67,7 +63,6 @@ public:
 
 signals:
 	void SaveFormatChanged(BmsonIO::BmsonVersion format);
-
 };
 
 

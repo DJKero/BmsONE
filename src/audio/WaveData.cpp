@@ -7,17 +7,19 @@ WaveData::WaveData()
 	: data(nullptr)
 {
 	err = NoError;
+    fmt = UnsupportedFormat;
     format.setChannelConfig(QAudioFormat::ChannelConfigStereo);
     format.setSampleFormat(QAudioFormat::Int16);
     format.setSampleRate(44100);
 	bytes = 0;
-	frames = 0;
+    frames = 0;
 }
 
 WaveData::WaveData(const QString &srcPath)
 	: data(nullptr)
 {
 	err = NoError;
+    fmt = UnsupportedFormat;
 	QFileInfo fi(srcPath);
 	QString ext = fi.suffix().toLower();
 	if (ext == "wav"){
@@ -149,10 +151,17 @@ void WaveData::LoadWav(const QString &srcPath)
 			din >> ckSize;
 			din.skipRawData(ckSize);
 		}
+
 		quint32 ckSize = 0;
 		din >> ckSize;
-		bytes = ckSize;
-		frames = bytes / blockAlign;
+        if (blockAlign != 0){
+            bytes = ckSize;
+            frames = bytes / blockAlign;
+        }
+        else{
+            err = Unknown;
+            return;
+        }
 		if (frames == 0){
 			err = DataMissing;
 			return;
@@ -161,8 +170,9 @@ void WaveData::LoadWav(const QString &srcPath)
 			err = DataSizeOver;
 			return;
 		}
-		data = new quint8[bytes];
+
         fmt = WAV;
+		data = new quint8[bytes];
 		char *d = (char*)data;
 		int remainingSize = bytes;
 		static const int unitSize = 0x00100000;
@@ -219,15 +229,16 @@ void WaveData::LoadOgg(const QString &srcPath)
 
 	// read data
 	frames = ov_pcm_total(&file, -1);
-	quint64 bytes = frames * 2 * info->channels;
+    bytes = frames * 2 * info->channels;
 	if (bytes > 0x40000000){
 		err = DataSizeOver;
 		ov_clear(&file);
 		return;
 	}
 	static const int bufferSize = 4096;
-	data = new char[bytes + bufferSize];
+
     fmt = OGG;
+	data = new char[bytes + bufferSize];
 	char *d = (char*)data;
 	int bitstream;
 	int remainingSize = bytes;
@@ -315,11 +326,12 @@ StandardWaveData::StandardWaveData()
 
 
 StandardWaveData::StandardWaveData(WaveData *src)
-    : frames(0)
-    , data(nullptr)
+    : data(nullptr)
 {
-	QAudioFormat fmt = src->GetFormat();
-	samplingRate = fmt.sampleRate();
+    QAudioFormat fmt = src->GetFormat();
+    samplingRate = fmt.sampleRate();
+    frames = 0;
+
 	const void *s = src->GetRawData();
 	if (fmt.channelCount() <= 0 || fmt.channelCount() > 2){
 		return;
@@ -481,7 +493,7 @@ StandardWaveData::StandardWaveData(WaveData *src)
                 }
             }
             // 32bit unsigned int
-            /*else if (fmt.sampleFormat() == QAudioFormat::NSampleFormats){
+            /*else if (fmt.sampleFormat() == QAudioFormat::UnSignedInt){
                 frames = src->GetFrameCount();
                 data = new SampleType[frames];
                 if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
@@ -500,7 +512,7 @@ StandardWaveData::StandardWaveData(WaveData *src)
                 }
             }*/
             // 32bit signed int
-            /*else if (fmt.sampleFormat() == QAudioFormat::NSampleFormats){
+            /*else if (fmt.sampleFormat() == QAudioFormat::SignedInt){
                 frames = src->GetFrameCount();
                 data = new SampleType[frames];
                 if (fmt.channelConfig() == QAudioFormat::ChannelConfigMono){
@@ -529,7 +541,7 @@ StandardWaveData::StandardWaveData(WaveData *src)
 StandardWaveData::~StandardWaveData()
 {
 	if (data){
-		delete[] data;
+        delete[] data;
 	}
 }
 

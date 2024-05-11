@@ -63,7 +63,7 @@ class WaveStreamSource : public AudioStreamSource
 	Q_OBJECT
 
 private:
-	QFile file;
+    QFile file;
 	QDataStream din;
 	quint64 dataOffset;
 
@@ -127,7 +127,7 @@ public:
 	quint64 Read(QAudioBuffer::S16S *buffer, quint64 frames);
 };
 
-class S32F44100StreamTransformer : public AudioStreamSource
+class F32S44100StreamTransformer : public AudioStreamSource
 {
 	Q_OBJECT
 
@@ -142,13 +142,13 @@ private:
 	char *inputBuffer;
 	QList<SampleType> auxBuffer;
 
-	bool IsSourceS32F44100() const;
+    bool IsSourceF32S44100() const;
 	void Provide(qreal playHeadEnd);
 	void Forget(qreal playHeadEnd);
 
 public:
-	S32F44100StreamTransformer(AudioStreamSource *src, QObject *parent=nullptr);
-	~S32F44100StreamTransformer();
+    F32S44100StreamTransformer(AudioStreamSource *src, QObject *parent=nullptr);
+    ~F32S44100StreamTransformer();
 
 	virtual int Open();
 	virtual quint64 Read(char *buffer, quint64 bufferSize);
@@ -198,8 +198,8 @@ private:
     int fmt;
 	QAudioFormat format;
 	void *data;
-	quint64 frames;
 	quint64 bytes;
+    quint64 frames;
 
 private:
 	void LoadWav(const QString &srcPath);

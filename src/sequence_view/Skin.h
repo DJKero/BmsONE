@@ -155,7 +155,7 @@ public:
 	SkinFloatProperty(Skin *parent, QString name, QString displayName, qreal min, qreal max, QVariant value);
 
 	virtual QVariant GetValue() const;
-	virtual void SetValue(QVariant va);
+    virtual void SetValue(QVariant va);
 
 	qreal GetFloatValue() const{ return value; }
 	qreal GetMin() const{ return min; }

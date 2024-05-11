@@ -173,4 +173,5 @@ public:
 	virtual SequenceView::Context* PlayingPane_MouseRelease(QMouseEvent*);
 };
 
+
 #endif // SEQUENCEVIEWCONTEXTS

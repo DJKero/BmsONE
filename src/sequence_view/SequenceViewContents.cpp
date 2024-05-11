@@ -1,9 +1,7 @@
 #include "SequenceView.h"
 #include "SequenceViewInternal.h"
 #include "MainWindow.h"
-#include "BpmEditTool.h"
 #include <cmath>
-#include <cstdlib>
 
 
 bool SequenceView::paintEventPlayingPane(QWidget *playingPane, QPaintEvent *event)
@@ -378,7 +376,7 @@ bool SequenceView::enterEventTimeLine([[maybe_unused]] QWidget *timeLine, QEvent
 
 bool SequenceView::mouseEventTimeLine([[maybe_unused]] QWidget *timeLine, QMouseEvent *event)
 {
-	if (event->x() < timeLineMeasureWidth){
+    if (event->position().x() < timeLineMeasureWidth){
 		switch (event->type()){
             case QEvent::MouseMove:
                 context = context->MeasureArea_MouseMove(event);

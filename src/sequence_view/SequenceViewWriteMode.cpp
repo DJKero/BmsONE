@@ -26,9 +26,9 @@ SequenceView::Context *SequenceView::WriteModeContext::Leave(QEnterEvent *)
 */
 SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
 	}
@@ -36,7 +36,7 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MouseMove(QMo
 	bool conflicts = false;
 	NoteConflict conf;
 	if (lane >= 0)
-		notes = sview->HitTestPlayingPaneMulti(lane, event->y(), iTime, event->modifiers() & Qt::AltModifier, &conflicts, &conf);
+        notes = sview->HitTestPlayingPaneMulti(lane, event->position().y(), iTime, event->modifiers() & Qt::AltModifier, &conflicts, &conf);
 	if (notes.size() > 0){
 		sview->playingPane->setCursor(Qt::SizeAllCursor);
 		if (conflicts){
@@ -56,9 +56,9 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MouseMove(QMo
 
 SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MousePress(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
 	}
@@ -66,7 +66,7 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MousePress(QM
 	bool conflicts = false;
 	NoteConflict conf;
 	if (lane >= 0)
-		notes = sview->HitTestPlayingPaneMulti(lane, event->y(), iTime, event->modifiers() & Qt::AltModifier, &conflicts, &conf);
+        notes = sview->HitTestPlayingPaneMulti(lane, event->position().y(), iTime, event->modifiers() & Qt::AltModifier, &conflicts, &conf);
 
 	sview->ClearBpmEventsSelection();
 	if (event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)){
@@ -175,7 +175,7 @@ SequenceView::Context *SequenceView::WriteModeContext::PlayingPane_MouseRelease(
 
 SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -189,7 +189,7 @@ SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MouseMove(QMo
 			auto i = bars.upperBound(iTime);
 			if (i != bars.begin()){
 				i--;
-				if (i != bars.end() && sview->Time2Y(i.key()) - 16 <= event->y()){
+                if (i != bars.end() && sview->Time2Y(i.key()) - 16 <= event->position().y()){
 					hitTime = i.key();
 				}
 			}
@@ -211,7 +211,7 @@ SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MouseMove(QMo
 
 SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MousePress(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -225,7 +225,7 @@ SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MousePress(QM
 			auto i = bars.upperBound(iTime);
 			if (i != bars.begin()){
 				i--;
-				if (i != bars.end() && sview->Time2Y(i.key()) - 16 <= event->y()){
+                if (i != bars.end() && sview->Time2Y(i.key()) - 16 <= event->position().y()){
 					hitTime = i.key();
 				}
 			}
@@ -272,7 +272,7 @@ SequenceView::Context *SequenceView::WriteModeContext::MeasureArea_MouseRelease(
 
 
 SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MouseMove(QMouseEvent *event){
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -284,7 +284,7 @@ SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MouseMove(QMouseE
 		auto i = events.upperBound(iTime);
 		if (i != events.begin()){
 			i--;
-			if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->y()){
+            if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->position().y()){
 				hitTime = i.key();
 			}
 		}
@@ -294,7 +294,7 @@ SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MouseMove(QMouseE
 		sview->cursor->SetExistingBpmEvent(events[hitTime]);
 	}else{
 		auto i = events.upperBound(iTime);
-		double bpm = i==events.begin() ? sview->document->GetInfo()->GetInitBpm() : (i-1)->value;
+        double bpm = i==events.begin() ? sview->document->GetInfo()->GetInitBpm() : (i--)->value;
 		sview->timeLine->setCursor(Qt::ArrowCursor);
 		sview->cursor->SetNewBpmEvent(BpmEvent(iTime, bpm));
 	}
@@ -302,7 +302,7 @@ SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MouseMove(QMouseE
 }
 
 SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MousePress(QMouseEvent *event){
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -314,7 +314,7 @@ SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MousePress(QMouse
 		auto i = events.upperBound(iTime);
 		if (i != events.begin()){
 			i--;
-			if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->y()){
+            if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->position().y()){
 				hitTime = i.key();
 			}
 		}
@@ -348,7 +348,7 @@ SequenceView::Context *SequenceView::WriteModeContext::BpmArea_MousePress(QMouse
 		if (event->button() == Qt::LeftButton){
 			// add event
 			auto i = events.upperBound(iTime);
-			double bpm = i==events.begin() ? sview->document->GetInfo()->GetInitBpm() : (i-1)->value;
+            double bpm = i==events.begin() ? sview->document->GetInfo()->GetInitBpm() : (i--)->value;
 			BpmEvent event(iTime, bpm);
 			if (sview->document->InsertBpmEvent(event)){
 				sview->cursor->SetExistingBpmEvent(event);
@@ -415,17 +415,17 @@ SequenceView::Context *SequenceView::WriteModeDrawNoteContext::PlayingPane_Mouse
 			return this;
 		}
 	}
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
     [[maybe_unused]] int iTimeUpper = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
     [[maybe_unused]] int laneX;
 	if (lane < 0){
-		if (event->x() < sview->sortedLanes[0].left){
+        if (event->position().x() < sview->sortedLanes[0].left){
 			laneX = 0;
 		}else{
 			laneX = sview->sortedLanes.size() - 1;

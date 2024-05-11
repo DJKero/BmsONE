@@ -9,7 +9,6 @@
 #include "SequenceViewDef.h"
 #include "ViewMode.h"
 #include "Skin.h"
-#include <functional>
 
 
 class MainWindow;
@@ -346,7 +345,6 @@ public:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };
-
 
 
 #endif // SEQUENCEVIEW_H

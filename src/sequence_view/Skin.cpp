@@ -1242,8 +1242,8 @@ QVariant SkinEnumProperty::GetValue() const
 
 void SkinEnumProperty::SetValue(QVariant va)
 {
-	switch (va.type()){
-        case QVariant::String: {
+    switch (va.typeId()){
+        case QMetaType::QString: {
             int i = choices.indexOf(va.toString());
             if (i >= 0){
                 value = i;
@@ -1251,7 +1251,7 @@ void SkinEnumProperty::SetValue(QVariant va)
             }
             return;
         }
-        case QVariant::Int:
+        case QMetaType::Int:
             value = va.toInt();
             emit Changed();
             return;
@@ -1295,18 +1295,18 @@ QVariant SkinIntegerProperty::GetValue() const
 
 void SkinIntegerProperty::SetValue(QVariant va)
 {
-	switch (va.type()){
-	case QVariant::Int:
+    switch (va.typeId()){
+    case QMetaType::Int:
 		value = va.toInt();
 		Normalize();
 		emit Changed();
 		return;
-	case QVariant::Double:
+    case QMetaType::Double:
 		value = va.toDouble();
 		Normalize();
 		emit Changed();
 		return;
-	case QVariant::String:
+    case QMetaType::QString:
 		value = va.toString().toInt();
 		Normalize();
 		emit Changed();
@@ -1340,7 +1340,7 @@ SkinFloatProperty::SkinFloatProperty(Skin *parent, QString name, QString display
 SkinFloatProperty::SkinFloatProperty(Skin *parent, QString name, QString displayName, qreal min, qreal max, QVariant value)
 	: SkinProperty(parent, name, displayName, this)
 	, min(min)
-	, max(max)
+    , max(max)
 {
 	SetValue(value);
 }
@@ -1352,18 +1352,18 @@ QVariant SkinFloatProperty::GetValue() const
 
 void SkinFloatProperty::SetValue(QVariant va)
 {
-	switch (va.type()){
-	case QVariant::Int:
+    switch (va.typeId()){
+    case QMetaType::Int:
 		value = va.toInt();
 		Normalize();
 		emit Changed();
 		return;
-	case QVariant::Double:
+    case QMetaType::Double:
 		value = va.toDouble();
 		Normalize();
 		emit Changed();
 		return;
-	case QVariant::String:
+    case QMetaType::QString:
 		value = va.toString().toInt();
 		Normalize();
 		emit Changed();

@@ -465,7 +465,7 @@ void SoundChannelView::UpdateBackBuffer(const QRect &rect)
 		QMap<int, SoundNoteView*>::const_iterator inote = notes.upperBound(tBegin);
 		quint32 color;
 		if (inote != notes.begin()){
-			auto iprev = inote-1;
+            auto iprev = inote--;
 			if ((*iprev)->GetNote().lane == 0){
 				color = 0xFF009900;
 			}else{
@@ -563,7 +563,7 @@ bool SoundChannelView::DrawsWaveform() const
 void SoundChannelView::mouseMoveEvent(QMouseEvent *event)
 {
 	if (!current){
-		qreal time = sview->Y2Time(event->y());
+        qreal time = sview->Y2Time(event->position().y());
 		int iTime = int(time);
 		if (sview->snapToGrid){
 			iTime = sview->SnapToLowerFineGrid(time);
@@ -598,7 +598,7 @@ void SoundChannelView::mouseDoubleClickEvent(QMouseEvent *event)
 	context = context->MouseDoubleClick(event);
 }
 
-void SoundChannelView::enterEvent([[maybe_unused]] QEvent *event)
+void SoundChannelView::enterEvent([[maybe_unused]] QEnterEvent *event)
 {
 }
 

@@ -92,7 +92,5 @@ public:
 };
 
 
-
-
 #endif // SEQUENCEVIEWCHANNELINTERNAL_H
 

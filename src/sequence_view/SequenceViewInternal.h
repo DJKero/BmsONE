@@ -5,9 +5,7 @@
 #include <QtWidgets>
 #include "../document/Document.h"
 #include "../document/SoundChannel.h"
-#include "SequenceDef.h"
 #include "SequenceViewDef.h"
-#include <functional>
 
 
 class MainWindow;
@@ -196,7 +194,7 @@ public:
 	virtual void mousePressEvent(QMouseEvent *event);
 	virtual void mouseReleaseEvent(QMouseEvent *event);
 	virtual void mouseDoubleClickEvent(QMouseEvent *event);
-	virtual void enterEvent(QEvent *event);
+    virtual void enterEvent(QEnterEvent *event);
 	virtual void leaveEvent(QEvent *event);
 
 	void SetMode(SequenceEditMode mode);
@@ -304,6 +302,4 @@ signals:
 };
 
 
-
 #endif // SEQUENCEVIEWINTERNAL
-

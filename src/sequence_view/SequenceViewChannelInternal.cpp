@@ -16,14 +16,14 @@ SoundChannelView::EditModeContext::~EditModeContext()
 
 SoundChannelView::Context *SoundChannelView::EditModeContext::MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
     [[maybe_unused]] int iTimeUpper = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
-	SoundNoteView *noteHit = cview->HitTestBGPane(event->y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1);
+    SoundNoteView *noteHit = cview->HitTestBGPane(event->position().y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1);
 	if (noteHit){
 		cview->setCursor(Qt::SizeAllCursor);
 		sview->cursor->SetExistingSoundNote(noteHit);
@@ -36,12 +36,12 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MouseMove(QMouseEv
 
 SoundChannelView::Context *SoundChannelView::EditModeContext::MousePress(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 	}
-	SoundNoteView *noteHit = cview->HitTestBGPane(event->y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1);
+    SoundNoteView *noteHit = cview->HitTestBGPane(event->position().y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1);
     if ((event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)) || (event->button() == Qt::MiddleButton)){
 		// select this channel (if not selected) & preview
 		if (!cview->current){
@@ -95,7 +95,7 @@ SoundChannelView::Context *SoundChannelView::EditModeContext::MousePress(QMouseE
                 QMenu menu(cview);
                 menu.addAction(cview->actionDeleteNotes);
                 menu.addAction(cview->actionTransferNotes);
-                menu.exec(event->globalPos());
+                menu.exec(event->globalPosition().toPoint());
                 break;
             }
             case Qt::MiddleButton:
@@ -150,7 +150,7 @@ SoundChannelView::EditModeSelectNotesContext::~EditModeSelectNotesContext()
 
 SoundChannelView::Context *SoundChannelView::EditModeSelectNotesContext::MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	int iTimeUpper = time;
 	if (sview->snapToGrid && EditConfig::SnappedSelectionInEditMode()){
@@ -188,7 +188,7 @@ SoundChannelView::Context *SoundChannelView::EditModeSelectNotesContext::MouseRe
 	if (event->button() != mouseButton){
 		return this;
 	}
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	int iTimeUpper = time;
 	if (sview->snapToGrid && EditConfig::SnappedSelectionInEditMode()){
@@ -251,12 +251,12 @@ SoundChannelView::WriteModeContext::~WriteModeContext()
 
 SoundChannelView::Context *SoundChannelView::WriteModeContext::MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = int(time);
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 	}
-	SoundNoteView *noteHit = cview->HitTestBGPane(event->y(), iTime);
+    SoundNoteView *noteHit = cview->HitTestBGPane(event->position().y(), iTime);
 	if (noteHit){
 		cview->setCursor(Qt::SizeAllCursor);
 		sview->cursor->SetExistingSoundNote(noteHit);
@@ -270,12 +270,12 @@ SoundChannelView::Context *SoundChannelView::WriteModeContext::MouseMove(QMouseE
 SoundChannelView::Context *SoundChannelView::WriteModeContext::MousePress(QMouseEvent *event)
 {
 	sview->ClearBpmEventsSelection();
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = int(time);
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 	}
-	SoundNoteView *noteHit = cview->HitTestBGPane(event->y(), iTime);
+    SoundNoteView *noteHit = cview->HitTestBGPane(event->position().y(), iTime);
     if ((event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)) || (event->button() == Qt::MiddleButton)){
 		// select this channel (if not selected) & preview
 		if (!cview->current){

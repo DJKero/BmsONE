@@ -7,7 +7,6 @@
 #include "../MasterView.h"
 #include "../EditConfig.h"
 #include <cmath>
-#include <cstdlib>
 
 namespace SequenceViewSettings{
 static const char* SettingsGroup = "SequenceView";
@@ -372,7 +371,7 @@ void SequenceView::ReplaceDocument(Document *newDocument)
 	// load document
 	{
 		// follow current state of document
-		int ichannel = 0;
+        [[maybe_unused]] int ichannel = 0;
 		for (auto *channel : document->GetSoundChannels()){
 			auto cview = new SoundChannelView(this, channel);
 			cview->SetInternalWidth(ChannelLaneWidth());
@@ -968,9 +967,9 @@ QSet<int> SequenceView::FineGridsInRange(qreal tBegin, qreal tEnd)
 	if (!documentReady)
 		return QSet<int>();
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-	const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
+    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
 	QSet<int> fineGridLines;
-	int prevBarLoc = ibar==bars.begin() ? -1 : (ibar-1)->Location;
+    int prevBarLoc = ibar == bars.begin() ? -1 : (ibar--)->Location;
 	for (QMap<int, BarLine>::const_iterator b=ibar; ; prevBarLoc=b->Location, b++){
 		if (prevBarLoc < 0){
 			continue;
@@ -996,9 +995,9 @@ QSet<int> SequenceView::CoarseGridsInRange(qreal tBegin, qreal tEnd)
 	if (!documentReady)
 		return QSet<int>();
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-	const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
+    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(tBegin);
 	QSet<int> coarseGridLines;
-	int prevBarLoc = ibar==bars.begin() ? -1 : (ibar-1)->Location;
+    int prevBarLoc = ibar==bars.begin() ? -1 : (ibar--)->Location;
 	for (QMap<int, BarLine>::const_iterator b=ibar; ; prevBarLoc=b->Location, b++){
 		if (prevBarLoc < 0){
 			continue;
@@ -1037,22 +1036,22 @@ QMap<int, QPair<int, BarLine>> SequenceView::BarsInRange(qreal tBegin, qreal tEn
 int SequenceView::SnapToLowerFineGrid(qreal time) const
 {
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-	const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(time);
+    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(time);
 	if (ibar == bars.begin()){
 		return time;
 	}
-	int prevBarLoc = (ibar-1)->Location;
+    int prevBarLoc = (ibar--)->Location;
 	return int(prevBarLoc + fineGrid.NthGrid(resolution, fineGrid.GridNumber(resolution, time - prevBarLoc)) + 0.5);
 }
 
 int SequenceView::SnapToUpperFineGrid(qreal time) const
 {
 	const QMap<int, BarLine> &bars = document->GetBarLines();
-	const QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(time);
+    QMap<int, BarLine>::const_iterator ibar = bars.lowerBound(time);
 	if (ibar == bars.begin()){
 		return time;
 	}
-	int prevBarLoc = (ibar-1)->Location;
+    int prevBarLoc = (ibar--)->Location;
 	int nextBarLoc = ibar->Location;
 	int snapped = int(prevBarLoc + fineGrid.NthGrid(resolution,
 													1+fineGrid.GridNumber(resolution, time - 1.0 - prevBarLoc)) + 0.5);
@@ -2199,7 +2198,7 @@ SequenceView::Context *SequenceView::Context::KeyPress(QKeyEvent *event)
 
 SequenceView::Context *SequenceView::Context::MeasureArea_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -2211,7 +2210,7 @@ SequenceView::Context *SequenceView::Context::MeasureArea_MouseMove(QMouseEvent 
 
 SequenceView::Context *SequenceView::Context::MeasureArea_MousePress(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -2228,7 +2227,7 @@ SequenceView::Context *SequenceView::Context::MeasureArea_MouseRelease([[maybe_u
 
 SequenceView::Context *SequenceView::Context::BpmArea_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -2240,7 +2239,7 @@ SequenceView::Context *SequenceView::Context::BpmArea_MouseMove(QMouseEvent *eve
 
 SequenceView::Context *SequenceView::Context::BpmArea_MousePress(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -2272,7 +2271,7 @@ SequenceViewFooterSizeGrip::SequenceViewFooterSizeGrip(SequenceView *sview, QWid
 void SequenceViewFooterSizeGrip::mouseMoveEvent(QMouseEvent *event)
 {
 	if (QWidget::mouseGrabber() == this){
-		sview->SetFooterHeight(sview->GetFooterHeight() - event->y() + dragOrig.y());
+        sview->SetFooterHeight(sview->GetFooterHeight() - event->position().y() + dragOrig.y());
 	}
 }
 

@@ -50,6 +50,5 @@ struct GridSize
 };
 
 
-
 #endif // SEQUENCEDEF_H
 

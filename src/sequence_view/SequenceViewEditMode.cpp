@@ -47,17 +47,17 @@ SequenceView::Context *SequenceView::EditModeContext::Leave(QEnterEvent *)
 */
 SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
     [[maybe_unused]] int iTimeUpper = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
     [[maybe_unused]] int laneX;
 	if (lane < 0){
-		if (event->x() < sview->sortedLanes[0].left){
+        if (event->position().x() < sview->sortedLanes[0].left){
 			laneX = 0;
 		}else{
 			laneX = sview->sortedLanes.size() - 1;
@@ -69,7 +69,7 @@ SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MouseMove(QMou
 	bool conflicts = false;
 	NoteConflict conf;
 	if (lane >= 0)
-		notes = sview->HitTestPlayingPaneMulti(lane, event->y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1,
+        notes = sview->HitTestPlayingPaneMulti(lane, event->position().y(), EditConfig::SnappedHitTestInEditMode() ? iTime : -1,
 											   event->modifiers() & Qt::AltModifier, &conflicts, &conf);
 	if (notes.size() > 0){
 		sview->playingPane->setCursor(Qt::SizeAllCursor);
@@ -90,17 +90,17 @@ SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MouseMove(QMou
 
 SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MousePress(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
     [[maybe_unused]] int iTimeUpper = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
 	int laneX;
 	if (lane < 0){
-		if (event->x() < sview->sortedLanes[0].left){
+        if (event->position().x() < sview->sortedLanes[0].left){
 			laneX = 0;
 		}else{
 			laneX = sview->sortedLanes.size() - 1;
@@ -112,7 +112,7 @@ SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MousePress(QMo
 	bool conflicts = false;
 	NoteConflict conf;
 	if (lane >= 0)
-		notes = sview->HitTestPlayingPaneMulti(lane, event->y(), EditConfig::SnappedHitTestInEditMode() ? iTime : time,
+        notes = sview->HitTestPlayingPaneMulti(lane, event->position().y(), EditConfig::SnappedHitTestInEditMode() ? iTime : time,
 										  event->modifiers() & Qt::AltModifier, &conflicts, &conf);
 	sview->ClearBpmEventsSelection();
 	if (event->button() == Qt::RightButton && (event->modifiers() & Qt::AltModifier)){
@@ -197,7 +197,7 @@ SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MousePress(QMo
                 for (auto note : notes){
                     sview->SetCurrentChannel(note->GetChannelView(), true);
                 }
-                QMetaObject::invokeMethod(sview, "ShowPlayingPaneContextMenu", Qt::QueuedConnection, Q_ARG(QPoint, event->globalPos()));
+                QMetaObject::invokeMethod(sview, "ShowPlayingPaneContextMenu", Qt::QueuedConnection, Q_ARG(QPoint, event->globalPosition().toPoint()));
                 break;
             }
             case Qt::MiddleButton:
@@ -236,7 +236,7 @@ SequenceView::Context *SequenceView::EditModeContext::PlayingPane_MouseDblClick(
 }
 
 SequenceView::Context *SequenceView::EditModeContext::BpmArea_MouseMove(QMouseEvent *event){
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -248,7 +248,7 @@ SequenceView::Context *SequenceView::EditModeContext::BpmArea_MouseMove(QMouseEv
 		auto i = events.upperBound(hitTime);
 		if (i != events.begin()){
 			i--;
-			if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->y()){
+            if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->position().y()){
 				hitTime = i.key();
 			}
 		}
@@ -264,7 +264,7 @@ SequenceView::Context *SequenceView::EditModeContext::BpmArea_MouseMove(QMouseEv
 }
 
 SequenceView::Context *SequenceView::EditModeContext::BpmArea_MousePress(QMouseEvent *event){
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(iTime);
@@ -276,7 +276,7 @@ SequenceView::Context *SequenceView::EditModeContext::BpmArea_MousePress(QMouseE
 		auto i = events.upperBound(iTime);
 		if (i != events.begin()){
 			i--;
-			if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->y()){
+            if (i != events.end() && sview->Time2Y(i.key()) - 16 <= event->position().y()){
 				hitTime = i.key();
 			}
 		}
@@ -313,7 +313,7 @@ SequenceView::Context *SequenceView::EditModeContext::BpmArea_MousePress(QMouseE
 			sview->ClearBpmEventsSelection();
 		}
 		return new EditModeSelectBpmEventsContext(this, sview, event->button(),
-												  EditConfig::SnappedSelectionInEditMode() ? iTime : time, event->globalPos());
+                                                  EditConfig::SnappedSelectionInEditMode() ? iTime : time, event->globalPosition().toPoint());
 	}
 	return this;
 }
@@ -367,17 +367,17 @@ SequenceView::Context *SequenceView::EditModeSelectNotesContext::PlayingPane_Mou
 			return this;
 		}
 	}
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	int iTimeUpper = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid && EditConfig::SnappedSelectionInEditMode()){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
 	int laneX;
 	if (lane < 0){
-		if (event->x() < sview->sortedLanes[0].left){
+        if (event->position().x() < sview->sortedLanes[0].left){
 			laneX = 0;
 		}else{
 			laneX = sview->sortedLanes.size() - 1;
@@ -433,17 +433,17 @@ SequenceView::Context *SequenceView::EditModeSelectNotesContext::PlayingPane_Mou
 		// release before drag began
 		return Escape();
 	}
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	int iTimeUpper = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid && EditConfig::SnappedSelectionInEditMode()){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
 	int laneX;
 	if (lane < 0){
-		if (event->x() < sview->sortedLanes[0].left){
+        if (event->position().x() < sview->sortedLanes[0].left){
 			laneX = 0;
 		}else{
 			laneX = sview->sortedLanes.size() - 1;
@@ -513,7 +513,7 @@ SequenceView::Context *SequenceView::EditModeSelectNotesContext::PlayingPane_Mou
 	}
 	rubberBand->hide();
 	if (mouseButton == Qt::RightButton){
-		QMetaObject::invokeMethod(sview, "ShowPlayingPaneContextMenu", Qt::QueuedConnection, Q_ARG(QPoint, event->globalPos()));
+        QMetaObject::invokeMethod(sview, "ShowPlayingPaneContextMenu", Qt::QueuedConnection, Q_ARG(QPoint, event->globalPosition().toPoint()));
 	}
 	return Escape();
 }
@@ -553,17 +553,17 @@ SequenceView::Context *SequenceView::EditModeDragNotesContext::Leave(QEnterEvent
 */
 SequenceView::Context *SequenceView::EditModeDragNotesContext::PlayingPane_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
     [[maybe_unused]] int iTimeUpper = time;
-	int lane = sview->X2Lane(event->x());
+    int lane = sview->X2Lane(event->position().x());
 	if (sview->snapToGrid){
 		iTime = sview->SnapToLowerFineGrid(time);
 		iTimeUpper = sview->SnapToUpperFineGrid(time);
 	}
 	int laneX;
 	if (lane < 0){
-		if (event->x() < sview->sortedLanes[0].left){
+        if (event->position().x() < sview->sortedLanes[0].left){
 			laneX = 0;
 		}else{
 			laneX = sview->sortedLanes.size() - 1;
@@ -669,7 +669,7 @@ SequenceView::Context *SequenceView::EditModeSelectBpmEventsContext::MeasureArea
 
 SequenceView::Context *SequenceView::EditModeSelectBpmEventsContext::BpmArea_MouseMove(QMouseEvent *event)
 {
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	int iTimeUpper = time;
 	if (sview->snapToGrid && EditConfig::SnappedSelectionInEditMode()){
@@ -708,7 +708,7 @@ SequenceView::Context *SequenceView::EditModeSelectBpmEventsContext::BpmArea_Mou
 		// ignore
 		return this;
 	}
-	qreal time = sview->Y2Time(event->y());
+    qreal time = sview->Y2Time(event->position().y());
 	int iTime = time;
 	int iTimeUpper = time;
 	if (sview->snapToGrid){

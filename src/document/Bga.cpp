@@ -1,6 +1,7 @@
-
 #include "DocumentDef.h"
-#include "bmson/Bmson.h"
+#include "bmson/Bmson100.h"
+
+using namespace Bmson100;
 
 BgaHeader::BgaHeader(const QJsonValue &json)
 	: BmsonObject(json)
@@ -11,7 +12,7 @@ BgaHeader::BgaHeader(const QJsonValue &json)
 
 QJsonValue BgaHeader::SaveBmson()
 {
-	bmsonFields[Bmson::BgaHeader::IdKey] = id;
+    bmsonFields[Bmson::BgaHeader::IdKey] = id;
 	bmsonFields[Bmson::BgaHeader::NameKey] = name;
 	return bmsonFields;
 }

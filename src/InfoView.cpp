@@ -1,8 +1,11 @@
 #include "InfoView.h"
 #include "MainWindow.h"
+#include "../bmson/Bmson100.h"
 #include "../util/JsonExtension.h"
 #include "../util/CollapseButton.h"
 #include "ViewMode.h"
+
+using namespace Bmson100;
 
 const char* InfoView::SettingsGroup = "DocumentInfoView";
 const char* InfoView::SettingsShowSubartists = "ShowSubartists";
@@ -85,24 +88,24 @@ InfoView::InfoView(MainWindow *mainWindow)
 	QString tyStringArray = tr("array of strings");
 	QString tyInteger = tr("integer");
 	QString tyDouble = tr("real number");
-	SetToolTip(editTitle, Bmson::BmsInfo::TitleKey, tyString, (""));
-	SetToolTip(editSubtitle, Bmson::BmsInfo::SubtitleKey, tyString, (""));
-	SetToolTip(editGenre, Bmson::BmsInfo::GenreKey, tyString, (""));
-	SetToolTip(editArtist, Bmson::BmsInfo::ArtistKey, tyString, (""));
-	SetToolTip(buttonShowSubartists, Bmson::BmsInfo::SubartistsKey, tyStringArray, tr("Enter one entry per line. Example:") +
+    SetToolTip(editTitle, Bmson::BmsonInfo::TitleKey, tyString, (""));
+    SetToolTip(editSubtitle, Bmson::BmsonInfo::SubtitleKey, tyString, (""));
+    SetToolTip(editGenre, Bmson::BmsonInfo::GenreKey, tyString, (""));
+    SetToolTip(editArtist, Bmson::BmsonInfo::ArtistKey, tyString, (""));
+    SetToolTip(buttonShowSubartists, Bmson::BmsonInfo::SubartistsKey, tyStringArray, tr("Enter one entry per line. Example:") +
 			   "<pre>music:Subartist1<br>movie:Subartist2<br>chart:Subartist3</pre>", editSubartists);
-	SetToolTip(editChartName, Bmson::BmsInfo::ChartNameKey, tyString, (""));
-	SetToolTip(editModeHint, Bmson::BmsInfo::ModeHintKey, tyString, "");
-	SetToolTip(buttonResolution, Bmson::BmsInfo::ResolutionKey, tyInteger, tr("Specify the number of pulses per beat (one quarter note in a 4/4 measure). Every note will located at some pulse number."));
-	SetToolTip(editJudgeRank, Bmson::BmsInfo::JudgeRankKey, tyDouble, tr("Specify the relative width (100 = default) of judgment window. The actual width is calculated by players. Larger values make looser judgment."));
-	SetToolTip(editInitBpm, Bmson::BmsInfo::InitBpmKey, tyDouble, "");
-	SetToolTip(editTotal, Bmson::BmsInfo::TotalKey, tyDouble, tr("Specify the relative amount (100 = default) of gauge increase. The actual amount is calculated by players."));
-	SetToolTip(editLevel, Bmson::BmsInfo::LevelKey, tyInteger, "");
-	SetToolTip(editBackImage, Bmson::BmsInfo::BackImageKey, tyString, tr("The filename of an image that will be displayed during game play."));
-	SetToolTip(editEyecatchImage, Bmson::BmsInfo::EyecatchImageKey, tyString, tr("The filename of an image that will be displayed during song loading."));
-	SetToolTip(editTitleImage, Bmson::BmsInfo::TitleImageKey, tyString, tr("The filename of an image that will be displayed before song starts."));
-	SetToolTip(editBanner, Bmson::BmsInfo::BannerKey, tyString, tr("The filename of an image that will be displayed in song selection or result screen."));
-	SetToolTip(editPreviewMusic, Bmson::BmsInfo::PreviewMusicKey, tyString, tr("The filename of a sound that will be used to preview the song."));
+    SetToolTip(editChartName, Bmson::BmsonInfo::ChartNameKey, tyString, (""));
+    SetToolTip(editModeHint, Bmson::BmsonInfo::ModeHintKey, tyString, "");
+    SetToolTip(buttonResolution, Bmson::BmsonInfo::ResolutionKey, tyInteger, tr("Specify the number of pulses per beat (one quarter note in a 4/4 measure). Every note will located at some pulse number."));
+    SetToolTip(editJudgeRank, Bmson::BmsonInfo::JudgeRankKey, tyDouble, tr("Specify the relative width (100 = default) of judgment window. The actual width is calculated by players. Larger values make looser judgment."));
+    SetToolTip(editInitBpm, Bmson::BmsonInfo::InitBpmKey, tyDouble, "");
+    SetToolTip(editTotal, Bmson::BmsonInfo::TotalKey, tyDouble, tr("Specify the relative amount (100 = default) of gauge increase. The actual amount is calculated by players."));
+    SetToolTip(editLevel, Bmson::BmsonInfo::LevelKey, tyInteger, "");
+    SetToolTip(editBackImage, Bmson::BmsonInfo::BackImageKey, tyString, tr("The filename of an image that will be displayed during game play."));
+    SetToolTip(editEyecatchImage, Bmson::BmsonInfo::EyecatchImageKey, tyString, tr("The filename of an image that will be displayed during song loading."));
+    SetToolTip(editTitleImage, Bmson::BmsonInfo::TitleImageKey, tyString, tr("The filename of an image that will be displayed before song starts."));
+    SetToolTip(editBanner, Bmson::BmsonInfo::BannerKey, tyString, tr("The filename of an image that will be displayed in song selection or result screen."));
+    SetToolTip(editPreviewMusic, Bmson::BmsonInfo::PreviewMusicKey, tyString, tr("The filename of a sound that will be used to preview the song."));
 	editExtraFields->setToolTip(tr("Enter extra fields that are not supported by BmsONE. Example:") +
 								"<pre>\"field_1\": \"14:00 2015/11/14\",\n\"field_2\": [0, 240, 480]</pre>");
 	buttonShowExtraFields->setToolTip(editExtraFields->toolTip());

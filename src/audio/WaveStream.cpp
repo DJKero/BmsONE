@@ -1014,6 +1014,7 @@ void F32S44100StreamTransformer::Provide(qreal playHeadEnd)
                 break;
             case 4:
                 switch (fmt.sampleFormat()){
+                    // 32bit float
                     case QAudioFormat::Float:
                         switch (fmt.channelConfig()){
                             case QAudioFormat::ChannelConfigMono: {

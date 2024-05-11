@@ -4,12 +4,12 @@
 #include "HistoryUtil.h"
 #include "History.h"
 #include "MasterCache.h"
-#include <cstdlib>
 #include <cmath>
-#include "../bmson/Bmson.h"
+#include "../bmson/Bmson100.h"
 #include "../bms/Bms.h"
 #include "../util/ResolutionUtil.h"
 
+using namespace Bmson100;
 
 SoundChannel::SoundChannel(Document *document)
 	: QObject(document)
@@ -41,9 +41,9 @@ void SoundChannel::LoadSound(const QString &filePath)
 void SoundChannel::LoadBmson(const QJsonValue &json)
 {
 	bmsonFields = json.toObject();
-	fileName = bmsonFields[Bmson::SoundChannel::NameKey].toString();
+    fileName = bmsonFields[Bmson::SoundChannel::NameKey].toString();
 	//adjustment = 0.;
-	for (QJsonValue jsonNote : bmsonFields[Bmson::SoundChannel::NotesKey].toArray()){
+    for (QJsonValue jsonNote : bmsonFields[Bmson::SoundChannel::NotesKey].toArray()){
 		SoundNote note(jsonNote);
 		notes.insert(note.location, note);
 	}
@@ -83,12 +83,12 @@ void SoundChannel::AfterInitialization()
 
 QJsonValue SoundChannel::SaveBmson()
 {
-	bmsonFields[Bmson::SoundChannel::NameKey] = fileName;
+    bmsonFields[Bmson::SoundChannel::NameKey] = fileName;
 	QJsonArray jsonNotes;
 	for (SoundNote note : notes){
 		jsonNotes.append(note.SaveBmson());
 	}
-	bmsonFields[Bmson::SoundChannel::NotesKey] = jsonNotes;
+    bmsonFields[Bmson::SoundChannel::NotesKey] = jsonNotes;
 	return bmsonFields;
 }
 
@@ -433,8 +433,8 @@ void SoundChannel::DrawRmsGraph(double location, double resolution, std::functio
 				auto itRms = rmsCacheLibrary.find(ixPacket);
 				if (itRms != rmsCacheLibrary.end() && itRms->size() > 0){
 					const QList<RmsCacheEntry> &entries = *itRms;
-					int bxBegin = std::max(0, std::min(entries.size()-1, (iPos - ixPacket) / SoundChannelResourceManager::RmsCacheBlockSize));
-					int bxEnd = std::max(bxBegin+1, std::min(entries.size(), (iNextPos - ixPacket) / SoundChannelResourceManager::RmsCacheBlockSize));
+                    int bxBegin = std::max(0, std::min( (int) entries.size()-1, (iPos - ixPacket) / SoundChannelResourceManager::RmsCacheBlockSize));
+                    int bxEnd = std::max(bxBegin+1, std::min( (int) entries.size(), (iNextPos - ixPacket) / SoundChannelResourceManager::RmsCacheBlockSize));
 					// assume (bxEnd-bxBegin) < 2^16
 					unsigned int rmsL=0;
 					unsigned int rmsR=0;
@@ -800,18 +800,18 @@ void SoundChannel::UpdateCache()
 SoundNote::SoundNote(const QJsonValue &json)
 	: BmsonObject(json)
 {
-	lane = bmsonFields[Bmson::Note::LaneKey].toInt();
-	location = bmsonFields[Bmson::Note::LocationKey].toInt();
-	length = bmsonFields[Bmson::Note::LengthKey].toInt();
-	noteType = bmsonFields[Bmson::Note::ContinueKey].toBool() ? 1 : 0;
+    lane = bmsonFields[Bmson::Note::LaneKey].toInt();
+    location = bmsonFields[Bmson::Note::LocationKey].toInt();
+    length = bmsonFields[Bmson::Note::LengthKey].toInt();
+    noteType = bmsonFields[Bmson::Note::ContinueKey].toBool() ? 1 : 0;
 }
 
 QJsonValue SoundNote::SaveBmson()
 {
-	bmsonFields[Bmson::Note::LaneKey] = lane;
-	bmsonFields[Bmson::Note::LocationKey] = location;
-	bmsonFields[Bmson::Note::LengthKey] = length;
-	bmsonFields[Bmson::Note::ContinueKey] = noteType > 0;
+    bmsonFields[Bmson::Note::LaneKey] = lane;
+    bmsonFields[Bmson::Note::LocationKey] = location;
+    bmsonFields[Bmson::Note::LengthKey] = length;
+    bmsonFields[Bmson::Note::ContinueKey] = noteType > 0;
 	return bmsonFields;
 }
 
@@ -819,10 +819,10 @@ QMap<QString, QJsonValue> SoundNote::GetExtraFields() const
 {
 	QMap<QString, QJsonValue> fields;
 	for (QJsonObject::const_iterator i=bmsonFields.begin(); i!=bmsonFields.end(); i++){
-		if (i.key() != Bmson::Note::LocationKey
-			&& i.key() != Bmson::Note::LaneKey
-			&& i.key() != Bmson::Note::LengthKey
-			&& i.key() != Bmson::Note::ContinueKey)
+        if (i.key() != Bmson::Note::LocationKey
+            && i.key() != Bmson::Note::LaneKey
+            && i.key() != Bmson::Note::LengthKey
+            && i.key() != Bmson::Note::ContinueKey)
 		{
 			fields.insert(i.key(), i.value());
 		}
@@ -834,10 +834,10 @@ void SoundNote::SetExtraFields(const QMap<QString, QJsonValue> &fields)
 {
 	bmsonFields = QJsonObject();
 	for (auto i=fields.begin(); i!=fields.end(); i++){
-		if (i.key() != Bmson::Note::LocationKey
-			&& i.key() != Bmson::Note::LaneKey
-			&& i.key() != Bmson::Note::LengthKey
-			&& i.key() != Bmson::Note::ContinueKey)
+        if (i.key() != Bmson::Note::LocationKey
+            && i.key() != Bmson::Note::LaneKey
+            && i.key() != Bmson::Note::LengthKey
+            && i.key() != Bmson::Note::ContinueKey)
 		{
 			bmsonFields[i.key()] = i.value();
 		}
@@ -847,10 +847,10 @@ void SoundNote::SetExtraFields(const QMap<QString, QJsonValue> &fields)
 QJsonObject SoundNote::AsJson() const
 {
 	QJsonObject obj = bmsonFields;
-	obj[Bmson::Note::LaneKey] = lane;
-	obj[Bmson::Note::LocationKey] = location;
-	obj[Bmson::Note::LengthKey] = length;
-	obj[Bmson::Note::ContinueKey] = noteType > 0;
+    obj[Bmson::Note::LaneKey] = lane;
+    obj[Bmson::Note::LocationKey] = location;
+    obj[Bmson::Note::LengthKey] = length;
+    obj[Bmson::Note::ContinueKey] = noteType > 0;
 	return obj;
 }
 

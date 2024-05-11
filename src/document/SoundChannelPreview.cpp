@@ -13,7 +13,7 @@ SoundChannelSourceFilePreviewer::SoundChannelSourceFilePreviewer(SoundChannel *c
 	QString srcPath = channel->document->GetAbsolutePath(channel->fileName);
 	AudioStreamSource *native = SoundChannelUtil::OpenSourceFile(srcPath, this);
 	if (native){
-		wave = new S32F44100StreamTransformer(native);
+        wave = new F32S44100StreamTransformer(native);
 		wave->Open();
 	}
 }
@@ -105,7 +105,7 @@ SoundChannelNotePreviewer::SoundChannelNotePreviewer(SoundChannel *channel, int 
 	AudioStreamSource *native = SoundChannelUtil::OpenSourceFile(srcPath, this);
 	if (!native)
 		return;
-	wave = new S32F44100StreamTransformer(native);
+    wave = new F32S44100StreamTransformer(native);
 	wave->Open();
 	wave->SeekAbsolute(currentSamplePos);
 }
@@ -135,8 +135,8 @@ int SoundChannelNotePreviewer::AudioPlayRead(AudioPlaySource::SampleType *buffer
 	if (durationInSamples > 0 && currentSampleCount + samplesRead > durationInSamples){
 		for (int i=0; i<samplesRead; i++){
 			//if (currentSampleCount + i > durationInSamples){
-				buffer[i].left *= fade;
-				buffer[i].right *= fade;
+                buffer[i].setValue(QAudioFormat::FrontLeft, buffer[i].value(QAudioFormat::FrontLeft) * fade);
+                buffer[i].setValue(QAudioFormat::FrontRight, buffer[i].value(QAudioFormat::FrontRight) * fade);
 				fade *= fadeRate;
 			//}
 		}
@@ -237,7 +237,7 @@ SoundChannelPreviewer::SoundChannelPreviewer(SoundChannel *channel, int location
 	AudioStreamSource *native = SoundChannelUtil::OpenSourceFile(srcPath, this);
 	if (!native)
 		return;
-	wave = new S32F44100StreamTransformer(native);
+    wave = new F32S44100StreamTransformer(native);
 	wave->Open();
 	wave->SeekAbsolute((quint64)std::max<qint64>(0, currentSamplePos));
 }
@@ -305,7 +305,10 @@ int SoundChannelPreviewer::AudioPlayRead(AudioPlaySource::SampleType *buffer, in
 				currentSamplePos += samplesRead;
 			}else{
 				for (int i=0; i<samples; i++){
-					buffer[i] = QAudioBuffer::StereoFrame<float>();
+                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                    buf.setValue(QAudioFormat::FrontLeft, 0);
+                    buf.setValue(QAudioFormat::FrontRight, 0);
+                    buffer[i] = buf;
 				}
 				samples = 0;
 			}
@@ -324,7 +327,10 @@ int SoundChannelPreviewer::AudioPlayRead(AudioPlaySource::SampleType *buffer, in
 					int samplesRead = wave->Read(buffer, r);
 					if (samplesRead == 0){
 						for (int i=0; i<r; i++){
-							buffer[i] = QAudioBuffer::StereoFrame<float>();
+                            QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                            buf.setValue(QAudioFormat::FrontLeft, 0);
+                            buf.setValue(QAudioFormat::FrontRight, 0);
+                            buffer[i] = buf;
 						}
 						break;
 					}
@@ -333,7 +339,10 @@ int SoundChannelPreviewer::AudioPlayRead(AudioPlaySource::SampleType *buffer, in
 				}
 			}else{
 				for (int i=0; i<endSamples; i++){
-					buffer[i] = QAudioBuffer::StereoFrame<float>();
+                    QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+                    buf.setValue(QAudioFormat::FrontLeft, 0);
+                    buf.setValue(QAudioFormat::FrontRight, 0);
+                    buffer[i] = buf;
 				}
 				buffer += endSamples;
 			}

@@ -41,6 +41,5 @@ struct Rms
 };
 
 
-
 #endif // SOUNDCHANNELDEF_H
 

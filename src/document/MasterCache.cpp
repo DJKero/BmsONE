@@ -154,33 +154,39 @@ int MasterCache::GetDataSize()
     return data.size();
 }
 
-const QAudioBuffer::StereoFrame<float> *MasterCache::GetAllData() const
+const QAudioBuffer::F32S *MasterCache::GetAllData() const
 {
     return data.constData();
 }
 
-void MasterCache::GetData(int position, std::function<bool (int, QAudioBuffer::S32F)> f)
+void MasterCache::GetData(int position, std::function<bool (int, QAudioBuffer::F32S)> f)
 {
 	QMutexLocker locker(&dataMutex);
 	bool r = true;
 	for (int s=position; r; s++){
 		if (s < 0 || s >= data.size()){
-			r = f(0, QAudioBuffer::StereoFrame<float>(0, 0));
+            QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+            buf.setValue(QAudioFormat::FrontLeft, 0);
+            buf.setValue(QAudioFormat::FrontRight, 0);
+            r = f(0, buf);
 		}else{
 			r = f(counter.lowerBound(s)->first, data[s]);
 		}
 	}
 }
 
-QPair<int, QAudioBuffer::S32F> MasterCache::GetData(int position)
+QPair<int, QAudioBuffer::F32S> MasterCache::GetData(int position)
 {
 	QMutexLocker locker(&dataMutex);
 	if (position < 0 || position >= data.size()){
-		return QPair<int, QAudioBuffer::S32F>(0, QAudioBuffer::StereoFrame<float>(0, 0));
+        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+        buf.setValue(QAudioFormat::FrontLeft, 0);
+        buf.setValue(QAudioFormat::FrontRight, 0);
+        return QPair<int, QAudioBuffer::F32S>(0, buf);
 	}
 	auto f = data[position];
 	auto i = counter.lowerBound(position);
-	return QPair<int, QAudioBuffer::S32F>(i->first, f);
+    return QPair<int, QAudioBuffer::F32S>(i->first, f);
 }
 
 bool MasterCache::IsComplete() const
@@ -211,7 +217,7 @@ MasterCacheSingleWorker::MasterCacheSingleWorker(MasterCache *master, int time, 
 	native = SoundChannelUtil::OpenSourceFile(srcPath, this);
 	if (!native)
 		return;
-	wave = new S32F44100StreamTransformer(native, this);
+    wave = new F32S44100StreamTransformer(native, this);
 }
 
 MasterCacheSingleWorker::~MasterCacheSingleWorker()
@@ -244,7 +250,7 @@ void MasterCacheSingleWorker::AddSoundTask()
 	wave->Open();
 	wave->SeekAbsolute(0);
 	static const int BufferSize = 4096;
-	QAudioBuffer::S32F buf[BufferSize];
+    QAudioBuffer::F32S buf[BufferSize];
 	while (frames > 0){
 		if (cancel){
 			return;
@@ -261,17 +267,17 @@ void MasterCacheSingleWorker::AddSoundTask()
 			if (v > 0){
 				for (int i=0; i<sizeRead; i++){
 					auto smp = buf[i];
-					QAudioBuffer::S32F out = master->data[time+i];
-					out.left += smp.left;
-					out.right += smp.right;
+                    QAudioBuffer::F32S out = master->data[time+i];
+                    out.setValue(QAudioFormat::FrontLeft, out.value(QAudioFormat::FrontLeft) + smp.value(QAudioFormat::FrontLeft));
+                    out.setValue(QAudioFormat::FrontRight, out.value(QAudioFormat::FrontRight) + smp.value(QAudioFormat::FrontRight));
 					master->data[time+i] = out;
 				}
 			}else{
 				for (int i=0; i<sizeRead; i++){
 					auto smp = buf[i];
-					QAudioBuffer::S32F out = master->data[time+i];
-					out.left -= smp.left;
-					out.right -= smp.right;
+                    QAudioBuffer::F32S out = master->data[time+i];
+                    out.setValue(QAudioFormat::FrontLeft, out.value(QAudioFormat::FrontLeft) - smp.value(QAudioFormat::FrontLeft));
+                    out.setValue(QAudioFormat::FrontRight, out.value(QAudioFormat::FrontRight) - smp.value(QAudioFormat::FrontRight));
 					master->data[time+i] = out;
 				}
 			}
@@ -301,8 +307,8 @@ MasterCacheMultiWorker::MasterCacheMultiWorker(MasterCache *master, QList<Master
 	native = SoundChannelUtil::OpenSourceFile(srcPath, this);
 	if (!native)
 		return;
-	wave = new S32F44100StreamTransformer(native, this);
-	buf = new QAudioBuffer::S32F[BufferSize];
+    wave = new F32S44100StreamTransformer(native, this);
+    buf = new QAudioBuffer::F32S[BufferSize];
 }
 
 MasterCacheMultiWorker::~MasterCacheMultiWorker()
@@ -368,17 +374,17 @@ void MasterCacheMultiWorker::AddSoundTask()
 				if (patch.sign > 0){
 					for (int i=0; i<sz; i++){
 						auto smp = buf[i];
-						QAudioBuffer::S32F out = master->data[patch.time+pbuf+i];
-						out.left += smp.left;
-						out.right += smp.right;
+                        QAudioBuffer::F32S out = master->data[patch.time+pbuf+i];
+                        out.setValue(QAudioFormat::FrontLeft, out.value(QAudioFormat::FrontLeft) + smp.value(QAudioFormat::FrontLeft));
+                        out.setValue(QAudioFormat::FrontRight, out.value(QAudioFormat::FrontRight) + smp.value(QAudioFormat::FrontRight));
 						master->data[patch.time+pbuf+i] = out;
 					}
 				}else{
 					for (int i=0; i<sz; i++){
 						auto smp = buf[i];
-						QAudioBuffer::S32F out = master->data[patch.time+pbuf+i];
-						out.left -= smp.left;
-						out.right -= smp.right;
+                        QAudioBuffer::F32S out = master->data[patch.time+pbuf+i];
+                        out.setValue(QAudioFormat::FrontLeft, out.value(QAudioFormat::FrontLeft) - smp.value(QAudioFormat::FrontLeft));
+                        out.setValue(QAudioFormat::FrontRight, out.value(QAudioFormat::FrontRight) - smp.value(QAudioFormat::FrontRight));
 						master->data[patch.time+pbuf+i] = out;
 					}
 				}
@@ -425,8 +431,11 @@ int MasterPlayer::AudioPlayRead(AudioPlaySource::SampleType *buffer, int bufferS
 	emit Progress(position);
 	QMutexLocker locker(&master->dataMutex);
 	for (; i<bufferSampleCount && position < master->data.size(); i++,position++){
-		QAudioBuffer::S32F data = position < 0 || position >= master->data.size()
-				? QAudioBuffer::StereoFrame<float>(0, 0)
+        QAudioBuffer::F32S buf = QAudioBuffer::F32S();
+        buf.setValue(QAudioFormat::FrontLeft, 0);
+        buf.setValue(QAudioFormat::FrontRight, 0);
+        QAudioBuffer::F32S data = position < 0 || position >= master->data.size()
+                ? buf
 				: master->data[position];
 		buffer[i] = data;
 	}

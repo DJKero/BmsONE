@@ -33,7 +33,7 @@ class MasterCacheSingleWorker : public MasterCacheWorkerBase
 private:
 	MasterCache *master;
 	AudioStreamSource *native;
-	S32F44100StreamTransformer *wave;
+    F32S44100StreamTransformer *wave;
 	int time;
 	int v;
 	int frames;
@@ -67,7 +67,7 @@ private:
 	MasterCache *master;
 	QList<Patch> patches;
 	AudioStreamSource *native;
-	S32F44100StreamTransformer *wave;
+    F32S44100StreamTransformer *wave;
 	QFuture<void> task;
 	static const int BufferSize;
     QAudioBuffer::F32S *buf;
@@ -160,7 +160,6 @@ signals:
 	void RegionUpdated(int position, int length);
 	void Complete();
 };
-
 
 
 #endif // MASTERCACHE_H

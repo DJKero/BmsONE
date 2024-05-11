@@ -145,7 +145,7 @@ int Bms::BmsUtil::ZZtoInt(const QString &xx){
 
 QChar Bms::BmsUtil::IntToZ(int num)
 {
-	return num < 10 ? '0' + num : 'A' + num - 10;
+    return QChar(num < 10 ? '0' + num : 'A' + num - 10);
 }
 
 QString Bms::BmsUtil::IntToZZ(int num)

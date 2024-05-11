@@ -151,9 +151,12 @@ QMap<QString, QString> Bms::BmsReader::GenerateEncodingPreviewMap()
 	for (auto codec : BmsReaderConfig::AvailableCodecs){
 		in.seek(0);
 		if (codec.isEmpty()){
-			in.setCodec(QTextCodec::codecForLocale());
+            in.setEncoding(QStringConverter::Utf8);
+            in.setAutoDetectUnicode(true);
+            if (in.autoDetectUnicode() == false)
+                in.setEncoding(QStringConverter::System);
 		}else{
-			in.setCodec(QTextCodec::codecForName(codec.toLatin1()));
+            in.setEncoding(QStringConverter::Latin1);
 		}
 		QString preview = in.read(1000);
 		map.insert(codec, preview + "...");
@@ -186,9 +189,12 @@ static qreal ToReal(const QString &s, qreal defaultValue){
 void Bms::BmsReader::StartWithCodec(QString codec)
 {
 	if (codec.isNull() || codec.isEmpty()){
-		in.setCodec(QTextCodec::codecForLocale());
+        in.setEncoding(QStringConverter::Utf8);
+        in.setAutoDetectUnicode(true);
+        if (in.autoDetectUnicode() == false)
+            in.setEncoding(QStringConverter::System);
 	}else{
-		in.setCodec(QTextCodec::codecForName(codec.toLatin1()));
+        in.setEncoding(QStringConverter::Latin1);
 	}
 	lineCount = 0;
 	while (!in.atEnd()){
@@ -234,7 +240,7 @@ void Bms::BmsReader::InitCommandHandlers()
 	headerCommandHandlers.insert(QString("PLAYLEVEL"), [this](QString value){ bms.level = ToInt(value, bms.level); });
 	headerCommandHandlers.insert(QString("DIFFICULTY"), [this](QString value){ bms.difficulty = ToInt(value, bms.difficulty); });
 	headerCommandHandlers.insert(QString("BPM"), [this](QString value){ bms.bpm = ToReal(value, bms.bpm); });
-    headerCommandHandlers.insert(QString("LNTYPE"), [this]([[maybe_unused]] QString value){ /* ignored */ });
+    headerCommandHandlers.insert(QString("LNTYPE"), []([[maybe_unused]] QString value){ /* ignored */ });
 	headerCommandHandlers.insert(QString("LNOBJ"), [this](QString value){ int n = BmsUtil::ZZtoInt(value); if (n >= 0) bms.lnobj = n; });
 
 	headerZZDefCommandHandlers.insert(QString("BPM"), [this](int def, QString value){
@@ -253,7 +259,7 @@ void Bms::BmsReader::InitCommandHandlers()
 
 void Bms::BmsReader::LoadMain()
 {
-	static QRegExp rexpDelimiter("[:\\s]");
+    static QRegularExpression rexpDelimiter("[:\\s]");
 
     cont = [this]([[maybe_unused]] QVariant arg){
 		LoadMain();
@@ -308,7 +314,7 @@ void Bms::BmsReader::LoadMain()
 				headerCommandHandlers[command](value);
 				return;
 			}
-			QString defCommandName = command.mid(0, std::max(0, command.length() - 2));
+            QString defCommandName = command.mid(0, std::max(0, (int) command.length() - 2));
 			if (headerZZDefCommandHandlers.contains(defCommandName)){
 				int num = BmsUtil::ZZtoInt(command.mid(command.length()-2, 2));
 				if (num >= 0){

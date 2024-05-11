@@ -36,7 +36,7 @@ BmsImportDialog::BmsImportDialog(QWidget *parent, Bms::BmsReader &reader)
 	buttonsLayout->addStretch(1);
 	buttonsLayout->addWidget(okButton);
 	buttonsLayout->addWidget(cancelButton);
-	buttonsLayout->setMargin(0);
+    buttonsLayout->setContentsMargins(0, 0, 0, 0);
 	mainLayout->addWidget(interactArea);
 	mainLayout->addWidget(progressBar);
 	mainLayout->addWidget(log, 1);
@@ -77,7 +77,7 @@ void BmsImportDialog::ResetInteractArea(const QString &message)
 	auto *label = new QLabel(message);
 	auto *layout = new QVBoxLayout();
 	layout->addWidget(label);
-	layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 	interactArea->setLayout(layout);
 }
 
@@ -110,7 +110,7 @@ void BmsImportDialog::AskTextEncoding()
 	auto *layout = new QVBoxLayout();
 	layout->addWidget(label);
 	layout->addLayout(previewsLayout, 1);
-	layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 	interactArea->setLayout(layout);
 }
 
@@ -165,7 +165,7 @@ void BmsImportDialog::AskRandomValue()
 	auto *layout = new QVBoxLayout();
 	layout->addWidget(label);
 	layout->addLayout(horzLayout, 1);
-	layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 	interactArea->setLayout(layout);
 }
 
@@ -196,7 +196,7 @@ void BmsImportDialog::AskGameMode()
 	auto *layout = new QVBoxLayout();
 	layout->addWidget(label);
 	layout->addLayout(previewsLayout, 1);
-	layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 	interactArea->setLayout(layout);
 }
 

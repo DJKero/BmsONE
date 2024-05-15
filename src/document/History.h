@@ -1,8 +1,9 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QString>
+#include <QStack>
 
 
 class EditActionException
@@ -59,5 +60,6 @@ signals:
 	void OnHistoryChanged();
 
 };
+
 
 #endif // HISTORY_H

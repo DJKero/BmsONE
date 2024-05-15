@@ -1,13 +1,12 @@
 #ifndef BMSON_H
 #define BMSON_H
 
+#include <QObject>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QString>
+#include <QStringList>
 #include "BmsonConvertDef.h"
-#include "Bmson100.h"
-#include <QtCore>
-
-using namespace Bmson100;
-
-
 
 
 class BmsonIO : public QObject
@@ -72,4 +71,3 @@ signals:
 
 
 #endif // BMSON_H
-

@@ -1,13 +1,20 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QWidget>
+#include <QDockWidget>
+#include <QMainWindow>
+#include <QApplication>
+#include <QSettings>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QMimeData>
+#include "AudioPlayer.h"
+#include "ChannelFindTools.h"
+#include "SequenceTools.h"
 #include "document/Document.h"
 #include "document/SoundChannel.h"
-#include "AudioPlayer.h"
-#include "SequenceTools.h"
-#include "ChannelFindTools.h"
+
 
 class ViewMode;
 class SequenceView;

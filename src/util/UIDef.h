@@ -1,9 +1,9 @@
 #ifndef UIDEF_H
 #define UIDEF_H
 
-#include <QtCore>
-#include <QtWidgets>
-
+#include <QWidget>
+#include <QSize>
+#include <QFont>
 
 
 class UIUtil
@@ -45,7 +45,6 @@ public:
 	static void LockGlobalShortcuts();
 	static void UnlockGlobalShortcuts();
 };
-
 
 
 #endif // UIDEF_H

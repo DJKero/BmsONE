@@ -1,8 +1,18 @@
 #ifndef PREFBMS_H
 #define PREFBMS_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QWidget>
+#include <QLabel>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+
 
 class Preferences;
 
@@ -31,5 +41,6 @@ public:
 	void load();
 	void store();
 };
+
 
 #endif // PREFBMS_H

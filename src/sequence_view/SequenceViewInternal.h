@@ -1,13 +1,15 @@
 #ifndef SEQUENCEVIEWINTERNAL
 #define SEQUENCEVIEWINTERNAL
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QWidget>
+#include <QAction>
+#include <QContextMenuEvent>
+#include <QPaintEvent>
+#include <QMouseEvent>
+#include "SequenceViewDef.h"
 #include "../document/Document.h"
 #include "../document/SoundChannel.h"
-#include "SequenceDef.h"
-#include "SequenceViewDef.h"
-#include <functional>
 
 
 class MainWindow;

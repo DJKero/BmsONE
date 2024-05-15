@@ -1,10 +1,9 @@
 #ifndef DOCUMENTAUX_H
 #define DOCUMENTAUX_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include "History.h"
+#include <QObject>
 #include "Document.h"
+#include "History.h"
 #include "SoundChannel.h"
 
 
@@ -84,4 +83,3 @@ public:
 
 
 #endif // DOCUMENTAUX_H
-

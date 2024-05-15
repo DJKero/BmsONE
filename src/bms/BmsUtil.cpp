@@ -2,6 +2,7 @@
 #include "../document/SoundChannel.h"
 #include "../document/DocumentDef.h"
 #include <cstdlib>
+#include <cmath>
 
 
 Bms::Rational::Rational(int numerator, int denominator)

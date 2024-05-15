@@ -1,9 +1,15 @@
 #ifndef AUDIOPLAYER_H
 #define AUDIOPLAYER_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include <QtMultimedia>
+#include <QObject>
+#include <QThread>
+#include <QMutex>
+#include <QIODevice>
+#include <QAudioBuffer>
+#include <QAudioOutput>
+#include <QFrame>
+#include <QToolBar>
+#include <QSlider>
 #include "audio/Wave.h"
 #include "document/Document.h"
 
@@ -148,7 +154,6 @@ public:
 	void PreviewSoundChannelSource(SoundChannel *channel);
 
 };
-
 
 
 #endif // AUDIOPLAYER_H

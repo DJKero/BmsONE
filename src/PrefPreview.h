@@ -1,9 +1,18 @@
 #ifndef PREFPREVIEWPAGE_H
 #define PREFPREVIEWPAGE_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QWidget>
+#include <QLabel>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QSlider>
 #include <QVector>
+#include <QFormLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QGroupBox>
+
 
 class MainWindow;
 
@@ -33,5 +42,6 @@ private slots:
 	//void DelayRatioEditChanged(QString value);
 	void SingleMaxDurationChanged(int value);
 };
+
 
 #endif // PREFPREVIEWPAGE_H

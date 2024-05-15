@@ -1,8 +1,15 @@
 #ifndef BMS_H
 #define BMS_H
 
-#include <QtCore>
-#include <functional>
+#include <QObject>
+#include <QFile>
+#include <QTextStream>
+#include <QTextCodec>
+#include <QString>
+#include <QVector>
+#include <QList>
+#include <QMap>
+#include <QStack>
 
 
 struct SoundNote;
@@ -143,6 +150,8 @@ public:
 
 class BmsReader : public QObject
 {
+    Q_OBJECT
+
 public:
 	enum Status{
 		STATUS_COMPLETE,
@@ -235,7 +244,6 @@ public:
 	int GetRandomMax() const;
 	QMap<Mode, QList<int>> GetErrorChannelsMap() const{ return errorChannelsMap; }
 };
-
 
 class BmsUtil
 {

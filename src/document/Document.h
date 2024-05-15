@@ -1,13 +1,10 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
-#include <QtCore>
-#include <QtConcurrent>
-#include <QtMultimedia>
-#include <string>
-#include <functional>
+#include <QDir>
 #include "DocumentDef.h"
 #include "../bmson/Bmson.h"
+
 
 class Document;
 class DocumentInfo;
@@ -21,6 +18,7 @@ class MasterCache;
 namespace Bms{
 	struct Bms;
 }
+
 
 class DocumentInfo : public QObject, public BmsonObject
 {
@@ -285,8 +283,6 @@ signals:
 
 	void ShowBpmEventLocation(int location);
 };
-
-
 
 
 #endif // DOCUMENT_H

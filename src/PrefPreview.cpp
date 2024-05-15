@@ -2,6 +2,7 @@
 #include "PreviewConfig.h"
 #include "ExternalViewerTools.h"
 #include "MainWindow.h"
+#include <cmath>
 
 const int PrefPreviewPage::DelayRatioSliderLevels = 16;
 

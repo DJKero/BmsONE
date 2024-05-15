@@ -24,31 +24,31 @@ QJsonObject ConverterFrom021::Convert(const QJsonObject &v021)
 	v100[Bmson::Bms::InfoKey] = ConvertBmsInfo(v021[Bmson021::Bmson::Bms::InfoKey].toObject());
 	{
 		QJsonArray barLines100, barLines021 = v021[Bmson021::Bmson::Bms::BarLinesKey].toArray();
-		for (auto bar021 : barLines021){
-			barLines100.append(ConvertBarLine(bar021.toObject()));
-		}
-		v100[Bmson::Bms::BarLinesKey] = barLines100;
+        for (auto bar021 : std::as_const(barLines021)) {
+            barLines100.append(ConvertBarLine(bar021.toObject()));
+        }
+        v100[Bmson::Bms::BarLinesKey] = barLines100;
 	}
 	{
 		QJsonArray bpmEvents100, bpmEvents021 = v021[Bmson021::Bmson::Bms::BpmNotesKey].toArray();
-		for (auto bpm021 : bpmEvents021){
-			bpmEvents100.append(ConvertBpmEvent(bpm021.toObject()));
-		}
-		v100[Bmson::Bms::BpmEventsKey] = bpmEvents100;
+        for (auto bpm021 : std::as_const(bpmEvents021)) {
+            bpmEvents100.append(ConvertBpmEvent(bpm021.toObject()));
+        }
+        v100[Bmson::Bms::BpmEventsKey] = bpmEvents100;
 	}
 	{
 		QJsonArray stopEvents100, stopEvents021 = v021[Bmson021::Bmson::Bms::StopNotesKey].toArray();
-		for (auto stop021 : stopEvents021){
-			stopEvents100.append(ConvertStopEvent(stop021.toObject()));
-		}
-		v100[Bmson::Bms::StopEventsKey] = stopEvents100;
+        for (auto stop021 : std::as_const(stopEvents021)) {
+            stopEvents100.append(ConvertStopEvent(stop021.toObject()));
+        }
+        v100[Bmson::Bms::StopEventsKey] = stopEvents100;
 	}
 	{
 		QJsonArray channels100, channels021 = v021[Bmson021::Bmson::Bms::SoundChannelsKey].toArray();
-		for (auto c021 : channels021){
-			channels100.append(ConvertSoundChannel(c021.toObject()));
-		}
-		v100[Bmson::Bms::SoundChannelsKey] = channels100;
+        for (auto c021 : std::as_const(channels021)) {
+            channels100.append(ConvertSoundChannel(c021.toObject()));
+        }
+        v100[Bmson::Bms::SoundChannelsKey] = channels100;
 	}
 	v100[Bmson::Bms::BgaKey] = ConvertBga(v021[Bmson021::Bmson::Bms::BgaKey].toObject());
 	return v100;
@@ -121,10 +121,10 @@ QJsonObject ConverterFrom021::ConvertSoundChannel(const QJsonObject &v021)
 	v100[Bmson::SoundChannel::NameKey] = v021[Bmson021::Bmson::SoundChannel::NameKey];
 	{
 		QJsonArray notes100, notes021 = v021[Bmson021::Bmson::SoundChannel::NotesKey].toArray();
-		for (auto n021 : notes021){
-			notes100.append(ConvertNote(n021.toObject()));
-		}
-		v100[Bmson::SoundChannel::NotesKey] = notes100;
+        for (auto n021 : std::as_const(notes021)) {
+            notes100.append(ConvertNote(n021.toObject()));
+        }
+        v100[Bmson::SoundChannel::NotesKey] = notes100;
 	}
 	return v100;
 }
@@ -152,31 +152,31 @@ QJsonObject ConverterFrom021::ConvertBga(const QJsonObject &v021)
 	v100.remove(Bmson021::Bmson::Bga::MissNotesKey);
 	{
 		QJsonArray headers100, headers021 = v021[Bmson021::Bmson::Bga::DefinitionsKey].toArray();
-		for (auto h021 : headers021){
-			headers100.append(ConvertBgaHeader(h021.toObject()));
-		}
-		v100[Bmson::Bga::HeaderKey] = headers100;
+        for (auto h021 : std::as_const(headers021)) {
+            headers100.append(ConvertBgaHeader(h021.toObject()));
+        }
+        v100[Bmson::Bga::HeaderKey] = headers100;
 	}
 	{
 		QJsonArray events100, events021 = v021[Bmson021::Bmson::Bga::BgaNotesKey].toArray();
-		for (auto e021 : events021){
-			events100.append(ConvertBgaEvent(e021.toObject()));
-		}
-		v100[Bmson::Bga::BgaEventsKey] = events100;
+        for (auto e021 : std::as_const(events021)) {
+            events100.append(ConvertBgaEvent(e021.toObject()));
+        }
+        v100[Bmson::Bga::BgaEventsKey] = events100;
 	}
 	{
 		QJsonArray events100, events021 = v021[Bmson021::Bmson::Bga::LayerNotesKey].toArray();
-		for (auto e021 : events021){
-			events100.append(ConvertBgaEvent(e021.toObject()));
-		}
-		v100[Bmson::Bga::LayerEventsKey] = events100;
+        for (auto e021 : std::as_const(events021)) {
+            events100.append(ConvertBgaEvent(e021.toObject()));
+        }
+        v100[Bmson::Bga::LayerEventsKey] = events100;
 	}
 	{
 		QJsonArray events100, events021 = v021[Bmson021::Bmson::Bga::MissNotesKey].toArray();
-		for (auto e021 : events021){
-			events100.append(ConvertBgaEvent(e021.toObject()));
-		}
-		v100[Bmson::Bga::MissEventsKey] = events100;
+        for (auto e021 : std::as_const(events021)) {
+            events100.append(ConvertBgaEvent(e021.toObject()));
+        }
+        v100[Bmson::Bga::MissEventsKey] = events100;
 	}
 	return v100;
 }
@@ -222,31 +222,31 @@ QJsonObject ConverterTo021::Convert(const QJsonObject &v100)
 	int resolution = info100[Bmson::BmsInfo::ResolutionKey].toInt(DefaultOriginalResolution);
 	{
 		QJsonArray bars021, bars100 = v100[Bmson::Bms::BarLinesKey].toArray();
-		for (auto b100 : bars100){
-			bars021.append(ConvertBarLine(b100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bms::BarLinesKey] = bars021;
+        for (auto b100 : std::as_const(bars100)) {
+            bars021.append(ConvertBarLine(b100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bms::BarLinesKey] = bars021;
 	}
 	{
 		QJsonArray bpms021, bpms100 = v100[Bmson::Bms::BpmEventsKey].toArray();
-		for (auto b100 : bpms100){
-			bpms021.append(ConvertBpmEvent(b100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bms::BpmNotesKey] = bpms021;
+        for (auto b100 : std::as_const(bpms100)) {
+            bpms021.append(ConvertBpmEvent(b100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bms::BpmNotesKey] = bpms021;
 	}
 	{
 		QJsonArray stops021, stops100 = v100[Bmson::Bms::StopEventsKey].toArray();
-		for (auto s100 : stops100){
-			stops021.append(ConvertStopEvent(s100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bms::StopNotesKey] = stops021;
+        for (auto s100 : std::as_const(stops100)) {
+            stops021.append(ConvertStopEvent(s100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bms::StopNotesKey] = stops021;
 	}
 	{
 		QJsonArray channels021, channels100 = v100[Bmson::Bms::SoundChannelsKey].toArray();
-		for (auto c100 : channels100){
-			channels021.append(ConvertSoundChannel(c100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bms::SoundChannelsKey] = channels021;
+        for (auto c100 : std::as_const(channels100)) {
+            channels021.append(ConvertSoundChannel(c100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bms::SoundChannelsKey] = channels021;
 	}
 	v021[Bmson021::Bmson::Bms::BgaKey] = ConvertBga(v100[Bmson::Bms::BgaKey].toObject(), resolution);
 	return v021;
@@ -325,10 +325,10 @@ QJsonObject ConverterTo021::ConvertSoundChannel(const QJsonObject &v100, int res
 	v021[Bmson021::Bmson::SoundChannel::NameKey] = v100[Bmson::SoundChannel::NameKey];
 	{
 		QJsonArray notes021, notes100 = v100[Bmson::SoundChannel::NotesKey].toArray();
-		for (auto n100 : notes100){
-			notes021.append(ConvertNote(n100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::SoundChannel::NotesKey] = notes021;
+        for (auto n100 : std::as_const(notes100)) {
+            notes021.append(ConvertNote(n100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::SoundChannel::NotesKey] = notes021;
 	}
 	return v021;
 }
@@ -356,31 +356,31 @@ QJsonObject ConverterTo021::ConvertBga(const QJsonObject &v100, int resolution)
 	v021.remove(Bmson::Bga::MissEventsKey);
 	{
 		QJsonArray headers021, headers100 = v100[Bmson::Bga::HeaderKey].toArray();
-		for (auto h100 : headers100){
-			headers021.append(ConvertBgaHeader(h100.toObject()));
-		}
-		v021[Bmson021::Bmson::Bga::DefinitionsKey] = headers021;
+        for (auto h100 : std::as_const(headers100)) {
+            headers021.append(ConvertBgaHeader(h100.toObject()));
+        }
+        v021[Bmson021::Bmson::Bga::DefinitionsKey] = headers021;
 	}
 	{
 		QJsonArray events021, events100 = v100[Bmson::Bga::BgaEventsKey].toArray();
-		for (auto e100 : events100){
-			events100.append(ConvertBgaEvent(e100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bga::BgaNotesKey] = events021;
+        for (auto e100 : std::as_const(events100)) {
+            events100.append(ConvertBgaEvent(e100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bga::BgaNotesKey] = events021;
 	}
 	{
 		QJsonArray events021, events100 = v100[Bmson::Bga::LayerEventsKey].toArray();
-		for (auto e100 : events100){
-			events100.append(ConvertBgaEvent(e100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bga::LayerNotesKey] = events021;
+        for (auto e100 : std::as_const(events100)) {
+            events100.append(ConvertBgaEvent(e100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bga::LayerNotesKey] = events021;
 	}
 	{
 		QJsonArray events021, events100 = v100[Bmson::Bga::MissEventsKey].toArray();
-		for (auto e100 : events100){
-			events100.append(ConvertBgaEvent(e100.toObject(), resolution));
-		}
-		v021[Bmson021::Bmson::Bga::MissNotesKey] = events021;
+        for (auto e100 : std::as_const(events100)) {
+            events100.append(ConvertBgaEvent(e100.toObject(), resolution));
+        }
+        v021[Bmson021::Bmson::Bga::MissNotesKey] = events021;
 	}
 	return v021;
 }

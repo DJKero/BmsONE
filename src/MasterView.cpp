@@ -6,9 +6,8 @@
 #include "sequence_view/SequenceViewInternal.h"
 #include "AudioPlayer.h"
 #include "MainWindow.h"
-#include "audio/Wave.h"
 #include "util/UIDef.h"
-#include <cstdlib>
+#include <cmath>
 #include <cstring>
 
 MiniMapView::MiniMapView(SequenceView *sview)
@@ -467,7 +466,8 @@ void MasterLaneView::paintEvent(QPaintEvent *event)
 		painter.drawImage(0, 0, *backBuffer);
 	}else{
 		RemakeBackBuffer();
-		painter.drawImage(0, 0, *backBuffer);
+        if (backBuffer)
+            painter.drawImage(0, 0, *backBuffer);
 	}
 
 	painter.setPen(palette().dark().color());

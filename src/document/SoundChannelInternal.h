@@ -1,10 +1,13 @@
 #ifndef SOUNDCHANNELINTERNAL
 #define SOUNDCHANNELINTERNAL
 
-#include <QtCore>
-#include "../audio/Wave.h"
+#include <QDir>
+#include <QFileInfo>
+#include <QImage>
+#include <QFuture>
 #include "DocumentDef.h"
 #include "SoundChannelDef.h"
+#include "../audio/Wave.h"
 
 
 class SoundChannelResourceManager : public QObject
@@ -74,6 +77,4 @@ public:
 };
 
 
-
 #endif // SOUNDCHANNELINTERNAL
-

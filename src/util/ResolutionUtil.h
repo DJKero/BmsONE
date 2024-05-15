@@ -1,7 +1,9 @@
 #ifndef RESOLUTIONUTIL_H
 #define RESOLUTIONUTIL_H
 
-#include <QtCore>
+#include <QSet>
+#include <QJsonArray>
+
 
 class ResolutionUtil
 {
@@ -17,7 +19,7 @@ public:
 	static int GetAcceptableDivider(QSet<int> locs){
 		if (locs.isEmpty()) return 0;
 		int n = *locs.begin();
-        for (auto i=++locs.begin(); i!=locs.constEnd(); i++){
+        for (auto i=++locs.begin(); i!=locs.end(); i++){
 			int l = (*i) % n;
 			if (l != 0){
 				n = gcd(n, l);
@@ -27,5 +29,5 @@ public:
 	}
 };
 
-#endif // RESOLUTIONUTIL_H
 
+#endif // RESOLUTIONUTIL_H

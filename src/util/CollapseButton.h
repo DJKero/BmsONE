@@ -1,9 +1,9 @@
 #ifndef COLLAPSEBUTTON_H
 #define COLLAPSEBUTTON_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include <functional>
+#include <QObject>
+#include <QToolButton>
+
 
 class CollapseButton : public QToolButton
 {

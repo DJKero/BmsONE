@@ -118,13 +118,13 @@ void BpmEditView::Update()
 		bool bpmUniform = true;
 		QMap<QString, QJsonValue> extraFields = bpmEvents.first().GetExtraFields();
 		bool extraFieldsUniform = true;
-		for (auto event : bpmEvents){
-			if (event.value != bpm){
+        for (const auto &event : std::as_const(bpmEvents)) {
+            if (event.value != bpm){
 				bpmUniform = false;
 				break;
 			}
-		}
-		for (auto event : bpmEvents){
+        }
+        for (const auto &event : std::as_const(bpmEvents)){
 			if (event.GetExtraFields() != extraFields){
 				extraFieldsUniform = false;
 				break;

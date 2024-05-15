@@ -1,17 +1,19 @@
 #ifndef MASTERCACHE_H
 #define MASTERCACHE_H
 
-#include <QtCore>
-#include <QtConcurrent>
+#include <QtConcurrentRun>
+#include <QFuture>
 #include <functional>
-#include "../audio/Wave.h"
 #include "SoundChannel.h"
+#include "../audio/Wave.h"
 #include "../util/SignalFunction.h"
+
 
 class Document;
 class SoundChannel;
 class MasterCache;
 class Smoother;
+
 
 class MasterCacheWorkerBase : public QObject
 {
@@ -24,7 +26,6 @@ public:
 signals:
 	void Complete(MasterCacheWorkerBase *worker);
 };
-
 
 class MasterCacheSingleWorker : public MasterCacheWorkerBase
 {
@@ -162,6 +163,4 @@ signals:
 };
 
 
-
 #endif // MASTERCACHE_H
-

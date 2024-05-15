@@ -1,8 +1,10 @@
 #ifndef QUASIMODALEDIT_H
 #define QUASIMODALEDIT_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QLineEdit>
+#include <QTextEdit>
+#include <QComboBox>
+#include <QKeyEvent>
 #include "UIDef.h"
 
 
@@ -85,7 +87,6 @@ signals:
 	void EditingFinished();
 	void EscPressed();
 };
-
 
 
 #endif // QUASIMODALEDIT_H

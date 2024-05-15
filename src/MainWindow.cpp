@@ -343,6 +343,7 @@ MainWindow::MainWindow(QSettings *settings)
 			viewModeGroup->addAction(action);
 			viewModeActionMap.insert(mode, action);
 		}
+        delete viewModeGroup;
 	}
 
 	//setStatusBar(statusBar = new StatusBar(this));

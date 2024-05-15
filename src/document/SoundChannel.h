@@ -1,11 +1,13 @@
 #ifndef SOUNDCHANNEL
 #define SOUNDCHANNEL
 
-#include <QtCore>
-#include "../audio/Wave.h"
+#include <QFileInfo>
+#include <QImage>
 #include "DocumentDef.h"
 #include "SoundChannelDef.h"
+#include "../audio/Wave.h"
 #include "../util/SignalFunction.h"
+
 
 class Document;
 class MasterCache;

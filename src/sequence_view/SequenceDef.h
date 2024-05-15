@@ -1,7 +1,8 @@
 #ifndef SEQUENCEDEF_H
 #define SEQUENCEDEF_H
 
-#include <QtCore>
+#include <QtGlobal>
+
 
 struct GridSize
 {
@@ -50,6 +51,4 @@ struct GridSize
 };
 
 
-
 #endif // SEQUENCEDEF_H
-

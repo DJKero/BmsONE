@@ -1,7 +1,9 @@
 #ifndef SCALARREGION_H
 #define SCALARREGION_H
 
-#include <QtCore>
+#include <QMap>
+#include <QPair>
+
 
 class ScalarRegion
 {
@@ -44,7 +46,7 @@ public:
 
 	ScalarRegion &Union(KeyType t0, KeyType t1);
 	ScalarRegion &Diff(KeyType t0, KeyType t1);
-
 };
+
 
 #endif // SCALARREGION_H

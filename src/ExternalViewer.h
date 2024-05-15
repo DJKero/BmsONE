@@ -1,8 +1,11 @@
 #ifndef EXTERNALVIEWER_H
 #define EXTERNALVIEWER_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QFile>
+#include <QProcess>
+#include <QMessageBox>
+
 
 class Document;
 class MainWindow;

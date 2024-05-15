@@ -1,7 +1,10 @@
 #ifndef SIGNAL_FUNCTION_H
 #define SIGNAL_FUNCTION_H
 
-#include <QtCore>
+#include <QObject>
+#include <QVariant>
+#include <QQueue>
+#include <QTimer>
 
 
 class Stabilizer : public QObject
@@ -90,11 +93,6 @@ signals:
 	void SmoothedValue(qreal value);
 
 };
-
-
-
-
-
 
 
 #endif // SIGNAL_FUNCTION_H

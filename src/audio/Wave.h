@@ -1,12 +1,18 @@
 #ifndef WAV_H
 #define WAV_H
 
-#include <QtCore>
-#include <QtMultimedia>
-#include <functional>
+#include <QObject>
+#include <QDir>
+#include <QFile>
+#include <QDataStream>
+#include <QAudioFormat>
+#include <QAudioBuffer>
+#include <QMutex>
+#include <QDebug>
+#include <QFileInfo>
+#include <QTypeInfo>
 #include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
-
 
 
 class AudioStreamSource : public QObject

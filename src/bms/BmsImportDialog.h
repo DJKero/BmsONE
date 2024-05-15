@@ -1,8 +1,21 @@
 #ifndef BMSIMPORTDIALOG_H
 #define BMSIMPORTDIALOG_H
 
-#include <QtWidgets>
+#include <QDialog>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPlainTextEdit>
+#include <QTextEdit>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QSlider>
+#include <QProgressBar>
+#include <QTimer>
 #include "Bms.h"
+
 
 class BmsImportDialog : public QDialog
 {

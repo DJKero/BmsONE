@@ -1,7 +1,7 @@
 #ifndef BMSON100CONVERT_H
 #define BMSON100CONVERT_H
 
-#include <QtCore>
+#include <QJsonObject>
 
 namespace Bmson100
 {
@@ -46,5 +46,5 @@ namespace Bmson100
 
 }
 
-#endif // BMSON100CONVERT_H
 
+#endif // BMSON100CONVERT_H

@@ -1,5 +1,7 @@
+#include <QStandardPaths>
+#include <QTranslator>
+#include <QLibraryInfo>
 #include "MainWindow.h"
-#include "util/UIDef.h"
 #include "AppInfo.h"
 #include <QApplication>
 #include <QMetaType>

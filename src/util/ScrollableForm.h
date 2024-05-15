@@ -1,8 +1,13 @@
 #ifndef SCROLLABLEFORM_H
 #define SCROLLABLEFORM_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QEvent>
+#include <QWheelEvent>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QFormLayout>
+
 
 class ScrollableForm : public QScrollArea
 {
@@ -22,5 +27,6 @@ public:
 	QWidget *Form(){ return form; }
 	void Initialize(QFormLayout *layout);
 };
+
 
 #endif // SCROLLABLEFORM_H

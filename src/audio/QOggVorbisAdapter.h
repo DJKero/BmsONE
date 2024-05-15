@@ -1,7 +1,8 @@
 #ifndef QOGGVORBISADAPTER_H
 #define QOGGVORBISADAPTER_H
 
-#include <QtCore>
+#include <QFile>
+#include <QString>
 #include <ogg/ogg.h>
 #include <vorbis/vorbisfile.h>
 

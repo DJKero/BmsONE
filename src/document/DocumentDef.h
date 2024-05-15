@@ -1,8 +1,12 @@
 #ifndef DOCUMENTDEF_H
 #define DOCUMENTDEF_H
 
-#include <QtCore>
-#include <QtMultimedia>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QString>
+#include <QMap>
+#include <QAudioFormat>
+
 
 enum class UpdateNotePolicy
 {
@@ -10,6 +14,7 @@ enum class UpdateNotePolicy
     BestEffort,
     ForceMove,
 };
+
 
 class BmsConsts
 {
@@ -158,4 +163,3 @@ struct WaveSummary
 
 
 #endif // DOCUMENTDEF_H
-

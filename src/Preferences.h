@@ -1,9 +1,18 @@
 #ifndef PREFERENCES_H
 #define PREFERENCES_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include "bmson/Bmson.h"
+#include <QObject>
+#include <QWidget>
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QDialog>
+#include <QFontDialog>
+#include <QPushButton>
+#include <QComboBox>
+#include <QFormLayout>
+#include <QVBoxLayout>
+#include <QGroupBox>
+
 
 class MainWindow;
 

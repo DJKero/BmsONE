@@ -1,6 +1,7 @@
 #ifndef SEQUENCEVIEWCONTEXTS
 #define SEQUENCEVIEWCONTEXTS
 
+#include <QApplication>
 #include "SequenceView.h"
 
 

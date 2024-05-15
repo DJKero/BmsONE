@@ -1,11 +1,9 @@
 #ifndef CHANNELFINDTOOLS_H
 #define CHANNELFINDTOOLS_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include "sequence_view/SequenceDef.h"
-#include "sequence_view/SequenceViewDef.h"
+#include <QToolBar>
 #include "util/QuasiModalEdit.h"
+
 
 class MainWindow;
 class SequenceView;
@@ -61,5 +59,6 @@ public:
 	bool HidesOthers() const{ return actionChannelFindHideOthers->isChecked(); }
 
 };
+
 
 #endif // CHANNELFINDTOOLS_H

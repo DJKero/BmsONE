@@ -1,10 +1,8 @@
 #ifndef SKIN_H
 #define SKIN_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QColor>
 #include "../ViewMode.h"
-
 
 
 struct LaneDef{
@@ -315,7 +313,6 @@ public:
 
 	static SkinLibrary *GetDefaultSkinLibrary();
 };
-
 
 
 #endif // SKIN_H

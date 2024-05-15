@@ -1,8 +1,17 @@
 #ifndef EXTERNALVIEWERTOOLS_H
 #define EXTERNALVIEWERTOOLS_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QFileDialog>
+#include <QFileIconProvider>
+#include <QListWidget>
+#include <QAction>
+#include <QDialog>
+#include <QToolBar>
+#include <QToolButton>
+#include <QComboBox>
+#include <QLabel>
+#include <QFormLayout>
+#include <QGroupBox>
 #include "ExternalViewer.h"
 
 class MainWindow;
@@ -114,7 +123,6 @@ public:
 	Qt::TextElideMode GetElideMode() const{ return elideMode; }
 	void SetElideMode(Qt::TextElideMode mode);
 };
-
 
 
 #endif // EXTERNALVIEWERTOOLS_H

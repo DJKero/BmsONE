@@ -1,8 +1,11 @@
-#include "InfoView.h"
 #include "MainWindow.h"
+#include "InfoView.h"
+#include "ViewMode.h"
+#include "../bmson/Bmson100.h"
 #include "../util/JsonExtension.h"
 #include "../util/CollapseButton.h"
-#include "ViewMode.h"
+
+using namespace Bmson100;
 
 const char* InfoView::SettingsGroup = "DocumentInfoView";
 const char* InfoView::SettingsShowSubartists = "ShowSubartists";

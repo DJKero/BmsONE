@@ -1,8 +1,9 @@
 #ifndef SEQUENCEVIEWCHANNELINTERNAL_H
 #define SEQUENCEVIEWCHANNELINTERNAL_H
 
-#include "SequenceViewInternal.h"
 #include "SequenceView.h"
+#include "SequenceViewInternal.h"
+
 
 class SoundChannelView::EditModeContext
 		: public SoundChannelView::Context
@@ -92,7 +93,4 @@ public:
 };
 
 
-
-
 #endif // SEQUENCEVIEWCHANNELINTERNAL_H
-

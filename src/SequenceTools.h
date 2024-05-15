@@ -1,11 +1,24 @@
 #ifndef SEQUENCETOOLS_H
 #define SEQUENCETOOLS_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QAbstractListModel>
+#include <QStyledItemDelegate>
+#include <QMenu>
+#include <QDialog>
+#include <QToolBar>
+#include <QToolButton>
+#include <QPushButton>
+#include <QLabel>
+#include <QComboBox>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QTreeView>
+#include <QJsonArray>
 #include "sequence_view/SequenceDef.h"
 #include "sequence_view/SequenceViewDef.h"
 #include "../util/Counter.h"
+
 
 class MainWindow;
 class SequenceView;

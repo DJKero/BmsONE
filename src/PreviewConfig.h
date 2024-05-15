@@ -1,7 +1,7 @@
 #ifndef PREVIEWCONFIG_H
 #define PREVIEWCONFIG_H
 
-#include <QtCore>
+#include <QObject>
 
 class PreviewConfig : public QObject
 {
@@ -37,5 +37,6 @@ signals:
 	void PreviewSingleSoftFadeOutChanged(bool value);
 
 };
+
 
 #endif // PREVIEWCONFIG_H

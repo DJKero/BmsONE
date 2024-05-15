@@ -22,10 +22,10 @@ void BmsonConvertContext::MarkConverted()
 QString BmsonConvertContext::GetCombinedMessage() const
 {
 	QString string;
-	for (auto message : messages){
-		string += message + "\n";
-	}
-	return string;
+    for (const auto &message : messages) {
+        string += message + "\n";
+    }
+    return string;
 }
 
 

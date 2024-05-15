@@ -1,7 +1,10 @@
 #ifndef SOUNDCHANNELDEF_H
 #define SOUNDCHANNELDEF_H
 
-#include <QtCore>
+#include <QtGlobal>
+#include <QMetaType>
+#include <QList>
+
 
 struct RmsCacheEntry
 {
@@ -13,8 +16,8 @@ struct RmsCacheEntry
 	bool IsNull() const{ return L != 255; }
 };
 
-Q_DECLARE_METATYPE(QList<RmsCacheEntry>)
 
+Q_DECLARE_METATYPE(QList<RmsCacheEntry>)
 
 class RmsCachePacket
 {
@@ -26,7 +29,6 @@ public:
 	QList<RmsCacheEntry> Uncompress() const;
 	int GetSize() const{ return compressed.size(); }
 };
-
 
 
 struct Rms
@@ -41,6 +43,4 @@ struct Rms
 };
 
 
-
 #endif // SOUNDCHANNELDEF_H
-

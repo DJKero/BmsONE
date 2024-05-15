@@ -1,4 +1,3 @@
-
 #include "JsonExtension.h"
 
 QString JsonExtension::RenderJsonValue(const QJsonValue &value, QJsonDocument::JsonFormat format)

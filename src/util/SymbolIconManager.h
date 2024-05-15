@@ -1,8 +1,12 @@
 #ifndef SYMBOLICONMANAGER_H
 #define SYMBOLICONMANAGER_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QPainter>
+#include <QPalette>
+#include <QIcon>
+#include <QPen>
+#include <QMap>
 
 class SymbolIconManager : public QObject
 {

@@ -4,11 +4,12 @@
 #include "HistoryUtil.h"
 #include "History.h"
 #include "MasterCache.h"
-#include <cstdlib>
 #include <cmath>
-#include "../bmson/Bmson.h"
+#include "../bmson/Bmson100.h"
 #include "../bms/Bms.h"
 #include "../util/ResolutionUtil.h"
+
+using namespace Bmson100;
 
 
 SoundChannel::SoundChannel(Document *document)
@@ -43,12 +44,12 @@ void SoundChannel::LoadBmson(const QJsonValue &json)
 	bmsonFields = json.toObject();
 	fileName = bmsonFields[Bmson::SoundChannel::NameKey].toString();
 	//adjustment = 0.;
-	for (QJsonValue jsonNote : bmsonFields[Bmson::SoundChannel::NotesKey].toArray()){
-		SoundNote note(jsonNote);
+    for (const QJsonValue &jsonNote : bmsonFields[Bmson::SoundChannel::NotesKey].toArray()) {
+        SoundNote note(jsonNote);
 		notes.insert(note.location, note);
-	}
+    }
 
-	// temporary length (exact totalLength is calculated in UpdateCache() when whole sound data is available)
+    // temporary length (exact totalLength is calculated in UpdateCache() when whole sound data is available)
 	if (notes.empty()){
 		totalLength = 0;
 	}else{

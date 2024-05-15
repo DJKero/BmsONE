@@ -1,9 +1,23 @@
 #ifndef MASTEROUTDIALOG_H
 #define MASTEROUTDIALOG_H
 
+#include <QApplication>
+#include <QObject>
+#include <QDialog>
+#include <QFileDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QTextEdit>
+#include <QPushButton>
+#include <QToolButton>
+#include <QCheckBox>
+#include <QSlider>
+#include <QComboBox>
+#include <QFormLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QVector>
-#include <QtWidgets>
-#include <QtMultimedia>
+
 
 class Document;
 class MasterCache;
@@ -51,5 +65,6 @@ private:
 	void ProcessHardClip(QDataStream &dout);
 	void ProcessNormalize(QDataStream &dout);
 };
+
 
 #endif // MASTEROUTDIALOG_H

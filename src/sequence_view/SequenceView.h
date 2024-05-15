@@ -1,15 +1,19 @@
 #ifndef SEQUENCEVIEW_H
 #define SEQUENCEVIEW_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include "../document/Document.h"
-#include "../document/SoundChannel.h"
+#include <QInputDialog>
+#include <QAbstractScrollArea>
+#include <QPainter>
+#include <QPen>
+#include <QLabel>
+#include <QPinchGesture>
+#include <QRubberBand>
 #include "SequenceDef.h"
 #include "SequenceViewDef.h"
-#include "ViewMode.h"
 #include "Skin.h"
-#include <functional>
+#include "../document/Document.h"
+#include "../document/SoundChannel.h"
+#include "../ViewMode.h"
 
 
 class MainWindow;
@@ -346,7 +350,6 @@ public:
 	void mousePressEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 };
-
 
 
 #endif // SEQUENCEVIEW_H

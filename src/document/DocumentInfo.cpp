@@ -1,8 +1,11 @@
+#include <QJsonArray>
 #include "Document.h"
 #include "History.h"
 #include "HistoryUtil.h"
-#include "../bmson/Bmson.h"
+#include "../bmson/Bmson100.h"
 #include "../bms/Bms.h"
+
+using namespace Bmson100;
 
 QSet<QString> DocumentInfo::SupportedKeys;
 
@@ -66,10 +69,10 @@ void DocumentInfo::LoadBmson(QJsonValue json)
 	artist = bmsonFields[Bmson::BmsInfo::ArtistKey].toString();
 	subartists.clear();
 	auto tmp_subartists = bmsonFields[Bmson::BmsInfo::SubartistsKey].toArray();
-	for (auto entry : tmp_subartists){
-		subartists.append(entry.toString());
-	}
-	chartName = bmsonFields[Bmson::BmsInfo::ChartNameKey].toString();
+    for (auto entry : std::as_const(tmp_subartists)) {
+        subartists.append(entry.toString());
+    }
+    chartName = bmsonFields[Bmson::BmsInfo::ChartNameKey].toString();
 	modeHint = bmsonFields[Bmson::BmsInfo::ModeHintKey].toString();
 	resolution = bmsonFields[Bmson::BmsInfo::ResolutionKey].toInt();
 	if (resolution <= 0 || resolution > 24000){
@@ -185,10 +188,10 @@ QJsonValue DocumentInfo::SaveBmson()
 	bmsonFields[Bmson::BmsInfo::GenreKey] = genre;
 	bmsonFields[Bmson::BmsInfo::ArtistKey] = artist;
 	auto tmp_subartists = QJsonArray();
-	for (auto entry : subartists){
-		tmp_subartists.append(entry);
-	}
-	bmsonFields[Bmson::BmsInfo::SubartistsKey] = tmp_subartists;
+    for (const auto &entry : std::as_const(subartists)) {
+        tmp_subartists.append(entry);
+    }
+    bmsonFields[Bmson::BmsInfo::SubartistsKey] = tmp_subartists;
 	bmsonFields[Bmson::BmsInfo::ChartNameKey] = chartName;
 	bmsonFields[Bmson::BmsInfo::ModeHintKey] = modeHint;
 	bmsonFields[Bmson::BmsInfo::ResolutionKey] = resolution;

@@ -1,7 +1,7 @@
-#include "Document.h"
+#include <QtConcurrentRun>
+#include <QPainter>
 #include "SoundChannel.h"
 #include "SoundChannelInternal.h"
-#include <cstdlib>
 #include <cmath>
 
 

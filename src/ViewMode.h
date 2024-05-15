@@ -1,7 +1,8 @@
 #ifndef VIEWMODE_H
 #define VIEWMODE_H
 
-#include <QtCore>
+#include <QObject>
+#include <QMap>
 
 class ViewMode : public QObject
 {

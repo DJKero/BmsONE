@@ -26,12 +26,12 @@ void MasterCache::ClearAll()
 {
 	{
 		QMutexLocker lock(&workersMutex);
-		for (auto worker : workers){
-			disconnect(worker, SIGNAL(Complete(MasterCacheWorkerBase*)), this, SLOT(WorkerComplete(MasterCacheWorkerBase*)));
+        for (auto worker : std::as_const(workers)) {
+            disconnect(worker, SIGNAL(Complete(MasterCacheWorkerBase*)), this, SLOT(WorkerComplete(MasterCacheWorkerBase*)));
 			worker->Cancel();
 			delete worker;
-		}
-	}
+        }
+    }
 	workers.clear();
 	{
 		QMutexLocker locker(&dataMutex);
@@ -332,13 +332,13 @@ void MasterCacheMultiWorker::Cancel()
 void MasterCacheMultiWorker::AddSoundTask()
 {
 	int fmax=0, tmax=0;
-	for (auto patch : patches){
-		if (patch.frames > fmax)
+    for (auto patch : std::as_const(patches)) {
+        if (patch.frames > fmax)
 			fmax = patch.frames;
 		if (patch.time + patch.frames > tmax)
 			tmax = patch.time + patch.frames;
-	}
-	if (fmax == 0){
+    }
+    if (fmax == 0){
 		return;
 	}
 	{
@@ -358,8 +358,8 @@ void MasterCacheMultiWorker::AddSoundTask()
 		}
 		{
 			QMutexLocker locker(&master->dataMutex);
-			for (auto patch : patches){
-				int sz = std::min<int>(sizeRead, patch.frames - pbuf);
+            for (auto patch : std::as_const(patches)) {
+                int sz = std::min<int>(sizeRead, patch.frames - pbuf);
 				if (sz <= 0)
 					continue;
 				if (patch.time+pbuf+sz > master->data.size()){
@@ -382,14 +382,14 @@ void MasterCacheMultiWorker::AddSoundTask()
 						master->data[patch.time+pbuf+i] = out;
 					}
 				}
-			}
-		}
+            }
+        }
 		pbuf += sizeRead;
 	}
-	for (auto patch : patches){
-		master->DecCounter(patch.time, patch.frames);
-	}
-	emit Complete(this);
+    for (auto patch : std::as_const(patches)) {
+        master->DecCounter(patch.time, patch.frames);
+    }
+    emit Complete(this);
 }
 
 

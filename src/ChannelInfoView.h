@@ -1,11 +1,17 @@
 #ifndef CHANNELINFOVIEW_H
 #define CHANNELINFOVIEW_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QWidget>
+#include <QFileDialog>
+#include <QComboBox>
+#include <QToolButton>
+#include <QLabel>
+#include <QLayout>
+#include <QFormLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include "audio/Wave.h"
 #include "document/Document.h"
-#include "util/ScrollableForm.h"
 
 
 class MainWindow;

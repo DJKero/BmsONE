@@ -202,14 +202,14 @@ QString ExternalViewer::EvalArgument(QString argumentFormat, QMap<QString, QStri
 			continue;
 		}
 		*/
-		result += argumentFormat.mid(pos, posnext-pos);
-		pos = posnext;
+        result += argumentFormat.midRef(pos, posnext - pos);
+        pos = posnext;
 		pos += variable.matchedLength();
 		QString var = variable.cap(1);
 		result += env.contains(var) ? env[var] : "";
 	}
-	result += argumentFormat.mid(pos);
-	return result;
+    result += argumentFormat.midRef(pos);
+    return result;
 }
 
 QMap<QString, QString> ExternalViewer::Environment(int time)

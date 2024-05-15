@@ -1,8 +1,9 @@
 #ifndef INFOVIEW_H
 #define INFOVIEW_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QToolButton>
+#include <QPushButton>
+#include <QMessageBox>
 #include "document/Document.h"
 #include "util/QuasiModalEdit.h"
 #include "util/ScrollableForm.h"
@@ -136,5 +137,6 @@ private slots:
 
 	void UpdateFormGeom();
 };
+
 
 #endif // INFOVIEW_H

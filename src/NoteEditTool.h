@@ -1,8 +1,7 @@
 #ifndef NOTEEDITVIEW_H
 #define NOTEEDITVIEW_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QLabel>
 #include "document/Document.h"
 #include "document/SoundChannel.h"
 #include "util/QuasiModalEdit.h"
@@ -56,5 +55,6 @@ public:
 	void UnsetNotes();
 	void SetNotes(QMultiMap<SoundChannel *, SoundNote> notes);
 };
+
 
 #endif // NOTEEDITVIEW_H

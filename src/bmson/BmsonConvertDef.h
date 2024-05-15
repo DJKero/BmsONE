@@ -1,7 +1,9 @@
 #ifndef BMSONCONVERTDEF_H
 #define BMSONCONVERTDEF_H
 
-#include <QtCore>
+#include <QString>
+#include <QStringList>
+
 
 class BmsonConvertContext
 {

@@ -1,8 +1,10 @@
 #ifndef PREFEDIT
 #define PREFEDIT
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QObject>
+#include <QWidget>
+#include <QCheckBox>
+#include <QSlider>
 
 class Preferences;
 
@@ -35,6 +37,4 @@ private slots:
 };
 
 
-
 #endif // PREFEDIT
-

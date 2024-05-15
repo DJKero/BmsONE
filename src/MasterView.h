@@ -1,8 +1,13 @@
 #ifndef MASTERVIEW_H
 #define MASTERVIEW_H
 
-#include <QtCore>
-#include <QtWidgets>
+#include <QWidget>
+#include <QTimer>
+#include <QPainter>
+#include <QScrollBar>
+#include <QAbstractAnimation>
+#include <QPropertyAnimation>
+#include <QEasingCurve>
 #include "document/SoundChannelDef.h"
 #include "util/ScalarRegion.h"
 
@@ -160,7 +165,6 @@ private slots:
 	void Progress(int currentSamples);
 	void PreviewerDestroyed();
 };
-
 
 
 #endif // MASTERVIEW_H

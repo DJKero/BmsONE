@@ -148,8 +148,8 @@ QVariant Bms::BmsReader::GetDefaultValue() const
 QMap<QString, QString> Bms::BmsReader::GenerateEncodingPreviewMap()
 {
 	QMap<QString, QString> map;
-	for (auto codec : BmsReaderConfig::AvailableCodecs){
-		in.seek(0);
+    for (const auto &codec : std::as_const(BmsReaderConfig::AvailableCodecs)) {
+        in.seek(0);
 		if (codec.isEmpty()){
 			in.setCodec(QTextCodec::codecForLocale());
 		}else{
@@ -157,8 +157,8 @@ QMap<QString, QString> Bms::BmsReader::GenerateEncodingPreviewMap()
 		}
 		QString preview = in.read(1000);
 		map.insert(codec, preview + "...");
-	}
-	in.seek(0);
+    }
+    in.seek(0);
 	return map;
 }
 

@@ -30,8 +30,8 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 		buffer[i].left = buffer[i].right = 0.0f;
 	}
     [[maybe_unused]] static int k = 0;
-	for (auto source : sources){
-		int cur = 0;
+    for (auto source : std::as_const(sources)) {
+        int cur = 0;
 		while (bufferSampleCount - cur >= BufferSize){
 			int sizeRead = source->AudioPlayRead(internalBuf, BufferSize);
 			for (int i=0; i<sizeRead; i++){
@@ -50,8 +50,8 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 				buffer[cur+i].right += internalBuf[i].right;
 			}
 		}
-	}
-	/*
+    }
+    /*
 	for (int i=0; i<bufferSampleCount; i++){
 		buffer[i].left  = saturate(0.95f, buffer[i].left);
 		buffer[i].right = saturate(0.95f, buffer[i].right);

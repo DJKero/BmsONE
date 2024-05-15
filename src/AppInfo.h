@@ -1,7 +1,7 @@
 #ifndef APPINFO
 #define APPINFO
 
-#include <QtCore>
+#include <QtGlobal>
 
 #define APP_NAME "BmsONE"
 #define APP_VERSION_STRING "beta 0.2.1"

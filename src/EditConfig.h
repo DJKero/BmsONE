@@ -1,7 +1,7 @@
 #ifndef EDITCONFIG_H
 #define EDITCONFIG_H
 
-#include <QtCore>
+#include <QObject>
 
 
 class EditConfig : public QObject
@@ -64,5 +64,6 @@ signals:
 	void CanShowMasterLaneChanged(bool value);
 	void CanShowMiniMapChanged(bool value);
 };
+
 
 #endif // EDITCONFIG_H

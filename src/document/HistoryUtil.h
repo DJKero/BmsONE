@@ -5,7 +5,6 @@
 #include <functional>
 
 
-
 class MultiAction : public EditAction
 {
 private:
@@ -222,6 +221,4 @@ public:
 };
 
 
-
 #endif // HISTORYUTIL_H
-

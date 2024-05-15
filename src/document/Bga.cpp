@@ -1,6 +1,8 @@
-
+#include <QJsonArray>
 #include "DocumentDef.h"
-#include "bmson/Bmson.h"
+#include "bmson/Bmson100.h"
+
+using namespace Bmson100;
 
 BgaHeader::BgaHeader(const QJsonValue &json)
 	: BmsonObject(json)
@@ -127,25 +129,25 @@ Bga::Bga(const QJsonValue &json)
 QJsonValue Bga::SaveBmson()
 {
 	QJsonArray jsonHeaders;
-	for (auto header : headers){
-		jsonHeaders.append(header.SaveBmson());
-	}
-	bmsonFields[Bmson::Bga::HeaderKey] = jsonHeaders;
+    for (auto header : std::as_const(headers)) {
+        jsonHeaders.append(header.SaveBmson());
+    }
+    bmsonFields[Bmson::Bga::HeaderKey] = jsonHeaders;
 	QJsonArray jsonBgaEvents;
-	for (auto ev : bgaEvents){
-		jsonBgaEvents.append(ev.SaveBmson());
-	}
-	bmsonFields[Bmson::Bga::BgaEventsKey] = jsonBgaEvents;
+    for (auto ev : std::as_const(bgaEvents)) {
+        jsonBgaEvents.append(ev.SaveBmson());
+    }
+    bmsonFields[Bmson::Bga::BgaEventsKey] = jsonBgaEvents;
 	QJsonArray jsonLayerEvents;
-	for (auto ev : layerEvents){
-		jsonLayerEvents.append(ev.SaveBmson());
-	}
-	bmsonFields[Bmson::Bga::LayerEventsKey] = jsonLayerEvents;
+    for (auto ev : std::as_const(layerEvents)) {
+        jsonLayerEvents.append(ev.SaveBmson());
+    }
+    bmsonFields[Bmson::Bga::LayerEventsKey] = jsonLayerEvents;
 	QJsonArray jsonMissEvents;
-	for (auto ev : missEvents){
-		jsonMissEvents.append(ev.SaveBmson());
-	}
-	bmsonFields[Bmson::Bga::MissEventsKey] = jsonMissEvents;
+    for (auto ev : std::as_const(missEvents)) {
+        jsonMissEvents.append(ev.SaveBmson());
+    }
+    bmsonFields[Bmson::Bga::MissEventsKey] = jsonMissEvents;
 	return bmsonFields;
 }
 
@@ -182,25 +184,25 @@ QJsonObject Bga::AsJson() const
 {
 	QJsonObject obj = bmsonFields;
 	QJsonArray jsonHeaders;
-	for (auto header : headers){
-		jsonHeaders.append(header.AsJson());
-	}
-	obj[Bmson::Bga::HeaderKey] = jsonHeaders;
+    for (const auto &header : headers) {
+        jsonHeaders.append(header.AsJson());
+    }
+    obj[Bmson::Bga::HeaderKey] = jsonHeaders;
 	QJsonArray jsonBgaEvents;
-	for (auto ev : bgaEvents){
-		jsonBgaEvents.append(ev.AsJson());
-	}
-	obj[Bmson::Bga::BgaEventsKey] = jsonBgaEvents;
+    for (const auto &ev : bgaEvents) {
+        jsonBgaEvents.append(ev.AsJson());
+    }
+    obj[Bmson::Bga::BgaEventsKey] = jsonBgaEvents;
 	QJsonArray jsonLayerEvents;
-	for (auto ev : layerEvents){
-		jsonLayerEvents.append(ev.AsJson());
-	}
-	obj[Bmson::Bga::LayerEventsKey] = jsonLayerEvents;
+    for (const auto &ev : layerEvents) {
+        jsonLayerEvents.append(ev.AsJson());
+    }
+    obj[Bmson::Bga::LayerEventsKey] = jsonLayerEvents;
 	QJsonArray jsonMissEvents;
-	for (auto ev : missEvents){
-		jsonMissEvents.append(ev.AsJson());
-	}
-	obj[Bmson::Bga::MissEventsKey] = jsonMissEvents;
+    for (const auto &ev : missEvents) {
+        jsonMissEvents.append(ev.AsJson());
+    }
+    obj[Bmson::Bga::MissEventsKey] = jsonMissEvents;
 	return obj;
 }
 

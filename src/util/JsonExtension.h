@@ -1,7 +1,12 @@
 #ifndef JSONEXTENSION
 #define JSONEXTENSION
 
-#include <QtCore>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
+#include <QString>
+
 
 class JsonExtension
 {
@@ -10,5 +15,5 @@ public:
 
 };
 
-#endif // JSONEXTENSION
 
+#endif // JSONEXTENSION

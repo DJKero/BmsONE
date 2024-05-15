@@ -1,7 +1,8 @@
 #ifndef SEQUENCEVIEWDEF_H
 #define SEQUENCEVIEWDEF_H
 
-#include <QtCore>
+#include <QString>
+
 
 enum class SequenceEditMode{
 	EDIT_MODE,
@@ -25,4 +26,3 @@ public:
 
 
 #endif // SEQUENCEVIEWDEF_H
-

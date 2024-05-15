@@ -1,12 +1,13 @@
 #ifndef BPMEDITTOOL_H
 #define BPMEDITTOOL_H
 
-#include <QtCore>
-#include <QtWidgets>
-#include "document/Document.h"
+#include <QApplication>
+#include <QLabel>
 #include "util/QuasiModalEdit.h"
 #include "util/ScrollableForm.h"
 #include "util/CollapseButton.h"
+#include "document/DocumentDef.h"
+
 
 class MainWindow;
 
@@ -54,5 +55,6 @@ signals:
 	void Updated();
 
 };
+
 
 #endif // BPMEDITTOOL_H

@@ -296,6 +296,7 @@ void SequenceView::ReplaceSkin(Skin *newSkin)
 					prop->SetValue(i);
 				});
 			}
+            delete group;
 			menuView->insertMenu(mainWindow->GetViewSkinSettingSeparator(), menu);
 			skinPropertyMenuItems.append(menu);
 			break;

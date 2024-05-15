@@ -451,6 +451,7 @@ MasterLaneView::~MasterLaneView()
 {
 	if (backBuffer)
 		delete backBuffer;
+    delete cxt;
 }
 
 void MasterLaneView::paintEvent(QPaintEvent *event)

@@ -7,7 +7,7 @@
 #-------------------------------------------------
 
 TARGET = BmsONE
-CONFIG += c++17
+CONFIG += c++17 warn_on
 FORMS    +=
 QT       += core concurrent gui multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

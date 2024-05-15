@@ -73,6 +73,7 @@ AudioPlayer::~AudioPlayer()
 	output->deleteLater(); // on Mac, this is necessary for terminating Mac's audio thread.
 	audioThread->exit();
 	audioThread->wait();
+    delete audioThread;
 }
 
 

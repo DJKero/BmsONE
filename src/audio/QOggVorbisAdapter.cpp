@@ -64,4 +64,3 @@ long QOggVorbisAdapter::Tell(QOggVorbisAdapter *This)
 {
 	return (long)This->file.pos();
 }
-

@@ -18,11 +18,6 @@ AudioPlayConstantSourceMix::~AudioPlayConstantSourceMix()
 	delete[] internalBuf;
 }
 
-void AudioPlayConstantSourceMix::AudioPlayRelease()
-{
-	deleteLater();
-}
-
 int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffer, int bufferSampleCount)
 {
 	QMutexLocker lock(&mtx);
@@ -59,6 +54,11 @@ int AudioPlayConstantSourceMix::AudioPlayRead(AudioPlaySource::SampleType *buffe
 	}
 	*/
 	return bufferSampleCount;
+}
+
+void AudioPlayConstantSourceMix::AudioPlayRelease()
+{
+    deleteLater();
 }
 
 void AudioPlayConstantSourceMix::OnSourceDestroyed(QObject *source)

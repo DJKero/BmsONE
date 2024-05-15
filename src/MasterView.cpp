@@ -187,12 +187,12 @@ void MiniMapView::ReconstructRmsCache()
 #else
 		// EXTERNAL ITERATOR
 		for (int s=smp_prev; s<smp; s++){
-			QPair<int, QAudioBuffer::S32F> d = master->GetData(s);
+            QPair<int, QAudioBuffer::F32S> d = master->GetData(s);
 			packet.available &= d.first == 0;
-			packet.rms.L += d.second.left * d.second.left;
-			packet.rms.R += d.second.right * d.second.right;
-			packet.peak.L = std::max(packet.peak.L, std::fabsf(d.second.left));
-			packet.peak.R = std::max(packet.peak.R, std::fabsf(d.second.right));
+            packet.rms.L += d.second.value(QAudioFormat::FrontLeft) * d.second.value(QAudioFormat::FrontLeft);
+            packet.rms.R += d.second.value(QAudioFormat::FrontRight) * d.second.value(QAudioFormat::FrontRight);
+            packet.peak.L = std::max(packet.peak.L, fabsf(d.second.value(QAudioFormat::FrontLeft)));
+            packet.peak.R = std::max(packet.peak.R, fabsf(d.second.value(QAudioFormat::FrontRight)));
 		}
 #endif
 		if (smp_prev < smp){
@@ -294,9 +294,9 @@ void MiniMapView::UpdateBuffer()
 	buffer.fill(QColor(0x33, 0x33, 0x33));
 	QPainter painter(&buffer);
 	for (int y=0; y<height(); y++){
-        qsizetype t = y * sview->viewLength / height();
-        qsizetype t2 = (y+1) * sview->viewLength / height();
-		if (std::min(t2, rmsCacheOfTicks.size()) > t){
+        int t = y * (int) sview->viewLength / height();
+        int t2 = (y+1) * (int) sview->viewLength / height();
+        if (std::min(t2, (int) rmsCacheOfTicks.size()) > t){
 			if (t2 > rmsCacheOfTicks.size())
 				t2 = rmsCacheOfTicks.size();
 			if (t < 0)
@@ -582,9 +582,9 @@ void MasterLaneView::UpdateBackBuffer(const QRect &rect)
 		mview->ReconstructRmsCache();
 	}
 	for (int y=rect.bottom()+my; y>=rect.top()-my; y--){
-        qsizetype t = sview->Y2Time(y);
-        qsizetype t2 = sview->Y2Time(y-1);
-		if (std::min(t2, mview->rmsCacheOfTicks.size()) > t){
+        int t = (int) sview->Y2Time(y);
+        int t2 = (int) sview->Y2Time(y-1);
+        if (std::min(t2, (int) mview->rmsCacheOfTicks.size()) > t){
 			if (t2 > mview->rmsCacheOfTicks.size())
 				t2 = mview->rmsCacheOfTicks.size();
 			if (t < 0)

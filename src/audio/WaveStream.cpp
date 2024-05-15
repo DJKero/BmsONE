@@ -772,7 +772,7 @@ void F32S44100StreamTransformer::Provide(qreal playHeadEnd)
 		   && src->GetCurrentFrame() < src->GetFrameCount())
 	{
 		quint64 sizeRead = src->Read(inputBuffer, InputBufferSize);
-		if (sizeRead == 0) break;
+        if (sizeRead == 0) break;
         switch (fmt.channelConfig()){
         case QAudioFormat::ChannelConfigMono:
             switch (fmt.bytesPerFrame()){

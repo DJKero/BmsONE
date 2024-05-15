@@ -8,6 +8,60 @@
 #include <vorbis/vorbisfile.h>
 
 
+class WaveData
+{
+public:
+    enum Errors{
+        NoError = 0,
+        UnknownFileType = 10,
+        CannotOpenFile = 11,
+        NotWaveFile = 22,
+        MalformedFile = 23,
+        FormatMissing = 24,
+        UnsupportedFormat = 25,
+        DataMissing = 26,
+        DataSizeOver = 27,
+        NotVorbisFile = 32,
+        UnsupportedVersion = 33,
+        MalformedVorbis = 34,
+        VorbisUnknown = 39,
+        Unknown = -1
+    };
+    enum Formats{
+        WAV = 0,
+        FLAC = 1,
+        OGG = 2
+    };
+
+private:
+    int error;
+    int extension;
+    QAudioFormat format;
+    void *data;
+    quint64 bytes;
+    quint64 frames;
+
+private:
+    void LoadWav(const QString &srcPath);
+    void LoadOgg(const QString &srcPath);
+
+    WaveData(const WaveData &);
+public:
+    WaveData(); // empty
+    WaveData(const QString &srcPath);
+    ~WaveData();
+
+    void Save(const QString &dstPath);
+
+    int GetError() const{ return error; }
+
+    QAudioFormat GetFormat() const{ return format; }
+    const void *GetRawData() const{ return data; }
+    quint64 GetFrameCount() const{ return frames; }
+};
+
+
+
 
 class AudioStreamSource : public QObject
 {
@@ -56,7 +110,6 @@ public:
 
 	void EnumerateAllAsFloat(std::function<void(float)> whenMonoral, std::function<void(float, float)> whenStereo);
 };
-
 
 class WaveStreamSource : public AudioStreamSource
 {
@@ -161,92 +214,6 @@ public:
 
 
 
-
-
-
-class WaveData;
-class StandardWaveData;
-
-
-class WaveData
-{
-public:
-	enum Errors{
-		NoError = 0,
-		UnknownFileType = 10,
-		CannotOpenFile = 11,
-		NotWaveFile = 22,
-		MalformedFile = 23,
-		FormatMissing = 24,
-		UnsupportedFormat = 25,
-		DataMissing = 26,
-		DataSizeOver = 27,
-		NotVorbisFile = 32,
-		UnsupportedVersion = 33,
-		MalformedVorbis = 34,
-		VorbisUnknown = 39,
-		Unknown = -1
-	};
-    enum Formats{
-        WAV = 0,
-        FLAC = 1,
-        OGG = 2
-    };
-
-private:
-	int err;
-    int fmt;
-	QAudioFormat format;
-	void *data;
-	quint64 bytes;
-    quint64 frames;
-
-private:
-	void LoadWav(const QString &srcPath);
-	void LoadOgg(const QString &srcPath);
-
-	WaveData(const WaveData &);
-public:
-	WaveData(); // empty
-	WaveData(const QString &srcPath);
-	~WaveData();
-
-	void Save(const QString &dstPath);
-
-	int error() const{ return err; }
-
-	QAudioFormat GetFormat() const{ return format; }
-	const void *GetRawData() const{ return data; }
-	quint64 GetFrameCount() const{ return frames; }
-};
-
-
-
-// Signed 16bit int / 2ch
-class StandardWaveData
-{
-public:
-	typedef QAudioBuffer::S16S SampleType;
-
-private:
-	int samplingRate;
-	int frames;
-	SampleType *data;
-
-public:
-	StandardWaveData(); // empty
-	StandardWaveData(WaveData *src);
-	~StandardWaveData();
-
-	int GetFrameCount() const{ return frames; }
-	int GetSamplingRate() const{ return samplingRate; }
-	const SampleType &operator [](int index) const{ return data[index]; }
-	SampleType &operator [](int index){ return data[index]; }
-};
-
-
-
-
 class AudioPlaySource : public QObject
 {
 	Q_OBJECT
@@ -257,8 +224,8 @@ public:
 	AudioPlaySource(QObject *parent=nullptr) : QObject(parent){}
 	~AudioPlaySource(){}
 
+    virtual int AudioPlayRead(SampleType *buffer, int bufferSampleCount)=0;
 	virtual void AudioPlayRelease()=0;
-	virtual int AudioPlayRead(SampleType *buffer, int bufferSampleCount)=0;
 };
 
 
@@ -279,15 +246,12 @@ public:
 	AudioPlayConstantSourceMix(QObject *parent, QList<AudioPlaySource *> sources);
 	~AudioPlayConstantSourceMix();
 
+    virtual int AudioPlayRead(SampleType *internalBuf, int bufferSampleCount);
 	virtual void AudioPlayRelease();
-	virtual int AudioPlayRead(SampleType *internalBuf, int bufferSampleCount);
 
 private slots:
 	void OnSourceDestroyed(QObject*source);
 };
 
 
-
-
 #endif // WAV_H
-
